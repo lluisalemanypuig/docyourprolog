@@ -23,7 +23,7 @@ def closes_struct_comm(line):
 # Returns true if the line tries to load a file
 def loads_file(line):
 	p = line.find(':-')
-	while p > 0 and (line[p] == ' ' or line[p] == '\t'): p -= 1
+	while p > 0 and (line[p] == ' ' or line[p] == '\t' or line[p] == '\n'): p -= 1
 	return p == 0
 
 # Deletes all leading spaces and tabs.
@@ -38,8 +38,15 @@ def delete_spaces_tabs(line):
 	
 	# find the last position of a code character
 	j = line.find('%')
-	while j > 0 and (line[j] == ' ' or line[j] == '\t'):
-		j -= 1
+	if j != -1:
+		while j > 0 and (line[j] == ' ' or line[j] == '\t'): j -= 1
+	else:
+		if len(line) == 1:
+			# sinle end-line character
+			j = 1
+		else:
+			j = len(line) - 1
+			while j > 0 and (line[j] == ' ' or line[j] == '\t' or line[j] == '\n'): j -= 1
 	
-	line = line[i:j]
+	line = line[i:(j+1)]
 	return line

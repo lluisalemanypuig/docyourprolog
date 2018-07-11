@@ -53,6 +53,8 @@ class file_parser:
 			# ignore lines with only one comment
 			if line == '': pass
 			
+			print "'%s'" % line
+			
 			opens_sc = utils.opens_struct_comm(line)
 			closes_sc = utils.closes_struct_comm(line)
 			load = utils.loads_file(line)

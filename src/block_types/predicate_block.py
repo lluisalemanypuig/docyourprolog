@@ -28,54 +28,72 @@ class predicate_block:
 	
 	all_param_types = ["++", "+", "-", "--", "?", ":", "@", "!"]
 	
-	def _parse_parameter(self, param):
+	def _parse_parameter(self, info):
+		# find position of next @param
+		p = info.find('@param', 1)
+		param = None
+		if p == -1: param = info
+		else: param = info[0:(p-1)]
+		
+		#print "Param:", param
+		
 		# extract parameter type
-		opened_bracket = param.find('[')
-		closed_bracket = param.find(']')
-		param_type = param[opened_bracket:closed_bracket]
+		ob = param.find('[')	# opened bracket
+		cb = param.find(']')	# closed bracket
+		if ob != -1 and cb != -1: parameter_type = param[(ob+1):cb]
+		else: parameter_type = None
+			
 		# find starting of description
 		s = param.find(' ')
 		# variable to store description 
-		descr = None
-		# find position of next @param
-		p = param.find('@param', 1)
+		descr = param[(s+1):len(param)]
 		
-		if p == -1: descr = param[(s+1):len(param)]
-		else: descr = param[(s+1):(p-1)]
+		#print "Description of parameter:",descr
+		parameter_name = descr.split(' ')[0]
 		
-		print "Description of parameter:",descr
+		paraminfo = (parameter_name, parameter_type, descr)
+		#print "Parameter info: ", paraminfo
+		
+		self._params.append(paraminfo)
+		
+		if p == 1: return ""
+		return info[p:]
 		
 	def _add_info(self, environment, info):
 		if environment == "form":
 			self._form = info[6:len(info)]
-			print self._form
+			#print self._form
 		elif environment == "descr":
 			self._descr = info[7:len(info)]
-			print self._descr
+			#print self._descr
 		elif environment == "constr":
-			print "constraint info:", info
+			#print "constraint info:", info
 			
 			# space after @constraints
 			s = info.find(' ')
 			# position of first @param
 			p = info.find('@param')
 			
-			print s,p
+			#print s,p
 			
 			# get constraints description
 			self._constr = info[(s+1):(p-1)]
 			
-			print "Constraint description:", self._constr
+			#print "Constraint description:", self._constr
 			
 			# delete leading description
 			info = info[p:len(info)]
 			
-			print "Result of deleting leading description:"
-			print info
+			#print "Result of deleting leading description:"
+			#print info
 			
 			# extract all parameter description
 			while len(info) > 0:
 				info = self._parse_parameter(info)
+				
+				print info
+				k = 0
+				input(k)
 				
 	def __init__(self, block):
 		print "predicate documentation"
