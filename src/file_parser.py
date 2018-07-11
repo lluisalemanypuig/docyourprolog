@@ -53,8 +53,6 @@ class file_parser:
 			# ignore lines with only one comment
 			if line == '': pass
 			
-			print "'%s'" % line
-			
 			opens_sc = utils.opens_struct_comm(line)
 			closes_sc = utils.closes_struct_comm(line)
 			load = utils.loads_file(line)
@@ -76,10 +74,18 @@ class file_parser:
 				# line opens a block comment
 				if inside_sc:
 					print utils.bc_in_bc
+					print "    In line", p
 					exit(1)
 				
 				inside_sc = True
-				current_line = line + " "
+				
+				# a block comment may be opened and
+				# closed in the same line
+				if closes_sc != -1:
+					inside_sc = False
+					self._doc_lines.append(line)
+				else:
+					current_line = line + " "
 					
 			elif closes_sc != -1:
 				# line closes a block comment
@@ -92,14 +98,14 @@ class file_parser:
 			
 			p += 1
 		
-		print "Parsed lines"
+		print "Parsed lines with documentation"
 		for parsed in self._doc_lines:
 			print "->", parsed
 		
 		print
 		print "Lines with file inclusion"
 		for load in self._load_predicates:
-			print "->", load
+			print "=>", load
 	
 	# Extract the predicate names, the format of the block documentation
 	def extract_doc_info(self):

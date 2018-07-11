@@ -1,3 +1,4 @@
+import utils
 
 """
 http://prologdoc.sourceforge.net/
@@ -5,7 +6,7 @@ http://prologdoc.sourceforge.net/
 
 GENERAL FILE DOCUMENTATION
 /***
-	@descr This file is used for many thing. Among them are:
+	@descr This file is used for many things. Among them are:
 		<ul>
 		  <li> Purpose 1 blah blah blah
 		  <li> Purpose 2 blah blah blah
@@ -17,5 +18,40 @@ GENERAL FILE DOCUMENTATION
 
 class file_block:
 	
+	def _add_info(self, environment, info):
+		if environment == "descr": self._descr = info[7:len(info)]
+		elif environment == "author": self._author = info[8:len(info)]
+		elif environment == "date": self._date = info[6:len(info)]
+		else:
+			# this should not happen
+			print "Error: wrong environment", environment
+	
 	def __init__(self, block):
-		print "file documentation"
+		self._descr = None
+		self._author = None
+		self._date = None
+		
+		descr = (block.find('@descr'), 'descr')
+		author = (block.find('@author'), 'author')
+		date = (block.find('@date'), 'date')
+		
+		info = sorted([descr, author, date])
+		
+		for i in range(0, len(info)):
+			M = -1
+			if i == len(info) - 1: M = len(block)
+			else: M = info[i + 1][0] - 1
+			
+			content = block[info[i][0] : M]
+			self._add_info(info[i][1], content)
+		
+		if self._descr != None:
+			self._descr = utils.clean_last_closed_struct(self._descr)
+		if self._author != None:
+			self._author = utils.clean_last_closed_struct(self._author)
+		if self._date != None:
+			self._date = utils.clean_last_closed_struct(self._date)
+		
+		print "File description: '%s' " % self._descr
+		print "File author: '%s'" % self._author
+		print "File date: '%s'" % self._date

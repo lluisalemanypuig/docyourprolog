@@ -1,6 +1,11 @@
+import utils
 
 """
 SEPARATOR COMMENT
+
+This type of comment is simple: between '/*!' and '*/' write any
+text without any leading keyword.
+
 /*! Category 1 */
 pred1(...):- ...
 pred2(...):- ...
@@ -17,8 +22,11 @@ pred9(...):- ...
 pred10(...):- ...
 """
 
-
 class separator_block:
 	
 	def __init__(self, block):
-		print "separator"
+		L = len(block)
+		self._descr = block[4:(L-2)]
+		self._descr = utils.clean_last_closed_struct(self._descr)
+		
+		print "Separator description: '%s'" % self._descr

@@ -26,6 +26,14 @@ def loads_file(line):
 	while p > 0 and (line[p] == ' ' or line[p] == '\t' or line[p] == '\n'): p -= 1
 	return p == 0
 
+# If a line finishes with '*/', delete it and return the rest
+def clean_last_closed_struct(line):
+	i = len(line) - 3
+	if line.find('*/') == -1: i = len(line) - 1
+	
+	while i > 0 and (line[i] == ' ' or line[i] == '\t'): i -= 1
+	return line[0:(i+1)]
+
 # Deletes all leading spaces and tabs.
 # Deletes all characters after '%' and all preceding spaces and tabs
 def delete_spaces_tabs(line):

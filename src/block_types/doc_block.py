@@ -8,8 +8,6 @@ class doc_block:
 		self._type = "which?"
 		self._info = None
 		
-		print block
-		
 		p = block.find(' ')
 		lead = block[0:p]
 		if lead == "/*!":
@@ -22,8 +20,7 @@ class doc_block:
 			self._type = "file"
 			self._info = file_block.file_block(block)
 		else:
-			print "Unrecognized block comment"
-			print block
+			print "Unrecognized block comment: '%s'" % block
 	
 	def block_type(self): return self._type
 	def block_info(self): return self._info
