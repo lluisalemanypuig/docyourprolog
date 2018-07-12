@@ -65,14 +65,18 @@ class predicate_block:
 			# position of first @param
 			p = info.find('@param')
 			
-			# get constraints description
-			self._constr = info[(s+1):(p-1)]
-			# delete leading description
-			info = info[p:len(info)]
-			
-			# extract all parameter description
-			while len(info) > 0:
-				info = self._parse_parameter(info)
+			if p == -1:
+				# there are no @param -> extract description only
+				self._constr = info[(s+1):len(info)]
+			else:
+				# get constraints description
+				self._constr = info[(s+1):(p-1)]
+				# delete leading description
+				info = info[p:len(info)]
+				
+				# extract all parameter description
+				while len(info) > 0:
+					info = self._parse_parameter(info)
 		else:
 			# this should not happen
 			print "Error: wrong environment", environment
