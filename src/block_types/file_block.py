@@ -46,12 +46,16 @@ class file_block:
 			self._add_info(info[i][1], content)
 		
 		if self._descr != None:
-			self._descr = utils.clean_last_closed_struct(self._descr)
+			self._descr = utils.line_cleanup(self._descr)
 		if self._author != None:
-			self._author = utils.clean_last_closed_struct(self._author)
+			self._author = utils.line_cleanup(self._author)
 		if self._date != None:
-			self._date = utils.clean_last_closed_struct(self._date)
+			self._date = utils.line_cleanup(self._date)
 		
+		self.show()
+	
+	def show(self):
+		print "File block"
 		print "    File description: '%s' " % self._descr
 		print "    File author: '%s'" % self._author
 		print "    File date: '%s'" % self._date

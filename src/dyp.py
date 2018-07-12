@@ -9,6 +9,5 @@ args = parser.parse_args()
 
 
 print "Parsing:", args.main
-main_file = file_parser.file_parser()
-main_file.extract_documentation(args.main)
-main_file.extract_doc_info()
+main_file = file_parser.file_parser(args.main, ["min/2", "max/2", "asdf/2"])
+

@@ -49,7 +49,6 @@ class predicate_block:
 		
 		# parameter name
 		parameter_name = descr.split(' ')[0]
-		
 		# parameter constraint information
 		self._params.append((parameter_name, parameter_type, descr))
 		
@@ -82,13 +81,10 @@ class predicate_block:
 			print "Internal error: wrong environment", environment
 				
 	def __init__(self, block, line):
-		self._form = None	# form of the predicate
-							# namely, @form
-		self._constr = None	# description of constraints
-		self._params = []	# parameters of the predicate
-							# namely, @constraints
-		self._descr = None	# description of the predicate
-							# namely, @descr
+		self._form = None	# Form of the predicate. Namely @form
+		self._constr = None	# Description of constraints
+		self._params = []	# Parameters of the predicate. Namely @constraints
+		self._descr = None	# Description of the predicate. Namely @descr
 		
 		form = (block.find('@form'), 'form')
 		descr = (block.find('@descr'), 'descr')
@@ -106,11 +102,11 @@ class predicate_block:
 		
 		# string cleanup
 		if self._form != None:
-			self._form = utils.clean_last_closed_struct(self._form)
+			self._form = utils.line_cleanup(self._form)
 		if self._descr != None:
-			self._descr = utils.clean_last_closed_struct(self._descr)
+			self._descr = utils.line_cleanup(self._descr)
 		if self._constr != None:
-			self._constr = utils.clean_last_closed_struct(self._constr)
+			self._constr = utils.line_cleanup(self._constr)
 		
 		# make sure that there are no two @param defining the same parameter
 		param_names = set()
@@ -118,7 +114,7 @@ class predicate_block:
 		for i in range(0, len(self._params)):
 			(name,attr,descr) = self._params[i]
 			if descr != None:
-				descr = utils.clean_last_closed_struct(descr)
+				descr = utils.line_cleanup(descr)
 				self._params[i] = (name,attr,descr)
 				if name in param_names:
 					print "Error: at least two @param defining '%s'" % name
@@ -127,15 +123,21 @@ class predicate_block:
 				else:
 					param_names.add(name)
 		
-		print "    Form: '%s'" % self._form
-		print "    Description: '%s'" % self._descr
-		print "    Constraints: '%s'" % self._constr
-		print "    Parameters: '%s'" % self._params
+		self.show()
 	
 	def get_form(self): return self._form
 	def get_predicate_name(self):
 		p = self._form.find('(')
-		return self._form[0:p]
+		return self._form[0:p] + '/' + str( self._form.count(',') + 1 )
 	def get_description(self): return self._descr
 	def get_constraints_description(self): return self._constr
 	def get_parameters(self): return self._params
+	
+	def show(self):
+		print "Predicate block"
+		print "    Form: '%s'" % self._form
+		print "    Description: '%s'" % self._descr
+		print "    Constraints: '%s'" % self._constr
+		print "    Parameters:"
+		for param in self._params:
+			print "        ", param

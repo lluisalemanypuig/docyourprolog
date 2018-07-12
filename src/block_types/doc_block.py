@@ -11,7 +11,7 @@ class doc_block:
 	}
 	
 	def __init__(self, line_block):
-		self._type = "which?"
+		self._type = None
 		self._info = None
 		
 		line = line_block[0]
@@ -19,21 +19,18 @@ class doc_block:
 		
 		if block.find("/*!") != -1:
 			self._type = "separator"
-			print "Separator:"
 			self._info = separator_block.separator_block(block, line)
 		elif block.find("/***") != -1:
 			self._type = "file"
-			print "File:"
 			self._info = file_block.file_block(block, line)
 		elif block.find("/**") != -1:
 			self._type = "predicate"
-			print "Predicate:"
 			self._info = predicate_block.predicate_block(block, line)
 		else:
 			print "Unrecognized block comment: '%s'" % block
 	
 	def block_type(self): return self._type
 	def block_info(self): return self._info
-		
+	
 		
 

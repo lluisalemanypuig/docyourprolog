@@ -13,20 +13,8 @@ class file_parser:
 	# *******
 	# PRIVATE (do not call from outside)
 	
-	# ******
-	# PUBLIC
-	
-	def __init__(self):
-		self._name = "none"			# name of the file
-		self._doc_lines = []		# all the lines with docs in the file
-		self._load_predicates = []	# lines with file inclusions
-		
-		self._blocks = []			# documentation blocks, parsed
-		self._pred_names = []		# names of the predicates
-		self._included_files = []	# names of the included files
-	
 	# Extract the documentation from the file, found in block comments
-	def extract_documentation(self, filename):
+	def _extract_information(self, filename):
 		self._filename = filename
 		
 		# read and store file
@@ -50,7 +38,7 @@ class file_parser:
 		start_line = 0
 		
 		while p < n_lines:
-			line = utils.delete_spaces_tabs(lines[p])
+			line = utils.string_cleanup(lines[p])
 			
 			# ignore lines with only one comment
 			if line == '': pass
@@ -105,26 +93,98 @@ class file_parser:
 				current_line += line + " "
 			
 			p += 1
-		
-		print "Parsed lines with documentation"
-		for parsed in self._doc_lines:
-			print "->", parsed
-		
-		print
-		print "Lines with file inclusion"
-		for load in self._load_predicates:
-			print "=>", load
-		
-		print
 	
-	# Extract the predicate names, the format of the block documentation
-	def extract_doc_info(self):
+	# Extract the predicate names
+	def _extract_documentation(self):
 		for doc_line in self._doc_lines:
 			B = block.doc_block(doc_line)
 			self._blocks.append(B)
 			if B.block_type() == "predicate":
 				pred_block = B.block_info()
 				self._pred_names.append( pred_block.get_predicate_name() )
+	
+	# Extract the names of the files being included
+	def _extract_included_files(self):
 		
-		print "Predicate names in file '%s'" % self._filename
-		print "    ", self._pred_names
+		def inclusion_type(rule):
+			i = rule.find(':')
+			i += 2
+			# place 'i' at the beginning of rule
+			while i < len(rule) and utils.empty_space(rule[i]): i += 1
+			# place 'j' at the end of rule
+			j = i
+			while j < len(rule) and rule[j] != '(' and rule[j] != '[': j += 1
+			if i == j: return rule[i:(j+1)]
+			return rule[i:j]
+			
+		for load in self._load_predicates:
+			rule = load[1]
+			inclusion = inclusion_type(rule)
+			
+			if inclusion == "ensure_loaded":
+				name = utils.file_ensure_loaded(rule)
+				self._included_files.append(name)
+			elif inclusion == "[":
+				names = utils.files_brackets(rule)
+				for name in names[0]:
+					self._included_files.append((name,None))
+			elif inclusion == "use_module":
+				names = utils.file_use_module(rule)
+				if names != None: self._included_files.append(names)
+			else:
+				print "Error: unsupported inclusion type in line %d: '%s'" % load
+	
+	# ******
+	# PUBLIC
+	
+	def __init__(self, filename, pred_filt):
+		self._filename = filename	# name of the file
+		
+		# (T): temporary attribute
+		self._doc_lines = []		# (T) all the lines with docs in the file
+		self._load_predicates = []	# (T) lines with file inclusions
+		
+		self._blocks = []			# documentation blocks, parsed
+		self._pred_names = []		# names of the predicates
+		self._included_files = []	# names of the included files
+		
+		self._extract_information(filename)
+		
+		print "+++ Parsed lines with documentation"
+		for parsed in self._doc_lines: print "->", parsed
+		print
+		print "+++ Lines with file inclusion"
+		for load in self._load_predicates: print "=>", load
+		print
+		
+		self._extract_documentation()
+		print
+		
+		# filter predicate blocks: delete those corresponding to
+		# the predicates that are NOT in pred_filt
+		for B in self._blocks:
+			if B.block_type() == "predicate":
+				bname = B.block_info().get_predicate_name()
+				if bname not in pred_filt:
+					self._blocks.remove(B)
+					self._pred_names.remove(bname)
+		
+		self._extract_included_files()
+		
+		print "+++ Filtered block comments"
+		for B in self._blocks:
+			if B.block_info() == "None":
+				print "Null block info"
+			B.block_info().show()
+		print "All methods to be shown:", self._pred_names
+		print
+		
+		print "+++ Included files and predicates"
+		for f in self._included_files:
+			print "    ", f
+		print
+		
+	def get_filename(self): self._filename
+	def get_blocks(self): self._blocks
+	def get_predicate_names(self): self._pred_names
+	def get_included_files(self): self._included_files
