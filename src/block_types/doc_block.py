@@ -4,21 +4,31 @@ import separator_block
 
 class doc_block:
 	
-	def __init__(self, block):
+	doc_block_types = {
+		"separator" : "/*!",
+		"predicate" : "/**",
+		"file" : "/***"
+	}
+	
+	def __init__(self, line_block):
 		self._type = "which?"
 		self._info = None
 		
-		p = block.find(' ')
-		lead = block[0:p]
-		if lead == "/*!":
+		line = line_block[0]
+		block = line_block[1]
+		
+		if block.find("/*!") != -1:
 			self._type = "separator"
-			self._info = separator_block.separator_block(block)
-		elif lead == "/**":
-			self._type = "predicate"
-			self._info = predicate_block.predicate_block(block)
-		elif lead == "/***":
+			print "Separator:"
+			self._info = separator_block.separator_block(block, line)
+		elif block.find("/***") != -1:
 			self._type = "file"
-			self._info = file_block.file_block(block)
+			print "File:"
+			self._info = file_block.file_block(block, line)
+		elif block.find("/**") != -1:
+			self._type = "predicate"
+			print "Predicate:"
+			self._info = predicate_block.predicate_block(block, line)
 		else:
 			print "Unrecognized block comment: '%s'" % block
 	

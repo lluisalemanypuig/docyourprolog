@@ -79,9 +79,9 @@ class predicate_block:
 					info = self._parse_parameter(info)
 		else:
 			# this should not happen
-			print "Error: wrong environment", environment
+			print "Internal error: wrong environment", environment
 				
-	def __init__(self, block):
+	def __init__(self, block, line):
 		self._form = None	# form of the predicate
 							# namely, @form
 		self._constr = None	# description of constraints
@@ -111,14 +111,31 @@ class predicate_block:
 			self._descr = utils.clean_last_closed_struct(self._descr)
 		if self._constr != None:
 			self._constr = utils.clean_last_closed_struct(self._constr)
-			
+		
+		# make sure that there are no two @param defining the same parameter
+		param_names = set()
+		
 		for i in range(0, len(self._params)):
 			(name,attr,descr) = self._params[i]
 			if descr != None:
 				descr = utils.clean_last_closed_struct(descr)
 				self._params[i] = (name,attr,descr)
+				if name in param_names:
+					print "Error: at least two @param defining '%s'" % name
+					print "    In block comment starting at line", line
+					exit(1)
+				else:
+					param_names.add(name)
 		
-		print "Form: '%s'" % self._form
-		print "Description: '%s'" % self._descr
-		print "Constraints: '%s'" % self._constr
-		print "Parameters: '%s'" % self._params
+		print "    Form: '%s'" % self._form
+		print "    Description: '%s'" % self._descr
+		print "    Constraints: '%s'" % self._constr
+		print "    Parameters: '%s'" % self._params
+	
+	def get_form(self): return self._form
+	def get_predicate_name(self):
+		p = self._form.find('(')
+		return self._form[0:p]
+	def get_description(self): return self._descr
+	def get_constraints_description(self): return self._constr
+	def get_parameters(self): return self._params

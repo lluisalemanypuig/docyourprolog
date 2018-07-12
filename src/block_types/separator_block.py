@@ -24,9 +24,9 @@ pred10(...):- ...
 
 class separator_block:
 	
-	def __init__(self, block):
+	def __init__(self, block, line):
 		L = len(block)
 		self._descr = block[4:(L-2)]
 		self._descr = utils.clean_last_closed_struct(self._descr)
 		
-		print "Separator description: '%s'" % self._descr
+		print "    Description: '%s'" % self._descr

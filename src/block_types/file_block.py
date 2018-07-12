@@ -24,9 +24,9 @@ class file_block:
 		elif environment == "date": self._date = info[6:len(info)]
 		else:
 			# this should not happen
-			print "Error: wrong environment", environment
+			print "Internal error: wrong environment", environment
 	
-	def __init__(self, block):
+	def __init__(self, block, line):
 		self._descr = None
 		self._author = None
 		self._date = None
@@ -52,6 +52,6 @@ class file_block:
 		if self._date != None:
 			self._date = utils.clean_last_closed_struct(self._date)
 		
-		print "File description: '%s' " % self._descr
-		print "File author: '%s'" % self._author
-		print "File date: '%s'" % self._date
+		print "    File description: '%s' " % self._descr
+		print "    File author: '%s'" % self._author
+		print "    File date: '%s'" % self._date

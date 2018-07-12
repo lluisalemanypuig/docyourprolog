@@ -27,7 +27,7 @@ class file_parser:
 	
 	# Extract the documentation from the file, found in block comments
 	def extract_documentation(self, filename):
-		self._name = filename
+		self._filename = filename
 		
 		# read and store file
 		f = open(filename, 'r')
@@ -46,6 +46,8 @@ class file_parser:
 		current_line = ""	# current line built
 		inside_sc = False
 		file_inclusion = False
+		ignore = 0
+		start_line = 0
 		
 		while p < n_lines:
 			line = utils.delete_spaces_tabs(lines[p])
@@ -60,38 +62,44 @@ class file_parser:
 			
 			if load:
 				if dot != -1:
-					self._load_predicates.append(line)
+					self._load_predicates.append((p + 1,line))
 				else:
 					file_inclusion = True
 					current_line = line
+					start_line = p
 				
 			elif file_inclusion and dot != -1:
 				file_inclusion = False
 				current_line += line
-				self._load_predicates.append(current_line)
+				self._load_predicates.append((start_line + 1,current_line))
 			
 			elif opens_sc != -1:
 				# line opens a block comment
 				if inside_sc:
-					print utils.bc_in_bc
-					print "    In line", p
-					exit(1)
-				
-				inside_sc = True
-				
-				# a block comment may be opened and
-				# closed in the same line
-				if closes_sc != -1:
-					inside_sc = False
-					self._doc_lines.append(line)
+					ignore += 1
+					print "Block comment within bigger block comment in line", p + 1
+					print "    Ignoring (%d) this block" % ignore
 				else:
-					current_line = line + " "
+					inside_sc = True
+					start_line = p
+					
+					# a block comment may be opened and
+					# closed in the same line
+					if closes_sc != -1:
+						inside_sc = False
+						self._doc_lines.append((p + 1,line))
+					else:
+						current_line = line + " "
 					
 			elif closes_sc != -1:
-				# line closes a block comment
-				inside_sc = False
-				current_line += " " + line
-				self._doc_lines.append(current_line)
+				if ignore > 0:
+					# discard ignored block comments
+					ignore -= 1
+				else:
+					# line closes a block comment
+					inside_sc = False
+					current_line += " " + line
+					self._doc_lines.append((start_line + 1,current_line))
 				
 			elif inside_sc or file_inclusion:
 				current_line += line + " "
@@ -106,10 +114,17 @@ class file_parser:
 		print "Lines with file inclusion"
 		for load in self._load_predicates:
 			print "=>", load
+		
+		print
 	
 	# Extract the predicate names, the format of the block documentation
 	def extract_doc_info(self):
 		for doc_line in self._doc_lines:
 			B = block.doc_block(doc_line)
 			self._blocks.append(B)
-	
+			if B.block_type() == "predicate":
+				pred_block = B.block_info()
+				self._pred_names.append( pred_block.get_predicate_name() )
+		
+		print "Predicate names in file '%s'" % self._filename
+		print "    ", self._pred_names
