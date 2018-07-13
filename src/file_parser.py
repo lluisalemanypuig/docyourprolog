@@ -1,6 +1,7 @@
 import utils
 import block_types.doc_block as block
-import os.path
+from os.path import abspath, dirname, isfile
+from os.path import join, splitext, relpath
 
 class file_parser:
 	# -----------------
@@ -150,7 +151,11 @@ class file_parser:
 		# absolute, relative and short name of the file to be parsed
 		self._abs_name = filename
 		self._relative_name = None	# to be set later
-		self._short_name = None		# to be set later
+		self._short_name = None		# """
+		
+		self._abs_html = None		# to be set later
+		self._relative_html = None	# """
+		self._short_html = None		# """
 		
 		# (T): temporary attribute
 		self._doc_lines = []		# (T) all the lines with docs in the file
@@ -161,7 +166,7 @@ class file_parser:
 		self._included_files = []	# names of the included files
 		
 		# check if file exists
-		if not os.path.isfile(filename):
+		if not isfile(filename):
 			print "    Error: could not read file '%s'" % filename
 			return
 		
@@ -176,9 +181,36 @@ class file_parser:
 	def set_short_name(self, short_name):
 		self._short_name = short_name
 	
+	# :::::::
+	# Getters
+	
 	def get_abs_name(self): return self._abs_name
 	def get_relative_name(self): return self._relative_name
 	def get_short_name(self): return self._short_name
+	def get_abs_html(self): return self._abs_html
+	def get_relative_html(self): return self._relative_html
+	def get_short_html(self): return self._short_html
+	
 	def get_blocks(self): return self._blocks
 	def get_predicate_names(self): return self._pred_names
 	def get_included_files(self): return self._included_files
+	
+	def make_html_names(self, dest_dir):
+		if self._relative_name == None:
+			print "Internal error: relative name not set for file: '%s'" % self._abs_name
+			return
+		
+		i = len(self._relative_name) - 1
+		while i > 0 and self._relative_name[i] != '/': i -= 1
+		
+		relative_path = None
+		if i != 0: relative_path = self._relative_name[0:(i+1)]
+		else: relative_path = ""
+			
+		name_no_ext = splitext(self._short_name)[0]
+		
+		self._abs_html = join(dest_dir,relative_path,name_no_ext + ".html")
+		self._relative_html = splitext(self._relative_name)[0] + ".html"
+		self._short_html = name_no_ext + ".html"
+		
+		

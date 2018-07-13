@@ -95,8 +95,8 @@ def file_use_module(rule):
 	
 	return filename_cleanup(filename)
 
-# returns the file's full path and the file's name
-def path_and_name(rel_path):
+# returns the file's absolute path and the file's name
+def abspath_and_name(rel_path):
 	abs_path = abspath(rel_path)
 	dir_path = dirname(abs_path)
 	name = relpath(rel_path, dir_path)
@@ -104,6 +104,6 @@ def path_and_name(rel_path):
 
 # returns the file's full name
 def absolute_filename(filename):
-	path, name = path_and_name(filename)
+	path, name = abspath_and_name(filename)
 	return join(path, name)
 
