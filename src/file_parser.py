@@ -93,7 +93,8 @@ class file_parser:
 			
 			p += 1
 	
-	# Extract the predicate names
+	# Extract the information in each comment block
+	# and the predicate's names
 	def _extract_documentation(self):
 		for doc_line in self._doc_lines:
 			B = block.doc_block(doc_line)
@@ -138,7 +139,18 @@ class file_parser:
 	# PUBLIC
 	
 	def __init__(self, filename):
-		self._filename = filename	# name of the file
+		# assuming that the main directory's absolute path
+		# specified in option -d, --main-dir is /home/user/dir1
+		# we have that:
+		
+		# absolute: /home/user/dir1/dir2/file.pl
+		# relative: dir2/file.pl
+		# short:    file.pl
+		
+		# absolute, relative and short name of the file to be parsed
+		self._abs_name = filename
+		self._relative_name = None	# to be set later
+		self._short_name = None		# to be set later
 		
 		# (T): temporary attribute
 		self._doc_lines = []		# (T) all the lines with docs in the file
@@ -150,7 +162,7 @@ class file_parser:
 		
 		# check if file exists
 		if not os.path.isfile(filename):
-			print "Error: could not read file '%s'" % filename
+			print "    Error: could not read file '%s'" % filename
 			return
 		
 		self._extract_information(filename)
@@ -158,8 +170,15 @@ class file_parser:
 		self._extract_included_files()
 		
 		del self._doc_lines, self._load_predicates
-		
-	def get_filename(self): return self._filename
+	
+	def set_relative_name(self, rel_name):
+		self._relative_name = rel_name
+	def set_short_name(self, short_name):
+		self._short_name = short_name
+	
+	def get_abs_name(self): return self._abs_name
+	def get_relative_name(self): return self._relative_name
+	def get_short_name(self): return self._short_name
 	def get_blocks(self): return self._blocks
 	def get_predicate_names(self): return self._pred_names
 	def get_included_files(self): return self._included_files
