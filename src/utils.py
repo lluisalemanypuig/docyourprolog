@@ -1,16 +1,6 @@
-
-# ----------------
-# Verbose messages
-# ----------------
-
-# bc: block comment
-
-bc_in_bc = "Who on Earth puts a block comment within a bigger block comment?!?!?\n\
-    Please... fix it."
-
-# ------------------
-# Dealing with lines
-# ------------------
+from os import listdir
+from os.path import abspath, dirname, isfile
+from os.path import join, splitext, relpath
 
 # Returns the position of the opening of the structured comment
 def opens_struct_comm(line):
@@ -104,4 +94,16 @@ def file_use_module(rule):
 	filename = rule[(op+1):comma]
 	
 	return filename_cleanup(filename)
-	
+
+# returns the file's full path and the file's name
+def path_and_name(rel_path):
+	abs_path = abspath(rel_path)
+	dir_path = dirname(abs_path)
+	name = relpath(rel_path, dir_path)
+	return (dir_path, name)
+
+# returns the file's full name
+def absolute_filename(filename):
+	path, name = path_and_name(filename)
+	return join(path, name)
+
