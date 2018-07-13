@@ -52,8 +52,8 @@ class file_block:
 		if self._date != None:
 			self._date = utils.line_cleanup(self._date)
 	
-	def show(self):
-		print "File block"
-		print "    File description: '%s' " % self._descr
-		print "    File author: '%s'" % self._author
-		print "    File date: '%s'" % self._date
+	def show(self, tab = ""):
+		print "%sFile block" % tab
+		print "%s    File description: '%s' " % (tab, self._descr)
+		print "%s    File author: '%s'" % (tab, self._author)
+		print "%s    File date: '%s'" % (tab, self._date)

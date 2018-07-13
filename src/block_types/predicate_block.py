@@ -88,7 +88,12 @@ class predicate_block:
 		
 		form = (block.find('@form'), 'form')
 		descr = (block.find('@descr'), 'descr')
-		constr = (block.find('@constrs'), 'constr')
+		
+		constr_pos = block.find('@constrs')
+		if constr_pos == -1:
+			constr_pos = block.find('@constraints')
+		
+		constr = (constr_pos, 'constr')
 		
 		info = sorted([constr, form, descr])
 		
@@ -131,11 +136,11 @@ class predicate_block:
 	def get_constraints_description(self): return self._constr
 	def get_parameters(self): return self._params
 	
-	def show(self):
-		print "Predicate block"
-		print "    Form: '%s'" % self._form
-		print "    Description: '%s'" % self._descr
-		print "    Constraints: '%s'" % self._constr
-		print "    Parameters:"
+	def show(self, tab = ""):
+		print "%sPredicate block" % tab
+		print "%s    Form: '%s'" % (tab, self._form)
+		print "%s    Description: '%s'" % (tab, self._descr)
+		print "%s    Constraints: '%s'" % (tab, self._constr)
+		print "%s    Parameters:" % tab
 		for param in self._params:
-			print "        ", param
+			print "%s        " % tab, param
