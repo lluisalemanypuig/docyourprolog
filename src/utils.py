@@ -64,20 +64,26 @@ def string_cleanup(line):
 	line = line[i:(j+1)]
 	return line
 
+# deletes simple quotes (') and double quotes (") from the name
+def filename_cleanup(filename):
+	filename = filename.replace("'", "")
+	filename = filename.replace('"', "")
+	return filename
+
 # rule is of the form ':-ensure_loaded(file).'
 # returns 'file'.
 def file_ensure_loaded(rule):
 	op = rule.find('(')
 	cp = rule.find(')')
 	filename = rule[(op+1):cp]
-	return (line_cleanup(filename), None)
+	return filename_cleanup(line_cleanup(filename))
 
 # rule is of the form ':-[file1,file2,...,fileN]'
 # returns all files between the brackets
 def files_brackets(rule):
 	ob = rule.find('[')
 	cb = rule.find(']')
-	return (rule[(ob+1):cb].split(','), None)
+	return map(filename_cleanup, rule[(ob+1):cb].split(','))
 
 # rule is of the form ':-use_module(library(system))'
 # returns all files between the brackets
@@ -92,17 +98,10 @@ def file_use_module(rule):
 	if comma == -1:
 		# parse use_module/1
 		filename = rule[(op+1):cp]
-		return (filename, None)
+		return filename_cleanup(filename)
 	
 	# parse use_module/2
 	filename = rule[(op+1):comma]
-	ob = rule.find('[')
-	cb = rule.find(']')
-	predicate_list = rule[(ob+1):cb]
 	
-	predicates = []
-	for pred in predicate_list.split(','):
-		predicates.append( string_cleanup(pred) )
-	
-	return (filename, predicates)
+	return filename_cleanup(filename)
 	
