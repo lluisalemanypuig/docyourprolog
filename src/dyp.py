@@ -1,52 +1,108 @@
-import argparse
-import os
+from sys import argv
+from os import listdir
+from os.path import abspath, dirname, isfile
+from os.path import join, splitext, relpath
 import file_parser
+import utils
 
-def path_and_name(filename):
-	abs_path = os.path.abspath(filename)
-	path_to_dir = os.path.dirname(abs_path)
-	s = len(filename) - 1
-	while s > 0 and filename[s] != '/': s -= 1
-	name = filename[(s+1):]
-	return (path_to_dir, name)
+def get_matching_files(dirname, pats, rec):
+	files = []
+	dirs = []
+	this_dir = listdir(dirname)
+	for f in this_dir:
+		full_name = join(dirname, f)
+		if isfile(full_name):
+			extension = splitext(f)[1]
+			if extension in pats:
+				files.append(full_name)
+		else: 
+			dirs.append(f)
+	
+	if rec:
+		for d in dirs:
+			full_dir = join(dirname, d)
+			files += get_matching_files(full_dir, pats, rec)
+	
+	return files
 
-def absolute_filename(filename):
-	path, name = path_and_name(filename)
-	return path + "/" + name
+def print_usage():
+	print "Document Your Prolog:"
 
-parser = argparse.ArgumentParser(description="Document your Prolog")
-parser.add_argument('-m', '--main', type=str, help='Main file of the project',)
-parser.add_argument('-d', '--src-dir', type=str, help='Directory with all the sources')
-parser.add_argument('-r', '--recursive', type=bool, help='Parse source directory recursively')
-args = parser.parse_args()
+# **********
+# Start code
+# **********
 
-# split main file into path and name
-path, name = path_and_name(args.main)
+# Parse arguments
+
+main_dir = None
+recursive = False
+exts = [".pl", ".prolog"]
+i = 1
+while i < len(argv):
+	if argv[i] == "-h" or argv[i] == "--help":
+		print_usage()
+		exit(0)
+	elif argv[i] == "-d" or argv[i] == "--main-dir":
+		main_dir = argv[i + 1]
+		i += 1
+	elif argv[i] == "-r" or argv[i] == "--recursive":
+		recursive = True
+	elif argv[i] == "-e" or argv[i] == "--extension":
+		exts = eval(argv[i + 1])
+		i += 1
+	else:
+		print "Error: unrecognised option '%s'" % argv[i]
+		exit(1)
+	i += 1
+
+if main_dir == None:
+	print "Error: the directory containing the files must be specified"
+	exit(1)
 
 # files to be parsed
-to_be_parsed = [ path + "/" + name ]
+to_be_parsed = []
+path = None
+
+# parse all files inside directory
+directory = abspath(main_dir)
+print "directory:", directory
+names = get_matching_files(directory, exts, recursive)
+for name in names:
+	to_be_parsed.append( join(directory, name) )
+
 # files already parsed
 already_parsed = set([])
-# objects with 
-information = []
+# relate each file's full path to its information object
+file_info = {}
 
 while len(to_be_parsed) > 0:
-	filename = to_be_parsed[0]
+	abs_path = to_be_parsed[0]
 	del to_be_parsed[0]
 	
-	abs_fname = absolute_filename(filename)
-	
-	if abs_fname not in already_parsed:
-		print ">> Parsing:", filename
-		# parse file, store information parsed
-		information = file_parser.file_parser(filename)
-		already_parsed.add(abs_fname)
+	if abs_path not in already_parsed:
+		print ">> Parsing:", abs_path
 		
-		# split file name into subpath and name
-		subpath, _ = path_and_name(filename)
+		# parse file
+		information = file_parser.file_parser(abs_path)
+		# set relative and short names
+		relative_name = relpath(abs_path, directory)
+		path_to_file, name_file = utils.path_and_name(abs_path)
+		information.set_relative_name(relative_name)
+		information.set_short_name(name_file)
+		# store information parsed
+		file_info[abs_path] = information
+		already_parsed.add(abs_path)
+		
 		# include next files to be parsed
 		for name in information.get_included_files():
-			to_be_parsed += [subpath + "/" + name]
-	
+			to_be_parsed += [path_to_file + "/" + name]
+
+print file_info
+
+for abs_path, info in file_info.iteritems():
+	print abs_path
+	print "    ", info.get_abs_name()
+	print "    ", info.get_relative_name()
+	print "    ", info.get_short_name()
 
 
