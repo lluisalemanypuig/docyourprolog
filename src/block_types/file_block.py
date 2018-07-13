@@ -51,8 +51,6 @@ class file_block:
 			self._author = utils.line_cleanup(self._author)
 		if self._date != None:
 			self._date = utils.line_cleanup(self._date)
-		
-		self.show()
 	
 	def show(self):
 		print "File block"

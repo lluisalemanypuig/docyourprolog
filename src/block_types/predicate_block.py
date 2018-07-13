@@ -122,8 +122,6 @@ class predicate_block:
 					exit(1)
 				else:
 					param_names.add(name)
-		
-		self.show()
 	
 	def get_form(self): return self._form
 	def get_predicate_name(self):

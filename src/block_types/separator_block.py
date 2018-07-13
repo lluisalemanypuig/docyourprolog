@@ -29,8 +29,6 @@ class separator_block:
 		self._descr = block[4:(L-2)]
 		self._descr = utils.line_cleanup(self._descr)
 		
-		self.show()
-		
 	def show(self):
 		print "Separator block"
 		print "    Description: '%s'" % self._descr
