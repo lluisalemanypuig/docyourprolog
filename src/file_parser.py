@@ -154,19 +154,21 @@ class file_parser:
 		# we have that:
 		
 		# absolute: /home/user/dir1/dir2/file.pl
-		# relative: dir2/file.pl
+		# rel: dir2/file.pl
 		# short:    file.pl
 		
-		relative_name = relpath(abs_name, source_dir)
+		rel_name = relpath(abs_name, source_dir)
 		abs_path, name_file = utils.abspath_name(abs_name)
 		
-		# absolute, relative and short name of the file to be parsed
+		# absolute, rel and short name of the file to be parsed
 		self._abs_name = abs_name
-		self._relative_name = relative_name
+		self._abs_path = utils.path_name(abs_name)[0]
+		self._rel_name = rel_name
+		self._rel_path = relpath(abs_path, source_dir)
 		self._short_name = name_file
 		
 		self._abs_html = None		# to be set later
-		self._relative_html = None	# """
+		self._rel_html = None	# """
 		self._short_html = None		# """
 		
 		# (T): temporary attribute
@@ -181,22 +183,23 @@ class file_parser:
 		
 		# check if file exists
 		if not isfile(abs_name):
-			print "    Error: could not read file"
+			print "    Error: could not read file '%s'" % abs_name
 			return
 		
 		self._extract_information(abs_name)
 		self._extract_documentation()
 		self._extract_included_files()
 		
-		relative_path = relpath(abs_path, source_dir)
+		rel_path = relpath(abs_path, source_dir)
 		for i in range(0, len(self._included_files)):
 			f = self._included_files[i]
-			self._included_files[i] = join(source_dir, f)
+			self._included_files[i] = join(abs_path, f)
+			print self._included_files[i]
 		
 		del self._doc_lines, self._load_predicates
 	
-	def set_relative_name(self, rel_name):
-		self._relative_name = rel_name
+	def set_rel_name(self, rel_name):
+		self._rel_name = rel_name
 	def set_short_name(self, short_name):
 		self._short_name = short_name
 	
@@ -204,11 +207,16 @@ class file_parser:
 	# Getters
 	
 	def get_abs_name(self): return self._abs_name
-	def get_relative_name(self): return self._relative_name
+	def get_abs_path(self): return self._abs_path
+	def get_rel_name(self): return self._rel_name
+	def get_rel_path(self): return self._rel_path
 	def get_short_name(self): return self._short_name
-	def get_abs_html(self): return self._abs_html
-	def get_relative_html(self): return self._relative_html
-	def get_short_html(self): return self._short_html
+	
+	def get_abs_html_name(self): return self._abs_html_name
+	def get_abs_html_path(self): return self._abs_html_path
+	def get_rel_html_name(self): return self._rel_html_name
+	def get_rel_html_path(self): return self._rel_html_path
+	def get_short_html_name(self): return self._short_html_name
 	
 	def get_blocks(self): return self._blocks
 	def get_class_blocks(self): return self._class_blocks
@@ -216,14 +224,15 @@ class file_parser:
 	def get_included_files(self): return self._included_files
 	
 	def make_html_names(self, dest_dir):
-		if self._relative_name == None:
-			print "    Internal error: relative name not set for file: '%s'" % self._abs_name
+		if self._rel_name == None:
+			print "    Internal error: rel name not set for file: '%s'" % self._abs_name
 			return
 		
-		relative_path, name_pl = utils.path_name(self._relative_name)
-		name_html = splitext(name_pl)[0] + ".html"
+		name_html = splitext(self._short_name)[0] + ".html"
 		
-		self._abs_html = join(dest_dir, relative_path, name_html)
-		self._relative_html = utils.path_ext(self._relative_name)[0] + ".html"
-		self._short_html = name_html
+		self._abs_html_name = join(dest_dir, self._rel_path, name_html)
+		self._abs_html_path = join(dest_dir, self._rel_path)
+		self._rel_html_name = join(self._rel_path, name_html)
+		self._rel_html_path = self._rel_path
+		self._short_html_name = name_html
 		

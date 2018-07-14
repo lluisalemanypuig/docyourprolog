@@ -99,41 +99,46 @@ for name in names:
 # files already parsed
 already_parsed = set([])
 # relate each file's full path to its information object
-file_info = {}
+all_info = {}
 
 while len(to_be_parsed) > 0:
 	abs_path = to_be_parsed[0]
 	del to_be_parsed[0]
 	
 	if abs_path not in already_parsed:
-		relative_name = relpath(abs_path, source_dir)
+		rel_name = relpath(abs_path, source_dir)
 		path_to_file, name_file = utils.abspath_name(abs_path)
 		
-		print ">> Parsing:", relative_name
+		print ">> Parsing:", rel_name
 		
 		# parse file
 		information = file_parser.file_parser(source_dir, abs_path)
 		information.make_html_names(dest_dir)
 		# store information parsed
-		file_info[abs_path] = information
+		all_info[abs_path] = information
 		already_parsed.add(abs_path)
 		
 		# include next files to be parsed
 		to_be_parsed +=  information.get_included_files()
 
-for abs_path, info in file_info.iteritems():
+for abs_path, info in all_info.iteritems():
 	print abs_path
 	print "    File paths:"
-	print "        prolog:", info.get_abs_name()
-	print "        prolog:", info.get_relative_name()
-	print "        prolog:", info.get_short_name()
-	print "          html:", info.get_abs_html()
-	print "          html:", info.get_relative_html()
-	print "          html:", info.get_short_html()
+	print "        prolog absolute name:", info.get_abs_name()
+	print "        prolog absolute path:", info.get_abs_path()
+	print "        prolog relative name:", info.get_rel_name()
+	print "        prolog relative path:", info.get_rel_path()
+	print "           prolog short name:", info.get_short_name()
+	print "          html absolute name:", info.get_abs_html_name()
+	print "          html absolute path:", info.get_abs_html_path()
+	print "          html relative name:", info.get_rel_html_name()
+	print "          html relative path:", info.get_rel_html_path()
+	print "             html short name:", info.get_short_html_name()
+	print "              included files:", info.get_included_files()
 	for btype, block_list in info.get_class_blocks().iteritems():
 		for B in block_list:
 			if B != None:
 				B.show("    ")
 	print
-	maker = hmaker.html_maker(info, file_info)
+	maker = hmaker.html_maker(source_dir, all_info, info)
 	maker.make_html_file()
