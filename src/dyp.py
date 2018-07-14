@@ -3,6 +3,7 @@ from os import listdir
 from os.path import abspath, dirname, isfile
 from os.path import join, splitext, relpath
 import file_parser
+import html_maker as hmaker
 import constants
 import utils
 
@@ -111,10 +112,7 @@ while len(to_be_parsed) > 0:
 		print ">> Parsing:", relative_name
 		
 		# parse file
-		information = file_parser.file_parser(abs_path)
-		# set relative and short names
-		information.set_relative_name(relative_name)
-		information.set_short_name(name_file)
+		information = file_parser.file_parser(source_dir, abs_path)
 		information.make_html_names(dest_dir)
 		# store information parsed
 		file_info[abs_path] = information
@@ -126,16 +124,17 @@ while len(to_be_parsed) > 0:
 
 for abs_path, info in file_info.iteritems():
 	print abs_path
-	print "    prolog:", info.get_abs_name()
-	print "    prolog:", info.get_relative_name()
-	print "    prolog:", info.get_short_name()
-	print "      html:", info.get_abs_html()
-	print "      html:", info.get_relative_html()
-	print "      html:", info.get_short_html()
-	"""
-	for B in info.get_blocks():
-		if B.block_info() != None:
-			B.block_info().show("    ")
-	"""
+	print "    File paths:"
+	print "        prolog:", info.get_abs_name()
+	print "        prolog:", info.get_relative_name()
+	print "        prolog:", info.get_short_name()
+	print "          html:", info.get_abs_html()
+	print "          html:", info.get_relative_html()
+	print "          html:", info.get_short_html()
+	for btype, block_list in info.get_class_blocks().iteritems():
+		for B in block_list:
+			if B != None:
+				B.show("    ")
 	print
-	#info.make_html_file()
+	maker = hmaker.html_maker(info)
+	maker.make_html_file()
