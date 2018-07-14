@@ -119,8 +119,7 @@ while len(to_be_parsed) > 0:
 		already_parsed.add(abs_path)
 		
 		# include next files to be parsed
-		for name in information.get_included_files():
-			to_be_parsed += [path_to_file + "/" + name]
+		to_be_parsed +=  information.get_included_files()
 
 for abs_path, info in file_info.iteritems():
 	print abs_path
@@ -136,5 +135,5 @@ for abs_path, info in file_info.iteritems():
 			if B != None:
 				B.show("    ")
 	print
-	maker = hmaker.html_maker(info)
+	maker = hmaker.html_maker(info, file_info)
 	maker.make_html_file()

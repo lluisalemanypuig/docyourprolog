@@ -110,7 +110,7 @@ def path_ext(filename):
 
 # returns the file's absolute path and the file's name
 # given a string: 'asdf/qwer/zxcv.ext' returns
-# ('/absolute/path/to/the/file', 'zxcv.ext')
+# ('/absolute/path/to/the/file/asdf/qwer', 'zxcv.ext')
 def abspath_name(rel_path):
 	abs_path = abspath(rel_path)
 	dir_path = dirname(abs_path)

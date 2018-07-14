@@ -157,10 +157,10 @@ class file_parser:
 		# relative: dir2/file.pl
 		# short:    file.pl
 		
-		# absolute, relative and short name of the file to be parsed
 		relative_name = relpath(abs_name, source_dir)
 		abs_path, name_file = utils.abspath_name(abs_name)
 		
+		# absolute, relative and short name of the file to be parsed
 		self._abs_name = abs_name
 		self._relative_name = relative_name
 		self._short_name = name_file
@@ -187,6 +187,11 @@ class file_parser:
 		self._extract_information(abs_name)
 		self._extract_documentation()
 		self._extract_included_files()
+		
+		relative_path = relpath(abs_path, source_dir)
+		for i in range(0, len(self._included_files)):
+			f = self._included_files[i]
+			self._included_files[i] = join(source_dir, f)
 		
 		del self._doc_lines, self._load_predicates
 	

@@ -1,3 +1,4 @@
+from os.path import abspath
 import constants as csts
 import file_parser
 import utils
@@ -16,7 +17,8 @@ class html_maker:
 	file_descr = "<h1> Documentation for Prolog file: %s</h1>"
 	
 	# href, string
-	link_to_pred = "<li><p><a href=\"#%s\">%s</a></p></li>"
+	pred_link = "<li><p><a href=\"#%s\">%s</a></p></li>"
+	file_link = "<li><p><a href=\"%s\">%s</a></p></li>"
 	# href, string
 	predicate_title = "<h3><a name=\"%s\"></a>%s</h3>"
 	
@@ -26,6 +28,13 @@ class html_maker:
 		self._html.write("<head>" + nl)
 		self._html.write("<title>" + self._short_name + "</title>" + nl)
 		self._html.write("</head>" + nl)
+	
+	def _write_included_files_list(self):
+		print self._included_files
+		for f in self._included_files:
+			abs_path = abspath(f)
+			
+			self._html.write((html_maker.file_link % (f, f)) + csts.nl)
 	
 	def _write_predicate_list(self):
 		nl = csts.nl
@@ -41,7 +50,7 @@ class html_maker:
 			elif btype == "predicate":
 				label = binfo.get_predicate_label()
 				href = refmaker(label)
-				self._html.write( (html_maker.link_to_pred % (href,label)) + nl )
+				self._html.write( (html_maker.pred_link % (href,label)) + nl )
 	
 	def _write_pred_form(self, binfo, name, all_param_names):
 		nl = csts.nl
@@ -125,13 +134,21 @@ class html_maker:
 			file_descr = self._class_blocks["file"][-1]
 			self._html.write("<p>" + file_descr.get_descr() + "</p>" + nl)
 		
-		self._html.write("<a name=\"Predicates\"></a>" + nl)
+		if len(self._included_files) > 0:
+			self._html.write("<a name=\"included_files\"></a>" + nl)
+			self._html.write("<h2>Included files:</h2>" + nl)
+			self._html.write("<ul id=\"included_files_list\">" + nl)
+			self._write_included_files_list()
+			self._html.write("</ul>" + nl)
+		
+		self._html.write("<a name=\"predicates\"></a>" + nl)
 		self._html.write("<h2>Predicates:</h2>" + nl)
 		self._html.write("<ul id=\"predicate_list\">" + nl)
 		self._write_predicate_list()
 		self._html.write("</ul>" + nl)
 		
-		self._html.write("<a name=\"details\"></a><h2>Predicate Details:</h2>" + nl)
+		self._html.write("<a name=\"details\"></a>" + nl)
+		self._html.write("<h2>Predicate Details:</h2>" + nl)
 		self._html.write("<ul id=\"predicate_details\">" + nl)
 		self._write_predicate_details()
 		self._html.write("</ul>" + nl)
@@ -143,7 +160,7 @@ class html_maker:
 		self._html.write("</body>" + nl)
 	
 	# fp: file parser object
-	def __init__(self, fp):
+	def __init__(self, fp, file_info):
 		self._abs_name = fp.get_abs_name()
 		self._relative_name = fp.get_relative_name()
 		self._short_name = fp.get_short_name()
@@ -151,6 +168,14 @@ class html_maker:
 		self._abs_html = fp.get_abs_html()
 		self._relative_html = fp.get_relative_html()
 		self._short_html = fp.get_short_html()
+		
+		self._included_files = []
+		inc_files = fp.get_included_files()
+		for i in range(0, len(inc_files)):
+			print "inc_files:", inc_files[i]
+			relative_html = file_info[inc_files[i]].get_relative_html()
+			print "    their relative html:", relative_html
+			self._included_files.append(relative_html)
 		
 		self._blocks = fp.get_blocks()
 		self._class_blocks = fp.get_class_blocks()
