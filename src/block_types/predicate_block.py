@@ -141,7 +141,7 @@ class predicate_block:
 		full_list = self._form[(op+1):cp]
 		return map(utils.string_cleanup, full_list.split(','))
 	def get_description(self): return self._descr
-	def get_constraints_description(self): return self._constr
+	def get_cstrs_descr(self): return self._constr
 	def get_parameters(self): return self._params
 	
 	def show(self, tab = ""):
