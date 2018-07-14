@@ -29,7 +29,7 @@ class doc_block:
 			self._type = "predicate"
 			self._info = predicate_block.predicate_block(block, lineno)
 		else:
-			print "    Error: unrecognised block starting with '%s' at line %d" % (firstw, lineno)
+			print "    Warning: unrecognised block starting with '%s' at line %d" % (firstw, lineno)
 	
 	def block_type(self): return self._type
 	def block_info(self): return self._info
