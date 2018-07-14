@@ -45,12 +45,12 @@ class predicate_block:
 		# find starting of description
 		s = param.find(' ')
 		# variable to store description 
-		descr = param[(s+1):len(param)]
+		descr = utils.line_cleanup(param[(s+1):len(param)])
 		
 		# parameter name
 		parameter_name = descr.split(' ')[0]
 		# parameter constraint information
-		self._params.append((parameter_name, parameter_type, descr))
+		self._params[parameter_name] = (parameter_type, descr)
 		
 		if p == -1: return ""
 		return info[p:]
@@ -83,17 +83,12 @@ class predicate_block:
 	def __init__(self, block, line):
 		self._form = None	# Form of the predicate. Namely @form
 		self._constr = None	# Description of constraints
-		self._params = []	# Parameters of the predicate. Namely @constraints
+		self._params = {}	# Parameters of the predicate. Namely @constraints
 		self._descr = None	# Description of the predicate. Namely @descr
 		
 		form = (block.find('@form'), 'form')
 		descr = (block.find('@descr'), 'descr')
-		
-		constr_pos = block.find('@constrs')
-		if constr_pos == -1:
-			constr_pos = block.find('@constraints')
-		
-		constr = (constr_pos, 'constr')
+		constr = (block.find('@constrs'), 'constr')
 		
 		info = sorted([constr, form, descr])
 		
@@ -116,31 +111,44 @@ class predicate_block:
 		# make sure that there are no two @param defining the same parameter
 		param_names = set()
 		
-		for i in range(0, len(self._params)):
-			(name,attr,descr) = self._params[i]
+		for pname, (ptype,descr) in self._params.iteritems():
 			if descr != None:
 				descr = utils.line_cleanup(descr)
-				self._params[i] = (name,attr,descr)
-				if name in param_names:
-					print "Error: at least two @param defining '%s'" % name
-					print "    In block comment starting at line", line
+				if pname in param_names:
+					print "    Error: at least two @param defining '%s'" % pname
+					print "        In block comment starting at line", line
 					exit(1)
 				else:
-					param_names.add(name)
+					param_names.add(pname)
+		
+		# make sure that there are at most as many parameters in
+		# form as @param there are in @constraints
+		if len(self._params) > self._form.count(',') + 1:
+			print "    Warning: too many @param in @constrs environment in block"
+			print "        starting at line %d" % line
+			exit(1)
 	
 	def get_form(self): return self._form
-	def get_predicate_name(self):
+	def get_predicate_label(self):
 		p = self._form.find('(')
 		return self._form[0:p] + '/' + str( self._form.count(',') + 1 )
+	def get_predicate_name(self):
+		p = self._form.find('(')
+		return self._form[0:p]
+	def get_predicate_param_list(self):
+		op = self._form.find('(')
+		cp = self._form.find(')')
+		full_list = self._form[(op+1):cp]
+		return map(utils.string_cleanup, full_list.split(','))
 	def get_description(self): return self._descr
 	def get_constraints_description(self): return self._constr
 	def get_parameters(self): return self._params
 	
 	def show(self, tab = ""):
 		print "%sPredicate block" % tab
-		print "%s    Form: '%s'" % (tab, self._form)
+		print "%s    Form: '%s' (%s)" % (tab, self._form, self.get_predicate_label())
 		print "%s    Description: '%s'" % (tab, self._descr)
 		print "%s    Constraints: '%s'" % (tab, self._constr)
 		print "%s    Parameters:" % tab
 		for param in self._params:
-			print "%s        " % tab, param
+			print "%s        " % tab, param, self._params[param]
