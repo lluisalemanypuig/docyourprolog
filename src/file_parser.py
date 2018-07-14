@@ -2,7 +2,7 @@ from os.path import abspath, dirname, isfile
 from os.path import join, splitext, relpath
 import utils
 import block_types.doc_block as dblock
-import constants
+import constants as csts
 
 class file_parser:
 	# -----------------
@@ -66,8 +66,8 @@ class file_parser:
 				# line opens a block comment
 				if inside_sc:
 					ignore += 1
-					print "Block comment within bigger block comment in line", p + 1
-					print "    Ignoring (%d) this block" % ignore
+					print "    Warning: Block comment within bigger block comment in line", p + 1
+					print "        Ignoring (%d) this block" % ignore
 				else:
 					inside_sc = True
 					start_line = p
@@ -101,9 +101,17 @@ class file_parser:
 		for doc_line in self._doc_lines:
 			B = dblock.doc_block(doc_line)
 			self._blocks.append(B)
-			if B.block_type() == "predicate":
+			btype = B.block_type()
+			if btype == "predicate":
 				pred_block = B.block_info()
-				self._pred_names.append( pred_block.get_predicate_name() )
+				self._pred_labels.append( pred_block.get_predicate_label() )
+			
+			if btype not in self._class_blocks:
+				self._class_blocks[btype] = [B.block_info()]
+			else:
+				if btype == "file":
+					print "    Warning: more than one file description"
+				self._class_blocks[btype].append(B.block_info())
 	
 	# Extract the names of the files being included
 	def _extract_included_files(self):
@@ -135,12 +143,12 @@ class file_parser:
 				if name != None:
 					self._included_files.append(name + ".pl")
 			else:
-				print "Error: unsupported inclusion type in line %d: '%s'" % load
+				print "    Warning: unsupported inclusion type in line %d: '%s'" % load
 	
 	# ******
 	# PUBLIC
 	
-	def __init__(self, filename):
+	def __init__(self, source_dir, abs_name):
 		# assuming that the main directory's absolute path
 		# specified in option -d, --main-dir is /home/user/dir1
 		# we have that:
@@ -150,9 +158,12 @@ class file_parser:
 		# short:    file.pl
 		
 		# absolute, relative and short name of the file to be parsed
-		self._abs_name = filename
-		self._relative_name = None	# to be set later
-		self._short_name = None		# """
+		relative_name = relpath(abs_name, source_dir)
+		abs_path, name_file = utils.abspath_name(abs_name)
+		
+		self._abs_name = abs_name
+		self._relative_name = relative_name
+		self._short_name = name_file
 		
 		self._abs_html = None		# to be set later
 		self._relative_html = None	# """
@@ -162,16 +173,18 @@ class file_parser:
 		self._doc_lines = []		# (T) all the lines with docs in the file
 		self._load_predicates = []	# (T) lines with file inclusions
 		
-		self._blocks = []			# documentation blocks, parsed
-		self._pred_names = []		# names of the predicates
+		self._blocks = []			# documentation blocks, stored in the
+									# same order as they are parsed
+		self._pred_labels = []		# names of the predicates
 		self._included_files = []	# names of the included files
+		self._class_blocks = {}		# blocks classified by type
 		
 		# check if file exists
-		if not isfile(filename):
-			print "    Error: could not read file '%s'" % filename
+		if not isfile(abs_name):
+			print "    Error: could not read file"
 			return
 		
-		self._extract_information(filename)
+		self._extract_information(abs_name)
 		self._extract_documentation()
 		self._extract_included_files()
 		
@@ -193,12 +206,13 @@ class file_parser:
 	def get_short_html(self): return self._short_html
 	
 	def get_blocks(self): return self._blocks
-	def get_predicate_names(self): return self._pred_names
+	def get_class_blocks(self): return self._class_blocks
+	def get_predicate_names(self): return self._pred_labels
 	def get_included_files(self): return self._included_files
 	
 	def make_html_names(self, dest_dir):
 		if self._relative_name == None:
-			print "Internal error: relative name not set for file: '%s'" % self._abs_name
+			print "    Internal error: relative name not set for file: '%s'" % self._abs_name
 			return
 		
 		relative_path, name_pl = utils.path_name(self._relative_name)
@@ -207,14 +221,4 @@ class file_parser:
 		self._abs_html = join(dest_dir, relative_path, name_html)
 		self._relative_html = utils.path_ext(self._relative_name)[0] + ".html"
 		self._short_html = name_html
-		
-	def make_html_file(self):
-		if self._abs_html == None:
-			print "Internal error: absoulte path to html file for '%s' was not set" % self._abs_name
-			exit(1)
-		
-		html = utils.make_file(self._abs_html)
-		html.write('Hey!')
-		html.write('How are you?')
-		html.close()
 		
