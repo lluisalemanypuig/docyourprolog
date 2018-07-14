@@ -32,3 +32,5 @@ class separator_block:
 	def show(self, tab = ""):
 		print "%sSeparator block" % tab
 		print "%s    Description: '%s'" % (tab, self._descr)
+	
+	def get_descr(self): return self._descr

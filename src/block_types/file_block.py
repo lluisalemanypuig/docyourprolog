@@ -57,3 +57,7 @@ class file_block:
 		print "%s    File description: '%s' " % (tab, self._descr)
 		print "%s    File author: '%s'" % (tab, self._author)
 		print "%s    File date: '%s'" % (tab, self._date)
+	
+	def get_descr(self): return self._descr
+	def get_author(self): return self._author
+	def get_date(self): return self._date
