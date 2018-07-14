@@ -3,6 +3,7 @@ from os import listdir
 from os.path import abspath, dirname, isfile
 from os.path import join, splitext, relpath
 import file_parser
+import constants
 import utils
 
 def get_matching_files(dirname, pats, rec):
@@ -80,6 +81,9 @@ if dest_dir == None:
 	print_usage()
 	exit(1)
 
+# Initialise platform-dependent constants
+constants.make_constants()
+
 # files to be parsed
 to_be_parsed = []
 path = None
@@ -102,7 +106,7 @@ while len(to_be_parsed) > 0:
 	
 	if abs_path not in already_parsed:
 		relative_name = relpath(abs_path, source_dir)
-		path_to_file, name_file = utils.abspath_and_name(abs_path)
+		path_to_file, name_file = utils.abspath_name(abs_path)
 		
 		print ">> Parsing:", relative_name
 		
@@ -128,8 +132,10 @@ for abs_path, info in file_info.iteritems():
 	print "      html:", info.get_abs_html()
 	print "      html:", info.get_relative_html()
 	print "      html:", info.get_short_html()
+	"""
 	for B in info.get_blocks():
 		if B.block_info() != None:
 			B.block_info().show("    ")
+	"""
 	print
-
+	#info.make_html_file()

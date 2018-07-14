@@ -1,7 +1,8 @@
-import utils
-import block_types.doc_block as block
 from os.path import abspath, dirname, isfile
 from os.path import join, splitext, relpath
+import utils
+import block_types.doc_block as dblock
+import constants
 
 class file_parser:
 	# -----------------
@@ -98,7 +99,7 @@ class file_parser:
 	# and the predicate's names
 	def _extract_documentation(self):
 		for doc_line in self._doc_lines:
-			B = block.doc_block(doc_line)
+			B = dblock.doc_block(doc_line)
 			self._blocks.append(B)
 			if B.block_type() == "predicate":
 				pred_block = B.block_info()
@@ -200,17 +201,20 @@ class file_parser:
 			print "Internal error: relative name not set for file: '%s'" % self._abs_name
 			return
 		
-		i = len(self._relative_name) - 1
-		while i > 0 and self._relative_name[i] != '/': i -= 1
+		relative_path, name_pl = utils.path_name(self._relative_name)
+		name_html = splitext(name_pl)[0] + ".html"
 		
-		relative_path = None
-		if i != 0: relative_path = self._relative_name[0:(i+1)]
-		else: relative_path = ""
-			
-		name_no_ext = splitext(self._short_name)[0]
+		self._abs_html = join(dest_dir, relative_path, name_html)
+		self._relative_html = utils.path_ext(self._relative_name)[0] + ".html"
+		self._short_html = name_html
 		
-		self._abs_html = join(dest_dir,relative_path,name_no_ext + ".html")
-		self._relative_html = splitext(self._relative_name)[0] + ".html"
-		self._short_html = name_no_ext + ".html"
+	def make_html_file(self):
+		if self._abs_html == None:
+			print "Internal error: absoulte path to html file for '%s' was not set" % self._abs_name
+			exit(1)
 		
+		html = utils.make_file(self._abs_html)
+		html.write('Hey!')
+		html.write('How are you?')
+		html.close()
 		

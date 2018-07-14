@@ -1,6 +1,7 @@
-from os import listdir
-from os.path import abspath, dirname, isfile
-from os.path import join, splitext, relpath
+from os import listdir, makedirs
+from os.path import exists, abspath, dirname, isfile
+from os.path import join, splitext, relpath, split
+import constants
 
 # Returns the position of the opening of the structured comment
 def opens_struct_comm(line):
@@ -13,7 +14,7 @@ def closes_struct_comm(line):
 # Returns true if the character is an empty space (either a blank
 # space, a tabulator or an endline character)
 def empty_space(c):
-	return c == ' ' or c == '\t' or c == '\n'
+	return c == ' ' or c == '\t' or c == constants.nl
 
 # Returns true if the line tries to load a file
 def loads_file(line):
@@ -95,15 +96,39 @@ def file_use_module(rule):
 	
 	return filename_cleanup(filename)
 
+# returns the file's path and name
+def path_name(filename):
+	return split(filename)
+
+# splits the string into the extension and the rest
+# given a string: 'asdf/qwer/zxcv.ext' returns
+# ('asdf/qwer/zxcv', '.ext')
+# given a string: 'zxcv.ext' returns
+# ('zxcv', '.ext')
+def path_ext(filename):
+	return splitext(filename)
+
 # returns the file's absolute path and the file's name
-def abspath_and_name(rel_path):
+# given a string: 'asdf/qwer/zxcv.ext' returns
+# ('/absolute/path/to/the/file', 'zxcv.ext')
+def abspath_name(rel_path):
 	abs_path = abspath(rel_path)
 	dir_path = dirname(abs_path)
 	name = relpath(rel_path, dir_path)
 	return (dir_path, name)
 
 # returns the file's full name
+# given a string: 'asdf/qwer/zxcv.ext' returns
+# '/absolute/path/to/the/file/zxcv.ext'
 def absolute_filename(filename):
-	path, name = abspath_and_name(filename)
+	path, name = abspath_name(filename)
 	return join(path, name)
 
+# opens the file in 'w+' mode and returns the object
+# this works for relative and absolute paths
+def make_file(abs_file_name):
+	dir_path = dirname(abs_file_name)
+	file_name = relpath(abs_file_name, dir_path)
+	if not exists(dir_path): makedirs(dir_path)
+	f = open(abs_file_name, "w+")
+	return f
