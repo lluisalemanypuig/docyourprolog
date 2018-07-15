@@ -155,6 +155,10 @@ class html_maker:
 			file_descr = self._class_blocks["file"][-1]
 			self._html.write("<p>" + file_descr.get_descr() + "</p>" + nl)
 		
+		if self._conf.FILE_INCLUSION_GRAPH:
+			short_name, _ = utils.path_ext(self._short_name)
+			self._html.write("<img src=\"" + short_name + ".png\" alt=\"file_inclusion_map\">" + nl)
+		
 		if len(self._included_files) > 0:
 			self._write_included_files_list()
 		
@@ -169,7 +173,9 @@ class html_maker:
 		self._html.write("</body>" + nl)
 	
 	# fp: file parser object
-	def __init__(self, source_dir, all_info, fp):
+	def __init__(self, conf, source_dir, all_info, fp):
+		self._conf = conf
+		
 		self._abs_name = fp.get_abs_name()
 		self._abs_path = fp.get_abs_path()
 		self._rel_name = fp.get_rel_name()
@@ -203,3 +209,6 @@ class html_maker:
 		self._write_head()
 		self._write_body()
 		self._html.write("</html>" + csts.nl)
+		
+		self._html.close()
+

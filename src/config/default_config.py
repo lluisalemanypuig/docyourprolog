@@ -37,7 +37,7 @@ FILE_INCLUSION_GRAPH	= True
 Same as for FILE_INCLUSION_GRAPH but this graph contains
 the graph for all the source files.
 """
-PROJ_INCLUSION_GRAPH	= True
+PROJECT_INCLUSION_GRAPH	= True
 
 # HOW TO TRAVERSE THE DIRECTORIES AND
 # WHAT FILES SHOULD BE PARSED
@@ -61,3 +61,10 @@ the RECURSIVE variable is set to False.
 """
 FOLLOW_INCLUDES			= True
 
+# PATH TO DOT EXECUTABLE
+
+"""
+Modify this variable appropriately so that python can
+find the program to generate the graphs (dot, part of graphViz)
+"""
+DOT_EXE_PATH			= "/usr/bin/"

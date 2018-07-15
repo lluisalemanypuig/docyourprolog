@@ -1,8 +1,9 @@
-from os import listdir
+from os import listdir, environ
 from os.path import abspath, dirname, isfile
 from os.path import join, splitext, relpath
 import sys, shutil, importlib
 
+import graph_maker
 import file_parser
 import html_maker as hmaker
 import constants
@@ -77,6 +78,7 @@ if config_from != None and config_to != None:
 mypath, myexe = utils.abspath_name(argv[0])
 sys.path.append(join(mypath, "config"))
 conf = importlib.import_module("default_config")
+environ['PATH'] += ":" + conf.DOT_EXE_PATH
 
 if config_to != None:
 	shutil.copyfile("config/default_config.py", config_to)
@@ -127,16 +129,17 @@ while len(to_be_parsed) > 0:
 		
 		# parse file
 		information = file_parser.file_parser(source_dir, abs_path)
-		information.make_html_names(dest_dir)
+		information.make_extra_names(dest_dir)
 		# store information parsed
 		all_info[abs_path] = information
 		already_parsed.add(abs_path)
 		
 		# include next files to be parsed
-		to_be_parsed +=  information.get_included_files()
+		if conf.FOLLOW_INCLUDES:
+			to_be_parsed += information.get_included_files()
 
 nl = constants.nl
-html_index = open(join(dest_dir, 'index.html'), "w+")
+html_index = utils.make_file(join(dest_dir, 'index.html'))
 html_index.write("<html>" + nl)
 
 html_index.write("<head>" + nl)
@@ -145,6 +148,8 @@ html_index.write("</head>" + nl)
 html_index.write("<body>" + nl)
 html_index.write("<h1>" + conf.PROJECT_NAME + "</h1>" + nl)
 html_index.write("<p>" + conf.PROJECT_DESCRIPTION + "</p>" + nl)
+if conf.PROJECT_INCLUSION_GRAPH:
+	html_index.write("<img src=\"project_graph.png\" alt=\"general_inlusion_map\">" + nl)
 html_index.write("<h2>Project files:</h2>" + nl)
 html_index.write("<ul id=\"project_files\">" + nl)
 file_list_item = "<li><p><a href=\"%s\">%s</a></p></li>"
@@ -168,8 +173,11 @@ for abs_path, info in all_info.iteritems():
 			if B != None:
 				B.show("    ")
 	print
-	maker = hmaker.html_maker(source_dir, all_info, info)
+	maker = hmaker.html_maker(conf, source_dir, all_info, info)
 	maker.make_html_file()
+	
+	if conf.FILE_INCLUSION_GRAPH:
+		graph_maker.make_single_graph(dest_dir, info, all_info)
 	
 	rel_name = info.get_rel_html_name()
 	html_index.write((file_list_item % (rel_name, rel_name)) + nl)
@@ -180,3 +188,7 @@ html_index.write("Generated with DYP" + nl)
 html_index.write("</a></p>" + nl)
 html_index.write("</body>" + nl)
 html_index.write("</html>" + nl)
+html_index.close()
+
+if conf.PROJECT_INCLUSION_GRAPH:
+	graph_maker.make_full_graph(dest_dir, all_info)

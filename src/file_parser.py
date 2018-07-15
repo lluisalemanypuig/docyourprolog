@@ -167,9 +167,16 @@ class file_parser:
 		self._rel_path = relpath(abs_path, source_dir)
 		self._short_name = name_file
 		
-		self._abs_html = None		# to be set later
-		self._rel_html = None	# """
-		self._short_html = None		# """
+		self._abs_html_name = None		# to be set later
+		self._abs_html_path = None		# to be set later
+		self._rel_html_name = None		# """
+		self._rel_html_path = None		# """
+		self._short_html_name = None	# """
+		
+		self._rel_png_name = None		# """
+		self._rel_png_path = None		# """
+		self._rel_dot_name = None		# """
+		self._rel_dot_path = None		# """
 		
 		# (T): temporary attribute
 		self._doc_lines = []		# (T) all the lines with docs in the file
@@ -218,21 +225,35 @@ class file_parser:
 	def get_rel_html_path(self): return self._rel_html_path
 	def get_short_html_name(self): return self._short_html_name
 	
+	def get_rel_png_name(self): return self._rel_png_name
+	def get_rel_png_path(self): return self._rel_png_path
+	def get_rel_dot_name(self): return self._rel_dot_name
+	def get_rel_dot_path(self): return self._rel_dot_path
+	
 	def get_blocks(self): return self._blocks
 	def get_class_blocks(self): return self._class_blocks
 	def get_predicate_names(self): return self._pred_labels
 	def get_included_files(self): return self._included_files
 	
-	def make_html_names(self, dest_dir):
+	def make_extra_names(self, dest_dir):
 		if self._rel_name == None:
-			print "    Internal error: rel name not set for file: '%s'" % self._abs_name
-			return
+			print "    Internal error: relative name not set for file: '%s'" % self._abs_name
+			exit(1)
 		
-		name_html = splitext(self._short_name)[0] + ".html"
+		name_no_ext = splitext(self._short_name)[0]
+		name_html = name_no_ext + ".html"
 		
 		self._abs_html_name = join(dest_dir, self._rel_path, name_html)
 		self._abs_html_path = join(dest_dir, self._rel_path)
 		self._rel_html_name = join(self._rel_path, name_html)
 		self._rel_html_path = self._rel_path
 		self._short_html_name = name_html
+		
+		name_png = name_no_ext + ".png"
+		self._rel_png_name = join(self._rel_path, name_png)
+		self._rel_png_path = self._rel_path
+		
+		name_dot = name_no_ext + ".dot"
+		self._rel_dot_name = join(self._rel_path, name_dot)
+		self._rel_dot_path = self._rel_path
 		
