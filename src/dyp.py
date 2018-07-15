@@ -135,6 +135,20 @@ while len(to_be_parsed) > 0:
 		# include next files to be parsed
 		to_be_parsed +=  information.get_included_files()
 
+nl = constants.nl
+html_index = open(join(dest_dir, 'index.html'), "w+")
+html_index.write("<html>" + nl)
+
+html_index.write("<head>" + nl)
+html_index.write("<title>" + conf.PROJECT_NAME + "</title>" + nl)
+html_index.write("</head>" + nl)
+html_index.write("<body>" + nl)
+html_index.write("<h1>" + conf.PROJECT_NAME + "</h1>" + nl)
+html_index.write("<p>" + conf.PROJECT_DESCRIPTION + "</p>" + nl)
+html_index.write("<h2>Project files:</h2>" + nl)
+html_index.write("<ul id=\"project_files\">" + nl)
+file_list_item = "<li><p><a href=\"%s\">%s</a></p></li>"
+
 for abs_path, info in all_info.iteritems():
 	print abs_path
 	print "    File paths:"
@@ -156,3 +170,13 @@ for abs_path, info in all_info.iteritems():
 	print
 	maker = hmaker.html_maker(source_dir, all_info, info)
 	maker.make_html_file()
+	
+	rel_name = info.get_rel_html_name()
+	html_index.write((file_list_item % (rel_name, rel_name)) + nl)
+
+html_index.write("</ul>" + nl)
+html_index.write("<p><a href=\"http://github.com/lluisalemanypuig/docyourprolog.git\">" + nl)
+html_index.write("Generated with DYP" + nl)
+html_index.write("</a></p>" + nl)
+html_index.write("</body>" + nl)
+html_index.write("</html>" + nl)
