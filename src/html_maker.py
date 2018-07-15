@@ -166,9 +166,7 @@ class html_maker:
 			self._write_predicate_list()
 			self._write_predicate_details()
 		
-		self._html.write("<p><a href=\"http://github.com/lluisalemanypuig/docyourprolog.git\">" + nl)
-		self._html.write("Generated with DYP" + nl)
-		self._html.write("</a></p>" + nl)
+		self._html.write(csts.html_git_footer)
 		
 		self._html.write("</body>" + nl)
 	

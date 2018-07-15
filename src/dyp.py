@@ -139,6 +139,21 @@ while len(to_be_parsed) > 0:
 		if conf.FOLLOW_INCLUDES:
 			to_be_parsed += information.get_included_files()
 
+all_files = []
+for abs_path, info in all_info.iteritems():
+	print ">> Making html file for:", info.get_rel_name()
+	maker = hmaker.html_maker(conf, source_dir, all_info, info)
+	maker.make_html_file()
+	
+	if conf.FILE_INCLUSION_GRAPH:
+		graph_maker.make_single_graph(dest_dir, info, all_info)
+	
+	rel_name = info.get_rel_html_name()
+	all_files.append(rel_name)
+
+print ">> Making html file for index"
+all_files = sorted(all_files)
+
 nl = constants.nl
 html_index = utils.make_file(join(dest_dir, 'index.html'))
 html_index.write("<html>" + nl)
@@ -155,22 +170,11 @@ html_index.write("<h2>Project files:</h2>" + nl)
 html_index.write("<ul id=\"project_files\">" + nl)
 file_list_item = "<li><p><a href=\"%s\">%s</a></p></li>"
 
-for abs_path, info in all_info.iteritems():
-	print ">> Making html file for:", info.get_rel_name()
-	maker = hmaker.html_maker(conf, source_dir, all_info, info)
-	maker.make_html_file()
-	
-	if conf.FILE_INCLUSION_GRAPH:
-		graph_maker.make_single_graph(dest_dir, info, all_info)
-	
-	rel_name = info.get_rel_html_name()
-	html_index.write((file_list_item % (rel_name, rel_name)) + nl)
+for f in all_files:
+	html_index.write((file_list_item % (f, f)) + nl)
 
-print ">> Making html file for index"
 html_index.write("</ul>" + nl)
-html_index.write("<p><a href=\"http://github.com/lluisalemanypuig/docyourprolog.git\">" + nl)
-html_index.write("Generated with DYP" + nl)
-html_index.write("</a></p>" + nl)
+html_index.write(constants.html_git_footer)
 html_index.write("</body>" + nl)
 html_index.write("</html>" + nl)
 html_index.close()

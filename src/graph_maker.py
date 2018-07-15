@@ -10,9 +10,11 @@ def graph_to_png(graph, dot_abs_name, png_abs_name):
 	
 	dot_file = utils.make_file(dot_abs_name)
 	dot_file.write("digraph file_graph {" + nl)
+	dot_file.write("node [shape=rectangle]" + nl)
+	dot_file.write("nodesep = 0.1" + nl)
+	dot_file.write("ranksep = 0.3" + nl)
 	
 	for node,neighs in graph.iteritems():
-		dot_file.write("\"" + node + "\" [shape=rectangle]" + nl)
 		for n in neighs:
 			dot_file.write("\"" + node + "\" -> \"" + n + "\"" + nl)
 	
