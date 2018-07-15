@@ -124,6 +124,34 @@ def absolute_filename(filename):
 	path, name = abspath_name(filename)
 	return join(path, name)
 
+# Delete all those goddam '..' and '.' from an absolute path
+def resolve_path(apath):
+	# decide what separator
+	sep = constants.sep
+	
+	while apath.find('..') != -1:
+		partspath = apath.split(sep)
+		i = partspath.index('..')
+		if i == 0:
+			print "Internal error: path '%s' has a '..' at the beginning" % apath
+			print "    Cannot resolve"
+			exit(1)
+		
+		del partspath[i]
+		del partspath[i - 1]
+		
+		apath = sep.join(partspath)
+	
+	while apath.find('./') != -1:
+		partspath = apath.split(sep)
+		i = partspath.index('.')
+		del partspath[i]
+		apath = sep.join(partspath)
+	
+	if apath.find('/.') != -1: apath = apath[0:-2]
+	
+	return apath
+
 # opens the file in 'w+' mode and returns the object
 # this works for relative and absolute paths
 def make_file(abs_file_name):

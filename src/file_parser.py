@@ -160,12 +160,20 @@ class file_parser:
 		rel_name = relpath(abs_name, source_dir)
 		abs_path, name_file = utils.abspath_name(abs_name)
 		
+		rel_name = utils.resolve_path(rel_name)
+		abs_path = utils.resolve_path(abs_path)
+		
 		# absolute, rel and short name of the file to be parsed
 		self._abs_name = abs_name
 		self._abs_path = utils.path_name(abs_name)[0]
 		self._rel_name = rel_name
 		self._rel_path = relpath(abs_path, source_dir)
 		self._short_name = name_file
+		
+		self._abs_name = utils.resolve_path(self._abs_name)
+		self._abs_path = utils.resolve_path(self._abs_path)
+		self._rel_name = utils.resolve_path(self._rel_name)
+		self._rel_path = utils.resolve_path(self._rel_path)
 		
 		self._abs_html_name = None		# to be set later
 		self._abs_html_path = None		# to be set later
@@ -200,8 +208,10 @@ class file_parser:
 		rel_path = relpath(abs_path, source_dir)
 		for i in range(0, len(self._included_files)):
 			f = self._included_files[i]
-			self._included_files[i] = join(abs_path, f)
-			print self._included_files[i]
+			a_path = join(abs_path, f)
+			if a_path.find('..') != -1:
+				a_path = utils.resolve_path(a_path)
+			self._included_files[i] = a_path
 		
 		del self._doc_lines, self._load_predicates
 	
@@ -256,4 +266,13 @@ class file_parser:
 		name_dot = name_no_ext + ".dot"
 		self._rel_dot_name = join(self._rel_path, name_dot)
 		self._rel_dot_path = self._rel_path
+		
+		self._abs_html_name = utils.resolve_path(self._abs_html_name)
+		self._abs_html_path = utils.resolve_path(self._abs_html_path)
+		self._rel_html_name = utils.resolve_path(self._rel_html_name)
+		self._rel_html_path = utils.resolve_path(self._rel_html_path)
+		self._rel_png_name = utils.resolve_path(self._rel_png_name)
+		self._rel_png_path = utils.resolve_path(self._rel_png_path)
+		self._rel_dot_name = utils.resolve_path(self._rel_dot_name)
+		self._rel_dot_path = utils.resolve_path(self._rel_dot_path)
 		

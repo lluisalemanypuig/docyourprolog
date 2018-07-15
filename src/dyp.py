@@ -9,23 +9,27 @@ import html_maker as hmaker
 import constants
 import utils
 
-def get_matching_files(dirname, pats, rec):
+def get_matching_files(dirname, patterns, rec):
 	files = []
 	dirs = []
 	this_dir = listdir(dirname)
 	for f in this_dir:
-		full_name = join(dirname, f)
-		if isfile(full_name):
+		abs_name = join(dirname, f)
+		abs_name = utils.resolve_path(abs_name)
+		
+		if isfile(abs_name):
 			extension = splitext(f)[1]
-			if extension in pats:
-				files.append(full_name)
+			if extension in patterns:
+				files.append(abs_name)
 		else: 
 			dirs.append(f)
 	
 	if rec:
 		for d in dirs:
-			full_dir = join(dirname, d)
-			files += get_matching_files(full_dir, pats, rec)
+			abs_path = join(dirname, d)
+			abs_path = utils.resolve_path(abs_path)
+			
+			files += get_matching_files(abs_path, patterns, rec)
 	
 	return files
 
@@ -155,7 +159,9 @@ html_index.write("<ul id=\"project_files\">" + nl)
 file_list_item = "<li><p><a href=\"%s\">%s</a></p></li>"
 
 for abs_path, info in all_info.iteritems():
-	print abs_path
+	print ">> Making html file for:", info.get_rel_name()
+	
+	"""
 	print "    File paths:"
 	print "        prolog absolute name:", info.get_abs_name()
 	print "        prolog absolute path:", info.get_abs_path()
@@ -173,6 +179,7 @@ for abs_path, info in all_info.iteritems():
 			if B != None:
 				B.show("    ")
 	print
+	"""
 	maker = hmaker.html_maker(conf, source_dir, all_info, info)
 	maker.make_html_file()
 	
@@ -182,6 +189,7 @@ for abs_path, info in all_info.iteritems():
 	rel_name = info.get_rel_html_name()
 	html_index.write((file_list_item % (rel_name, rel_name)) + nl)
 
+print ">> Making html file for index"
 html_index.write("</ul>" + nl)
 html_index.write("<p><a href=\"http://github.com/lluisalemanypuig/docyourprolog.git\">" + nl)
 html_index.write("Generated with DYP" + nl)

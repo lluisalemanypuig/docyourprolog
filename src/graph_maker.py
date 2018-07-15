@@ -5,57 +5,93 @@ import file_parser
 import constants
 import utils
 
-# adds all edges to files incldued in abs_name
-def make_one_level(dot_file, abs_name, top_rel_path, all_info):
+def graph_to_png(graph, dot_abs_name, png_abs_name):
 	nl = constants.nl
 	
-	if abs_name not in all_info:
-		return []
+	dot_file = utils.make_file(dot_abs_name)
+	dot_file.write("digraph file_graph {" + nl)
 	
-	fp = all_info[abs_name]
-	inc_files = fp.get_included_files()
-	pl_rel_inc_files = []
+	for node,neighs in graph.iteritems():
+		dot_file.write("\"" + node + "\" [shape=rectangle]" + nl)
+		for n in neighs:
+			dot_file.write("\"" + node + "\" -> \"" + n + "\"" + nl)
 	
-	my_short_name_pl = fp.get_short_name()
-	my_rel_name_dot = fp.get_rel_dot_name()
-	
-	for f in inc_files:
-		their_rel_pl_name = all_info[f].get_rel_name()
-		pl_name_href = relpath(their_rel_pl_name, top_rel_path)
-		pl_rel_inc_files.append(pl_name_href)
-		
-		dot_file.write("\"" + pl_name_href + "\" [shape=square]" + nl)
-		dot_file.write("\"" + my_short_name_pl + "\" -> \"" + pl_name_href + "\"" + nl)
-	
-	return inc_files
+	dot_file.write("}" + nl)
+	dot_file.close()
+	os.system("dot " + dot_abs_name + " -T png > " + png_abs_name)
 
 # makes the graph for all parsed files in all_info
 def make_full_graph(dest_dir, all_info):
-	print "hey"
+	
+	# dictionary: {node : set of neighbours}
+	graph = {}
+	
+	found_files = set([])
+	list_files = [abs_name for abs_name in all_info.keys()]
+	while len(list_files) > 0:
+		abs_name = list_files[0]
+		del list_files[0]
+		
+		neigh_set = set([])
+		inc_files = all_info[abs_name].get_included_files()
+		for f in inc_files:
+			neigh_set.add( all_info[f].get_rel_name() )
+			
+			if f not in found_files:
+				# this file has yet to be processed: add to 'queue'
+				list_files.append(f)
+				found_files.add(f)
+		
+		rel_name = all_info[abs_name].get_rel_name()
+		if rel_name not in graph: graph[rel_name] = neigh_set
+		else: graph[rel_name].update(neigh_set)
+	
+	dot_abs_name = join(dest_dir, "project_graph.dot")
+	dot_abs_name = utils.resolve_path(dot_abs_name)
+	
+	png_abs_name = join(dest_dir, "project_graph.png")
+	png_abs_name = utils.resolve_path(png_abs_name)
+	
+	print "    >> Make graph file"
+	graph_to_png(graph, dot_abs_name, png_abs_name)
 
 # makes the graph for the parsed file 'fp'
 def make_single_graph(dest_dir, fp, all_info):
-	nl = constants.nl
+	
+	# dictionary: {node : set of neighbours}
+	graph = {}
+	
+	found_files = set([])
+	list_files = [fp.get_abs_name()]
+	while len(list_files) > 0:
+		abs_name = list_files[0]
+		del list_files[0]
+		
+		neigh_set = set([])
+		inc_files = all_info[abs_name].get_included_files()
+		for f in inc_files:
+			neigh_set.add( all_info[f].get_rel_name() )
+			
+			if f not in found_files:
+				# this file has yet to be processed: add to 'queue'
+				list_files.append(f)
+				found_files.add(f)
+		
+		rel_name = all_info[abs_name].get_rel_name()
+		if rel_name not in graph: graph[rel_name] = neigh_set
+		else: graph[rel_name].update(neigh_set)
 	
 	top_rel_path = fp.get_rel_path()
 	my_short_name_pl = fp.get_short_name()
 	my_rel_name_dot = fp.get_rel_dot_name()
 	my_rel_name_png = fp.get_rel_png_name()
 	
-	print "Create:", join(dest_dir, my_rel_name_dot)
-	print "  my pl label:", my_short_name_pl
+	dot_abs_name = join(dest_dir, my_rel_name_dot)
+	dot_abs_name = utils.resolve_path(dot_abs_name)
 	
-	dot_file = utils.make_file(join(dest_dir, my_rel_name_dot))
-	dot_file.write("digraph file_graph {" + nl)
+	png_abs_name = join(dest_dir, my_rel_name_png)
+	png_abs_name = utils.resolve_path(png_abs_name)
 	
-	inc_files = make_one_level(dot_file, fp.get_abs_name(), top_rel_path, all_info)
-	while len(inc_files) > 0:
-		abs_name = inc_files[0]
-		del inc_files[0]
-		inc_files += make_one_level(dot_file, abs_name, top_rel_path, all_info)
-	
-	dot_file.write("}" + nl)
-	dot_file.close()
-	
-	os.system("dot " + join(dest_dir, my_rel_name_dot) + " -T png > " + join(dest_dir, my_rel_name_png))
+	print "    >> Make graph file"
+	graph_to_png(graph, dot_abs_name, png_abs_name)
 	
