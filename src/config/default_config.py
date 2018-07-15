@@ -1,13 +1,30 @@
 
+# FILE DIRECTORIES
+
 """
 Where to find the source files.
 """
-SRC_DIR					= None
+SRC_DIR					= "src"
 
 """
 Where to store the documentation files.
 """
-DEST_DIR				= None
+DEST_DIR				= "doc"
+
+# PROJECT DESCRIPTION
+
+"""
+Give your project a name.
+"""
+PROJECT_NAME			= "Project Manhattan"
+
+"""
+Add a description for your project.
+"""
+PROJECT_DESCRIPTION		= "Super cool\
+project that will solve all the world's problems"
+
+# GENERATED GRAPHS
 
 """
 For every file, make a directed graph showing what files
@@ -21,6 +38,9 @@ Same as for FILE_INCLUSION_GRAPH but this graph contains
 the graph for all the source files.
 """
 PROJ_INCLUSION_GRAPH	= True
+
+# HOW TO TRAVERSE THE DIRECTORIES AND
+# WHAT FILES SHOULD BE PARSED
 
 """
 Document all files found in the source directories
