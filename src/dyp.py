@@ -47,6 +47,9 @@ def print_usage():
 # Start code
 # **********
 
+# Initialise platform-dependent constants
+constants.make_constants()
+
 # Parse arguments
 
 argv = sys.argv
@@ -98,9 +101,6 @@ source_dir = conf.SRC_DIR
 dest_dir = conf.DEST_DIR
 exts = conf.EXTENSIONS
 
-# Initialise platform-dependent constants
-constants.make_constants()
-
 # files to be parsed
 to_be_parsed = []
 path = None
@@ -108,9 +108,6 @@ path = None
 # parse all files inside source_dir
 source_dir = abspath(source_dir)
 dest_dir = dest_dir
-
-print "source:", source_dir
-print "  dest:", dest_dir
 
 names = get_matching_files(source_dir, exts, conf.RECURSIVE)
 for name in names:
@@ -160,26 +157,6 @@ file_list_item = "<li><p><a href=\"%s\">%s</a></p></li>"
 
 for abs_path, info in all_info.iteritems():
 	print ">> Making html file for:", info.get_rel_name()
-	
-	"""
-	print "    File paths:"
-	print "        prolog absolute name:", info.get_abs_name()
-	print "        prolog absolute path:", info.get_abs_path()
-	print "        prolog relative name:", info.get_rel_name()
-	print "        prolog relative path:", info.get_rel_path()
-	print "           prolog short name:", info.get_short_name()
-	print "          html absolute name:", info.get_abs_html_name()
-	print "          html absolute path:", info.get_abs_html_path()
-	print "          html relative name:", info.get_rel_html_name()
-	print "          html relative path:", info.get_rel_html_path()
-	print "             html short name:", info.get_short_html_name()
-	print "              included files:", info.get_included_files()
-	for btype, block_list in info.get_class_blocks().iteritems():
-		for B in block_list:
-			if B != None:
-				B.show("    ")
-	print
-	"""
 	maker = hmaker.html_maker(conf, source_dir, all_info, info)
 	maker.make_html_file()
 	
