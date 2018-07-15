@@ -4,7 +4,7 @@ nl = None
 sep = None
 
 def make_constants():
-	global nl
+	global nl, sep
 	if platform.system() == "Linux":
 		sep = "/"
 		nl = "\n"

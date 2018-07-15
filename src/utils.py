@@ -139,16 +139,15 @@ def resolve_path(apath):
 		
 		del partspath[i]
 		del partspath[i - 1]
-		
 		apath = sep.join(partspath)
 	
-	while apath.find('./') != -1:
+	while apath.find('.' + sep) != -1:
 		partspath = apath.split(sep)
 		i = partspath.index('.')
 		del partspath[i]
 		apath = sep.join(partspath)
 	
-	if apath.find('/.') != -1: apath = apath[0:-2]
+	if apath.find(sep + '.') != -1: apath = apath[0:-2]
 	
 	return apath
 
