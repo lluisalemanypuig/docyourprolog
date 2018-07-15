@@ -39,6 +39,11 @@ the graph for all the source files.
 """
 PROJECT_INCLUSION_GRAPH	= True
 
+"""
+Remove or keep the .dot files used to generate the .png
+"""
+KEEP_DOT				= False
+
 # HOW TO TRAVERSE THE DIRECTORIES AND
 # WHAT FILES SHOULD BE PARSED
 

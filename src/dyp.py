@@ -146,7 +146,7 @@ for abs_path, info in all_info.iteritems():
 	maker.make_html_file()
 	
 	if conf.FILE_INCLUSION_GRAPH:
-		graph_maker.make_single_graph(dest_dir, info, all_info)
+		graph_maker.make_single_graph(dest_dir, info, all_info, conf.KEEP_DOT)
 	
 	rel_name = info.get_rel_html_name()
 	all_files.append(rel_name)
@@ -180,4 +180,4 @@ html_index.write("</html>" + nl)
 html_index.close()
 
 if conf.PROJECT_INCLUSION_GRAPH:
-	graph_maker.make_full_graph(dest_dir, all_info)
+	graph_maker.make_full_graph(dest_dir, all_info, conf.KEEP_DOT)

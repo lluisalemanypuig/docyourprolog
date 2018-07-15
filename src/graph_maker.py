@@ -23,7 +23,7 @@ def graph_to_png(graph, dot_abs_name, png_abs_name):
 	os.system("dot " + dot_abs_name + " -T png > " + png_abs_name)
 
 # makes the graph for all parsed files in all_info
-def make_full_graph(dest_dir, all_info):
+def make_full_graph(dest_dir, all_info, keep_dot):
 	
 	# dictionary: {node : set of neighbours}
 	graph = {}
@@ -56,9 +56,11 @@ def make_full_graph(dest_dir, all_info):
 	
 	print "    >> Make graph file"
 	graph_to_png(graph, dot_abs_name, png_abs_name)
+	
+	if not keep_dot: os.remove(dot_abs_name)
 
 # makes the graph for the parsed file 'fp'
-def make_single_graph(dest_dir, fp, all_info):
+def make_single_graph(dest_dir, fp, all_info, keep_dot):
 	
 	# dictionary: {node : set of neighbours}
 	graph = {}
@@ -96,4 +98,6 @@ def make_single_graph(dest_dir, fp, all_info):
 	
 	print "    >> Make graph file"
 	graph_to_png(graph, dot_abs_name, png_abs_name)
+	
+	if not keep_dot: os.remove(dot_abs_name)
 	
