@@ -1,7 +1,8 @@
-from sys import argv
 from os import listdir
 from os.path import abspath, dirname, isfile
 from os.path import join, splitext, relpath
+import sys, shutil, importlib
+
 import file_parser
 import html_maker as hmaker
 import constants
@@ -31,14 +32,11 @@ def print_usage():
 	print "Document Your Prolog:"
 	print "Generate html documentation to document your prolog code easily."
 	print
-	print "    [-h, --help]            Prints the usage and exits"
-	print "    [-s, --source-dir] DIR  Indicates the source_dir to be parsed"
-	print "    [-d, --dest-dir] DIR    Where to store the html files"
-	print "    [-r, --recursive]       Iterate recursively on all directories found in"
-	print "                            main source_dir and parse the files found"
-	print "    [-e, --extension] LIST  Parse only those files whose extension matches"
-	print "                            one of the extensions in LIST."
-	print "                            Default: \"['.pl','.prolog']\""
+	print "    [-h, --help]             Prints the usage and exits."
+	print "    [-c, --config-file] FILE Indicates the configuration file that"
+	print "                             should be used to make the documentation."
+	print "    [-g, --gen-config] FILE  Where to generate an empty configuration"
+	print "                             file."
 	
 # **********
 # Start code
@@ -46,41 +44,53 @@ def print_usage():
 
 # Parse arguments
 
-source_dir = None
-dest_dir = None
-recursive = False
-exts = [".pl", ".prolog"]
+argv = sys.argv
+config_from = None
+config_to = None
 i = 1
 while i < len(argv):
 	if argv[i] == "-h" or argv[i] == "--help":
 		print_usage()
 		exit(0)
-	elif argv[i] == "-s" or argv[i] == "--source-dir":
-		source_dir = argv[i + 1]
+	elif argv[i] == "-c" or argv[i] == "--config-file":
+		config_from = argv[i + 1]
 		i += 1
-	elif argv[i] == "-d" or argv[i] == "--dest-dir":
-		dest_dir = argv[i + 1]
-		i += 1
-	elif argv[i] == "-r" or argv[i] == "--recursive":
-		recursive = True
-	elif argv[i] == "-e" or argv[i] == "--extension":
-		exts = eval(argv[i + 1])
+	elif argv[i] == "-g" or argv[i] == "--gen-config":
+		config_to = argv[i + 1]
 		i += 1
 	else:
 		print "Error: unrecognised option '%s'" % argv[i]
 		exit(1)
 	i += 1
 
-if source_dir == None:
-	print "Error: the source_dir containing the files must be specified"
-	print
-	print_usage()
+if config_from == None and config_to == None:
+	print "Error: this program needs either the configuration to be read"
+	print "    or where to generate a new configuration file."
+	usage()
 	exit(1)
-if dest_dir == None:
-	print "Error: the dest_dir specifying where to store the html files must be specified"
-	print
-	print_usage()
+
+if config_from != None and config_to != None:
+	print "Error: specify only the configuration file to be read or where"
+	print "    to generate a new configuration file, but not both."
 	exit(1)
+
+mypath, myexe = utils.abspath_name(argv[0])
+sys.path.append(join(mypath, "config"))
+conf = importlib.import_module("default_config")
+
+if config_to != None:
+	shutil.copyfile("config/default_config.py", config_to)
+	exit(0)
+
+if config_from != None:
+	abs_path, name = utils.abspath_name(config_from)
+	sys.path.append(abs_path)
+	del conf
+	conf = importlib.import_module(name)
+
+source_dir = conf.SRC_DIR
+dest_dir = conf.DEST_DIR
+exts = conf.EXTENSIONS
 
 # Initialise platform-dependent constants
 constants.make_constants()
@@ -91,8 +101,12 @@ path = None
 
 # parse all files inside source_dir
 source_dir = abspath(source_dir)
-dest_dir = abspath(dest_dir)
-names = get_matching_files(source_dir, exts, recursive)
+dest_dir = dest_dir
+
+print "source:", source_dir
+print "  dest:", dest_dir
+
+names = get_matching_files(source_dir, exts, conf.RECURSIVE)
 for name in names:
 	to_be_parsed.append( join(source_dir, name) )
 
