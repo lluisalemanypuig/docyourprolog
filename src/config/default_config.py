@@ -21,8 +21,8 @@ PROJECT_NAME			= "Project Manhattan"
 """
 Add a description for your project.
 """
-PROJECT_DESCRIPTION		= "Super cool\
-project that will solve all the world's problems"
+PROJECT_DESCRIPTION		= "Super cool project that will solve \
+all the world's problems"
 
 # GENERATED GRAPHS
 
