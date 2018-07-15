@@ -36,10 +36,7 @@ class html_maker:
 		self._html.write("<h2>Included files:</h2>" + nl)
 		self._html.write("<ul id=\"included_files_list\">" + nl)
 		
-		print self._included_files
-		
 		for f in self._included_files:
-			print f
 			self._html.write((html_maker.file_link % (f, f)) + nl)
 		self._html.write("</ul>" + nl)
 	
