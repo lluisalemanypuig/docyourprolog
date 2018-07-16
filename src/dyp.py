@@ -38,10 +38,10 @@ def print_usage():
 	print "Generate html documentation to document your prolog code easily."
 	print
 	print "    [-h, --help]             Prints the usage and exits."
-	print "    [-c, --config-file] FILE Indicates the configuration file that"
-	print "                             should be used to make the documentation."
-	print "    [-g, --gen-config] FILE  Where to generate an empty configuration"
-	print "                             file."
+	print "    [-c, --config-file] FILE The configuration file containing the"
+	print "                             configuration for the documentation."
+	print "    [-g, --gen-config] FILE  Directory where to generate an empty"
+	print "                             configuration file."
 	
 # **********
 # Start code
@@ -83,12 +83,13 @@ if config_from != None and config_to != None:
 	exit(1)
 
 mypath, myexe = utils.abspath_name(argv[0])
-sys.path.append(join(mypath, "config"))
+def_config_file = join(mypath, "config")
+sys.path.append(def_config_file)
 conf = importlib.import_module("default_config")
 environ['PATH'] += ":" + conf.DOT_EXE_PATH
 
 if config_to != None:
-	shutil.copyfile("config/default_config.py", config_to)
+	shutil.copyfile(def_config_file + "/default_config.py", config_to)
 	exit(0)
 
 if config_from != None:

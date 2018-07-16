@@ -94,7 +94,7 @@ def make_full_graph(dest_dir, all_info, conf):
 			
 			# if that distance is greater than the allowed,
 			# do not add more vertices to graph
-			if PGMD > 0 and dists[f] <= PGMD:
+			if PGMD <= 0 or dists[f] <= PGMD:
 			
 				neigh_set.add( all_info[f].get_rel_name() )
 				if f not in found_files:
@@ -142,7 +142,7 @@ def make_single_graph(dest_dir, fp, all_info, conf):
 			
 			# if that distance is greater than the allowed,
 			# do not add more vertices to graph
-			if FGMD > 0 and dists[f] <= FGMD:
+			if FGMD <= 0 or dists[f] <= FGMD:
 			
 				neigh_set.add( all_info[f].get_rel_name() )
 				if f not in found_files:
