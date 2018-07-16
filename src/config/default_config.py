@@ -49,8 +49,8 @@ The maximum distance between a source vertex and a sink vertex
 in the file inclusion graph is at most the value. A value less than
 or equal to 0 is interpreted as infinite.
 """
-FILE_GRAPH_MAX_DIAMETER		= 2
-PROJECT_GRAPH_MAX_DIAMETER	= 2
+FILE_GRAPH_MAX_DIAMETER		= 0
+PROJECT_GRAPH_MAX_DIAMETER	= 0
 
 # HOW TO TRAVERSE THE DIRECTORIES AND
 # WHAT FILES SHOULD BE PARSED
