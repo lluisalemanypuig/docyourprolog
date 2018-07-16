@@ -150,6 +150,8 @@ class html_maker:
 		if "file" in self._class_blocks != None:
 			file_descr = self._class_blocks["file"][-1]
 			self._html.write("<p>" + file_descr.get_descr() + "</p>" + nl)
+			self._html.write("<p><b>By</b>    <i>" + file_descr.get_author() + "</i></p>" + nl)
+			self._html.write("<p><b>On</b>    <i>" + file_descr.get_date() + "</i></p>" + nl)
 		
 		if self._conf.FILE_INCLUSION_GRAPH and self._needs_graph:
 			short_name, _ = utils.path_ext(self._short_name)
