@@ -25,8 +25,9 @@ as follows:
         @date July 16th, 2018
         */
 
-    These blocks may be placed anywhere in the file, however it makes more sense to put
-    them at the very beginning.
+    This block may be placed anywhere in the file, however it makes more sense to put
+    it at the very beginning. If more than one is used, a warning will be issued and
+    the last file block found will be used.
 
 - Predicate blocks: these blocks contain the documentation for a particular predicate
 and are placed just right above it. With this kind of blocks the programmer can
@@ -131,7 +132,7 @@ to the executable file:
 In order to generate the html documentation issue the following command while being in the
 directory of the project.
 
-        dyc -c dyfile/dyconf
+        dyp -c dyfile/dyconf
 
 Notice that the _.py_ is not in the command.
 
@@ -140,3 +141,16 @@ Notice that the _.py_ is not in the command.
 - [Python](https://www.python.org/): this software has been tested only on python 2.7.
 - [Graphviz](https://www.graphviz.org/): the _dot_ software is required to generate the
 inclusion graphs.
+
+## Installation
+
+Installing this project is simple: one can download the source and place it anywhere in
+their file system. Say it is downloaded to ~/Documents/software. One way to call the
+main file is to add an alias to your _.bashrc_ (or equivalent file):
+
+        alias dyp='python ~/Documents/software/docyourprolog/src/dyp.py'
+
+Alternatively, the code can also be copied and moved to the _/usr/bin/_ directory:
+
+        sudo cp ~/Documents/software/docyourprolog/src/* /usr/bin/docyourprolog
+        alias dyp='python /usr/bin/docyourprolog/dyp.py'
