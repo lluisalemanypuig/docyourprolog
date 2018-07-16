@@ -4,12 +4,14 @@ This project intends to offer a stable tool to generate html documentation for
 [SWI-Prolog](http://www.swi-prolog.org/) code automatically by parsing the source
 files.
 
+## Documenting your code
+
 The documentation generated is extracted from so-called _block comments_. There are
 several types of block comments and each start with a particular string of characters,
 all of them ignored by the SWI-Prolog compiler. Likewise for JavaDoc, inside these
 blocks the programmer will write the documentation using tags starting with '@'.
 
-## Block comments
+### Block comments
 
 There are three types of block comments:
 - File blocks: these blocks are used to indicate a general description of a given file.
@@ -75,9 +77,66 @@ a description that categorises them. For example, one may write:
         - pnppred1
         - pnppred2
         
-## Usage
+### Usage
+
+#### Generate the default configuration
 
 This software needs a configuration file containing control variables in order to generate
-the documentation. To generate this file, issue the command:
+the documentation. Assume that _dyp_ is an alias of _python src/dyp.py_.
+To generate the configuration file, issue the commands:
 
+        cd /path/to/the/project
+        dyp -g dyfile/dyconf.py
 
+#### Edit the configuration
+
+In that directory there should be another with all the sources (usually called _src/_).
+Now, edit the file appropriately depending on your needs. There are several variables to be
+edited. The most important variables are the following:
+- SRC_DIR: relative path to the directory with all the source files
+- DEST_DIR: relative path to the directory where all the files for the documentation will be
+saved.
+- PROJECT_NAME: the name of your project.
+- PROJECT_DESCRIPTION: a description of your project.
+ 
+There are other variables related to the files generated and other characteristics of
+the documentation. There exists the possibility of generating graphs that show what files
+_include_ what files. These graphs are directed and there is a vertex for each file and
+one directed edge A -> B if file A includes B.
+- FILE_INCLUSION_GRAPH: generate a graph for each file. This graph will have a single source
+vertex that represents the file.
+- PROJECT_INCLUSION_GRAPH: generate a graph for the whole project. This graph may have
+several source vertices.
+- KEEP_DOT: the graphs are generated using the _dot_ software which is part of Graphviz.
+This variable is used to decide whether the _.dot_ files are kept or removed after generating
+the graphs in _.png_ format.
+- FILE_GRAPH_MAX_DIAMETER: control the maximum diameter of each file's graph.
+- PROJECT_GRAPH_MAX_DIAMETER: control the maximum diameter of the whole project's graph.
+ 
+Since each source file may include other files, the programmer may be interested to generete
+documentation for those too. 
+- FOLLOW_INCLUDES: tell _dyp_ to generate documentation for the files from other files.
+
+Some source files may not be included by the files in the directory specified in _SRC_DIR_,
+although these files may still be found in the directory.
+- RECURSIVE: tell _dyp_ to find source files in all the subdirectories in _SRC_DIR_.
+- EXTENSIONS: document only those files with an extension in the list.
+
+Finally, since _dot_ is needed to generate the graphs, _dyp_ needs to know the path
+to the executable file:
+- DOT_EXE_PATH: the absolute path to the executable file of the _dot_ software.
+
+#### Generate the documentation
+
+In order to generate the html documentation issue the following command while being in the
+directory of the project.
+
+        dyc -c dyfile/dyconf
+
+Notice that the _.py_ is not in the command.
+
+## Dependencies
+
+- [Python](https://www.python.org/): this software has been tested only on python 2.7.
+- [Graphviz](https://www.graphviz.org/): the _dot_ software is required to generate the
+inclusion graphs.
