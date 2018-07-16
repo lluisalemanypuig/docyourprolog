@@ -74,7 +74,7 @@ while i < len(argv):
 if config_from == None and config_to == None:
 	print "Error: this program needs either the configuration to be read"
 	print "    or where to generate a new configuration file."
-	usage()
+	print_usage()
 	exit(1)
 
 if config_from != None and config_to != None:
@@ -118,6 +118,8 @@ already_parsed = set([])
 # relate each file's full path to its information object
 all_info = {}
 
+print "Parsing source files:"
+
 while len(to_be_parsed) > 0:
 	abs_path = to_be_parsed[0]
 	del to_be_parsed[0]
@@ -139,14 +141,18 @@ while len(to_be_parsed) > 0:
 		if conf.FOLLOW_INCLUDES:
 			to_be_parsed += information.get_included_files()
 
+print
+print "Making html files:"
+
 all_files = []
 for abs_path, info in all_info.iteritems():
 	print ">> Making html file for:", info.get_rel_name()
 	maker = hmaker.html_maker(conf, source_dir, all_info, info)
 	maker.make_html_file()
 	
-	if conf.FILE_INCLUSION_GRAPH:
-		graph_maker.make_single_graph(dest_dir, info, all_info, conf.KEEP_DOT)
+	if conf.FILE_INCLUSION_GRAPH and info.needs_inc_graph():
+		print "    + Make graph file"
+		graph_maker.make_single_graph(dest_dir, info, all_info, conf)
 	
 	rel_name = info.get_rel_html_name()
 	all_files.append(rel_name)
@@ -180,4 +186,5 @@ html_index.write("</html>" + nl)
 html_index.close()
 
 if conf.PROJECT_INCLUSION_GRAPH:
-	graph_maker.make_full_graph(dest_dir, all_info, conf.KEEP_DOT)
+	print "    + Make graph file"
+	graph_maker.make_full_graph(dest_dir, all_info, conf)

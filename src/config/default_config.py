@@ -4,12 +4,12 @@
 """
 Where to find the source files.
 """
-SRC_DIR					= "src"
+SRC_DIR					= "plsrc"
 
 """
 Where to store the documentation files.
 """
-DEST_DIR				= "doc"
+DEST_DIR				= "docs"
 
 # PROJECT DESCRIPTION
 
@@ -43,6 +43,14 @@ PROJECT_INCLUSION_GRAPH	= True
 Remove or keep the .dot files used to generate the .png
 """
 KEEP_DOT				= False
+
+"""
+The maximum distance between a source vertex and a sink vertex
+in the file inclusion graph is at most the value. A value less than
+or equal to 0 is interpreted as infinite.
+"""
+FILE_GRAPH_MAX_DIAMETER		= 2
+PROJECT_GRAPH_MAX_DIAMETER	= 2
 
 # HOW TO TRAVERSE THE DIRECTORIES AND
 # WHAT FILES SHOULD BE PARSED

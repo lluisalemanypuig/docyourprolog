@@ -75,10 +75,6 @@ class html_maker:
 		self._html.write("</dt>" + nl)
 	
 	def _write_pred_constrs(self, binfo, all_param_names, params):
-		print "Constraints description '%s'" % binfo.get_cstrs_descr()
-		print "Length params:", len(params)
-		print "    something is not empty!"
-		
 		nl = csts.nl
 		self._html.write("<dt>" + nl)
 		constr_descr = "<b>Constraints: </b> "
@@ -155,7 +151,7 @@ class html_maker:
 			file_descr = self._class_blocks["file"][-1]
 			self._html.write("<p>" + file_descr.get_descr() + "</p>" + nl)
 		
-		if self._conf.FILE_INCLUSION_GRAPH:
+		if self._conf.FILE_INCLUSION_GRAPH and self._needs_graph:
 			short_name, _ = utils.path_ext(self._short_name)
 			self._html.write("<img src=\"" + short_name + ".png\" alt=\"file_inclusion_map\">" + nl)
 		
@@ -193,6 +189,7 @@ class html_maker:
 			html_name_href = relpath(their_rel_html_name, self._rel_html_path)
 			self._included_files.append(html_name_href)
 		
+		self._needs_graph = fp.needs_inc_graph()
 		self._blocks = fp.get_blocks()
 		self._class_blocks = fp.get_class_blocks()
 	

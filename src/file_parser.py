@@ -245,6 +245,8 @@ class file_parser:
 	def get_predicate_names(self): return self._pred_labels
 	def get_included_files(self): return self._included_files
 	
+	def needs_inc_graph(self): return len(self._included_files) > 0
+	
 	def make_extra_names(self, dest_dir):
 		if self._rel_name == None:
 			print "    Internal error: relative name not set for file: '%s'" % self._abs_name
