@@ -4,7 +4,7 @@ import utils
 PREDICATE DOCUMENTATION
 /**
     @form predicate(P1,P2,P3,P4,P5,P6,P7,P8,P9,P10)
-    @constraints [Optional description]
+    @constrs [Optional description]
 		@param P1 blah blah blah
 		@param P2 blah blah blah
 		@param[++] P3 blah blah blah
