@@ -83,7 +83,7 @@ a description that categorises them. For example, one may write:
 #### Generate the default configuration
 
 This software needs a configuration file containing control variables in order to generate
-the documentation. Assume that _dyp_ is an alias of _python src/dyp.py_.
+the documentation. Assume that _dyp_ is an alias of _python dyp.py_.
 To generate the configuration file, issue the commands:
 
         cd /path/to/the/project
@@ -148,7 +148,7 @@ Installing this project is simple: one can download the source and place it anyw
 their file system. Say it is downloaded to ~/Documents/software. One way to call the
 main file is to add an alias to your _.bashrc_ (or equivalent file):
 
-        alias dyp='python ~/Documents/software/docyourprolog/src/dyp.py'
+        alias dyp='python ~/Documents/software/docyourprolog/dyp.py'
 
 Alternatively, the code can also be copied and moved to the _/usr/bin/_ directory:
 
