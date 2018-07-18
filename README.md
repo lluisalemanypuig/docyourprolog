@@ -77,7 +77,35 @@ a description that categorises them. For example, one may write:
         These predicates will prove that P = NP
         - pnppred1
         - pnppred2
-        
+
+Any description (anything after a @descr, or between the @constr and
+the first @param, if there is any) can contain references to parameters
+and predicates. For example, we can have the following predicates
+documentation:
+
+        /**
+        @form min(List,Value)
+        @descr @Value is the minimum value in @List.
+        @constrs
+            @param List Cannot be empty and must contain elements
+        	comparable with @>
+        */
+
+        /**
+        @form max(List,Value)
+        @descr @Value is the maximum value in @List.
+        @constrs
+            @param List Likewise in ?min/2.
+        */
+
+The reference to the parameter, indicated with '@' will simply highlight
+the string following the '@'. The reference to the predicate, however,
+will add a hyperlink tied to the following string. The referenced predicate
+must be in the same source file as the block comment where the reference
+is put. That is, the reference '?min/2' can not be used if the corresponding
+predicate block is not in the same file as the predicate block documenting
+'min/2'.
+
 ### Usage
 
 #### Generate the default configuration

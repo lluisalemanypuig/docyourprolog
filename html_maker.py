@@ -8,21 +8,18 @@ import formats
 class html_maker:
 	file_descr = "<h1> Documentation for Prolog file: %s</h1>"
 	
-	# href, string
-	pred_link = "<li><p><a href=\"#%s\">%s</a></p></li>"
-	file_link = "<li><p><a href=\"%s\">%s</a></p></li>"
-	# href, string
-	predicate_title = "<h3><a name=\"%s\"></a>%s</h3>"
-	
-	# a predicate's label and its href 
-	preds_href = {}
+	# a predicate's label and its href in the same file
+	preds_local_href = {}
+	# a predicate's label and its global href: a hyperlink that
+	# should open the html containing that predicate
+	preds_global_href = {}
 	
 	# find all words starting with '@' and '?'.
 	# Make sure those with '@' are a parameter, and display them appropriately
 	# Make sure those with '?' are a predicates, and display them appropriately
 	def _format_constr_descr(self, descr, param_names):
 		form_param = formats.descr_parameter_format
-		form_href_pred = formats.pred_ref_format
+		form_href_pred = formats.pred_local_cstr_format
 		
 		words = descr.split(' ')
 		for i in range(0, len(words)):
@@ -30,16 +27,21 @@ class html_maker:
 			if w.find('@') != -1:
 				j = len(w) - 1
 				while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
+				j += 1
+				
 				if w[1:j] in param_names:
 					words[i] = form_param(w[1:j]) + w[j:]
 			elif w.find('?') != -1:
 				j = len(w) - 1
 				while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
 				j += 1
-				if w[1:j] in html_maker.preds_href:
-					href = html_maker.preds_href[w[1:j]]
-					print w[1:j], href
-					words[i] = form_href_pred(w[1:j], href) + w[j:]
+				
+				label = w[1:j]
+				
+				if label in html_maker.preds_global_href:
+					href = html_maker.preds_local_href[label]
+					print href
+					words[i] = form_href_pred(label, href) + w[j:]
 				
 		return " ".join(words)
 	
@@ -59,12 +61,11 @@ class html_maker:
 		self._html.write("<ul id=\"included_files_list\">" + nl)
 		
 		for f in self._included_files:
-			self._html.write((html_maker.file_link % (f, f)) + nl)
+			self._html.write(formats.included_file_format(f, f) + nl)
 		self._html.write("</ul>" + nl)
 	
 	def _write_predicate_list(self):
 		nl = csts.nl
-		refmaker = lambda s: s.replace('/', '-')
 		
 		self._html.write("<a name=\"predicates\"></a>" + nl)
 		self._html.write("<h2>Predicates:</h2>" + nl)
@@ -79,9 +80,8 @@ class html_maker:
 					self._html.write( binfo.get_descr() + nl )
 			elif btype == "predicate":
 				label = binfo.get_predicate_label()
-				href = refmaker(label)
-				html_maker.preds_href[label] = href
-				self._html.write( (html_maker.pred_link % (href,label)) + nl )
+				href = html_maker.preds_local_href[label]
+				self._html.write(formats.pred_list_format(label,href) + nl )
 		
 		self._html.write("</ul>" + nl)
 	
@@ -157,7 +157,7 @@ class html_maker:
 				href = refmaker(label)
 				
 				self._html.write("<li>" + nl)
-				self._html.write( (html_maker.predicate_title % (href,label)) + nl )
+				self._html.write(formats.pred_title_format(label,href) + nl )
 				self._html.write("<dl>" + nl)
 				
 				# write predicate form

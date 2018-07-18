@@ -116,7 +116,7 @@ for name in names:
 
 # files already parsed
 already_parsed = set([])
-# relate each file's full path to its information object
+# relate each file's full path to its file parser object
 all_info = {}
 
 print "Parsing source files:"
@@ -143,11 +143,31 @@ while len(to_be_parsed) > 0:
 			to_be_parsed += information.get_included_files()
 
 print
+print "Make labels and hrefs for all predicates"
+hmaker.html_maker.preds_local_href = {}
+hmaker.html_maker.preds_global_href = {}
+for abs_path, fp in all_info.iteritems():
+	pred_names = fp.get_predicate_names()
+	
+	for label in pred_names:
+		local_href = label.replace('/', '-')
+		global_href = fp.get_abs_html_name() + '#' + local_href
+		
+		hmaker.html_maker.preds_local_href[label] = local_href
+		hmaker.html_maker.preds_global_href[label] = global_href
+
+print
 print "Making html files:"
 
 all_files = []
 for abs_path, info in all_info.iteritems():
 	print ">> Making html file for:", info.get_rel_name()
+	
+	print "   ", info.get_abs_html_name()
+	print "   ", info.get_abs_html_path()
+	print "   ", info.get_rel_html_name()
+	print "   ", info.get_rel_html_path()
+	
 	maker = hmaker.html_maker(conf, source_dir, all_info, info)
 	maker.make_html_file()
 	
