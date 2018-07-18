@@ -4,21 +4,6 @@ import file_parser
 import utils
 import formats
 
-# find all words starting with '@', make sure they are a parameter,
-# and display them in italics
-def format_constr_descr(descr, param_names):
-	form_param = formats.descr_parameter_format
-	
-	words = descr.split(' ')
-	for i in range(0, len(words)):
-		w = words[i]
-		if w.find('@') != -1:
-			j = 1
-			while j < len(w) and utils.is_alphanumeric(w[j]): j += 1
-			if w[1:j] in param_names:
-				words[i] = form_param(w[1:j]) + w[j:]
-	return " ".join(words)
-
 # write the head of the html file
 class html_maker:
 	file_descr = "<h1> Documentation for Prolog file: %s</h1>"
@@ -28,6 +13,35 @@ class html_maker:
 	file_link = "<li><p><a href=\"%s\">%s</a></p></li>"
 	# href, string
 	predicate_title = "<h3><a name=\"%s\"></a>%s</h3>"
+	
+	# a predicate's label and its href 
+	preds_href = {}
+	
+	# find all words starting with '@' and '?'.
+	# Make sure those with '@' are a parameter, and display them appropriately
+	# Make sure those with '?' are a predicates, and display them appropriately
+	def _format_constr_descr(self, descr, param_names):
+		form_param = formats.descr_parameter_format
+		form_href_pred = formats.pred_ref_format
+		
+		words = descr.split(' ')
+		for i in range(0, len(words)):
+			w = words[i]
+			if w.find('@') != -1:
+				j = len(w) - 1
+				while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
+				if w[1:j] in param_names:
+					words[i] = form_param(w[1:j]) + w[j:]
+			elif w.find('?') != -1:
+				j = len(w) - 1
+				while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
+				j += 1
+				if w[1:j] in html_maker.preds_href:
+					href = html_maker.preds_href[w[1:j]]
+					print w[1:j], href
+					words[i] = form_href_pred(w[1:j], href) + w[j:]
+				
+		return " ".join(words)
 	
 	def _write_head(self):
 		nl = csts.nl
@@ -66,6 +80,7 @@ class html_maker:
 			elif btype == "predicate":
 				label = binfo.get_predicate_label()
 				href = refmaker(label)
+				html_maker.preds_href[label] = href
 				self._html.write( (html_maker.pred_link % (href,label)) + nl )
 		
 		self._html.write("</ul>" + nl)
@@ -93,7 +108,7 @@ class html_maker:
 		self._html.write("<dt>" + nl)
 		constr_descr = "<b>Constraints: </b> "
 		bcd = binfo.get_cstrs_descr()
-		constr_descr += format_constr_descr(bcd, all_param_names)
+		constr_descr += self._format_constr_descr(bcd, all_param_names)
 		self._html.write(constr_descr + nl)
 		
 		# write parameter list
@@ -117,7 +132,7 @@ class html_maker:
 		pred_descr = "<b>Description: </b> "
 		if binfo.get_description() != "":
 			descr = binfo.get_description()
-			pred_descr += format_constr_descr(descr, all_param_names)
+			pred_descr += self._format_constr_descr(descr, all_param_names)
 		
 		self._html.write(pred_descr + nl)
 		self._html.write("</dt>" + nl)
