@@ -143,20 +143,6 @@ while len(to_be_parsed) > 0:
 			to_be_parsed += information.get_included_files()
 
 print
-print "Make labels and hrefs for all predicates"
-hmaker.html_maker.preds_local_href = {}
-hmaker.html_maker.preds_global_href = {}
-for abs_path, fp in all_info.iteritems():
-	pred_names = fp.get_predicate_names()
-	
-	for label in pred_names:
-		local_href = label.replace('/', '-')
-		global_href = fp.get_abs_html_name() + '#' + local_href
-		
-		hmaker.html_maker.preds_local_href[label] = local_href
-		hmaker.html_maker.preds_global_href[label] = global_href
-
-print
 print "Making html files:"
 
 all_files = []

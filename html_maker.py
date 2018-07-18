@@ -8,12 +8,6 @@ import formats
 class html_maker:
 	file_descr = "<h1> Documentation for Prolog file: %s</h1>"
 	
-	# a predicate's label and its href in the same file
-	preds_local_href = {}
-	# a predicate's label and its global href: a hyperlink that
-	# should open the html containing that predicate
-	preds_global_href = {}
-	
 	# find all words starting with '@' and '?'.
 	# Make sure those with '@' are a parameter, and display them appropriately
 	# Make sure those with '?' are a predicates, and display them appropriately
@@ -38,9 +32,8 @@ class html_maker:
 				
 				label = w[1:j]
 				
-				if label in html_maker.preds_global_href:
-					href = html_maker.preds_local_href[label]
-					print href
+				if label in self._pred_names:
+					href = label.replace('/', '-')
 					words[i] = form_href_pred(label, href) + w[j:]
 				
 		return " ".join(words)
@@ -80,7 +73,7 @@ class html_maker:
 					self._html.write( binfo.get_descr() + nl )
 			elif btype == "predicate":
 				label = binfo.get_predicate_label()
-				href = html_maker.preds_local_href[label]
+				href = label.replace('/','-')
 				self._html.write(formats.pred_list_format(label,href) + nl )
 		
 		self._html.write("</ul>" + nl)
@@ -220,6 +213,8 @@ class html_maker:
 		self._rel_html_name = fp.get_rel_html_name()
 		self._rel_html_path = fp.get_rel_html_path()
 		self._short_html_name = fp.get_short_html_name()
+		
+		self._pred_names = fp.get_predicate_names()
 		
 		self._included_files = []
 		inc_files = fp.get_included_files()
