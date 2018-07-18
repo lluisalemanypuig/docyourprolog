@@ -125,7 +125,8 @@ class html_maker:
 		pred_descr = "<b>Description: </b> "
 		if binfo.get_description() != "":
 			descr = binfo.get_description()
-			pred_descr += self._format_constr_descr(descr, all_param_names)
+			descr = self._format_constr_descr(descr, all_param_names)
+			pred_descr += descr
 		
 		self._html.write(pred_descr + nl)
 		self._html.write("</dt>" + nl)
