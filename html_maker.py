@@ -2,10 +2,13 @@ from os.path import abspath, relpath
 import constants as csts
 import file_parser
 import utils
+import formats
 
 # find all words starting with '@', make sure they are a parameter,
 # and display them in italics
 def format_constr_descr(descr, param_names):
+	form_param = formats.descr_parameter_format
+	
 	words = descr.split(' ')
 	for i in range(0, len(words)):
 		w = words[i]
@@ -13,7 +16,7 @@ def format_constr_descr(descr, param_names):
 			j = 1
 			while j < len(w) and utils.is_alphanumeric(w[j]): j += 1
 			if w[1:j] in param_names:
-				words[i] = "<i>" + w[1:j] + "</i>" + w[j:]
+				words[i] = form_param(w[1:j]) + w[j:]
 	return " ".join(words)
 
 # write the head of the html file
@@ -28,10 +31,11 @@ class html_maker:
 	
 	def _write_head(self):
 		nl = csts.nl
+		HTML = self._html
 		
-		self._html.write("<head>" + nl)
-		self._html.write("<title>" + self._short_name + "</title>" + nl)
-		self._html.write("</head>" + nl)
+		HTML.write("<head>" + nl)
+		HTML.write("<title>" + self._short_name + "</title>" + nl)
+		HTML.write("</head>" + nl)
 	
 	def _write_included_files_list(self):
 		nl = csts.nl
@@ -67,20 +71,25 @@ class html_maker:
 		self._html.write("</ul>" + nl)
 	
 	def _write_pred_form(self, binfo, name, all_param_names):
+		form_param = formats.form_parameter_format
+		
 		nl = csts.nl
 		self._html.write("<dt>" + nl)
 		html_form = "<b>Form:</b> " + name + "("
 		for i in range(0, len(all_param_names)):
 			param_name = all_param_names[i]
-			html_form += "<i>" + param_name + "</i>"
-			if i < len(all_param_names) - 1: html_form += ", "
+			html_form += form_param(param_name)
+			if i < len(all_param_names) - 1:
+				html_form += ", "
 		
 		html_form += ")"
 		self._html.write(html_form + nl)
 		self._html.write("</dt>" + nl)
 	
 	def _write_pred_constrs(self, binfo, all_param_names, params):
+		form_param = formats.cstr_parameter_format
 		nl = csts.nl
+		
 		self._html.write("<dt>" + nl)
 		constr_descr = "<b>Constraints: </b> "
 		bcd = binfo.get_cstrs_descr()
@@ -93,7 +102,9 @@ class html_maker:
 			if pname in params:
 				_, pdescr = params[pname]
 				self._html.write("<li>" + nl)
-				self._html.write("<i>" + pname + "</i>: ")
+				self._html.write(form_param(pname) + " ")
+				pdescr = pdescr.split(' ')
+				pdescr = " ".join(pdescr[1:])
 				self._html.write(pdescr + nl)
 				self._html.write("</li>" + nl)
 			
