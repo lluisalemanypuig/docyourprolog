@@ -3,6 +3,13 @@ from os.path import exists, abspath, dirname, isfile
 from os.path import join, splitext, relpath, split
 import constants
 
+# Returns true if character is either a letter or a number
+def is_alphanumeric(c):
+	if 'a' <= c and c <= 'z': return True
+	if 'A' <= c and c <= 'Z': return True
+	if '0' <= c and c <= '9': return True
+	return False
+
 # Returns the position of the opening of the structured comment
 def opens_struct_comm(line):
 	return line.find('/*')

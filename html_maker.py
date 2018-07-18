@@ -3,13 +3,17 @@ import constants as csts
 import file_parser
 import utils
 
-# find all words starting with '@' and display them in italics
-def format_constr_descr(descr):
+# find all words starting with '@', make sure they are a parameter,
+# and display them in italics
+def format_constr_descr(descr, param_names):
 	words = descr.split(' ')
 	for i in range(0, len(words)):
 		w = words[i]
 		if w.find('@') != -1:
-			words[i] = "<i>" + w[1:len(w)] + "</i>"
+			j = 1
+			while j < len(w) and utils.is_alphanumeric(w[j]): j += 1
+			if w[1:j] in param_names:
+				words[i] = "<i>" + w[1:j] + "</i>" + w[j:]
 	return " ".join(words)
 
 # write the head of the html file
@@ -70,6 +74,7 @@ class html_maker:
 			param_name = all_param_names[i]
 			html_form += "<i>" + param_name + "</i>"
 			if i < len(all_param_names) - 1: html_form += ", "
+		
 		html_form += ")"
 		self._html.write(html_form + nl)
 		self._html.write("</dt>" + nl)
@@ -78,7 +83,8 @@ class html_maker:
 		nl = csts.nl
 		self._html.write("<dt>" + nl)
 		constr_descr = "<b>Constraints: </b> "
-		constr_descr += format_constr_descr(binfo.get_cstrs_descr())
+		bcd = binfo.get_cstrs_descr()
+		constr_descr += format_constr_descr(bcd, all_param_names)
 		self._html.write(constr_descr + nl)
 		
 		# write parameter list
@@ -94,12 +100,14 @@ class html_maker:
 		self._html.write("</ul>" + nl)
 		self._html.write("</dt>" + nl)
 	
-	def _write_pred_descr(self, binfo):
+	def _write_pred_descr(self, binfo, all_param_names):
 		nl = csts.nl
 		self._html.write("<dt>" + nl)
 		pred_descr = "<b>Description: </b> "
 		if binfo.get_description() != "":
-			pred_descr += format_constr_descr(binfo.get_description())
+			descr = binfo.get_description()
+			pred_descr += format_constr_descr(descr, all_param_names)
+		
 		self._html.write(pred_descr + nl)
 		self._html.write("</dt>" + nl)
 	
@@ -130,7 +138,7 @@ class html_maker:
 				self._write_pred_form(binfo, name, all_param_names)
 				
 				# write predicate description
-				self._write_pred_descr(binfo)
+				self._write_pred_descr(binfo, all_param_names)
 				
 				# write predicate constraints
 				if binfo.get_cstrs_descr() != "" or len(params) > 0:
@@ -143,22 +151,23 @@ class html_maker:
 	
 	def _write_body(self):
 		nl = csts.nl
+		HTML = self._html
 		
-		self._html.write("<body>" + nl)
-		self._html.write((html_maker.file_descr % self._short_name) + nl)
+		HTML.write("<body>" + nl)
+		HTML.write((html_maker.file_descr % self._short_name) + nl)
 		
 		if "file" in self._class_blocks != None:
 			file_descr = self._class_blocks["file"][-1]
-                        if file_descr.get_descr() != "":
-			    self._html.write("<p>" + file_descr.get_descr() + "</p>" + nl)
-                        if file_descr.get_author() != "":
-			    self._html.write("<p></b>    <i>" + file_descr.get_author() + "</i></p>" + nl)
-                        if file_descr.get_date() != "":
-			    self._html.write("<p><b>On</b>    <i>" + file_descr.get_date() + "</i></p>" + nl)
+			if file_descr.get_descr() != "":
+				HTML.write("<p>" + file_descr.get_descr() + "</p>" + nl)
+			if file_descr.get_author() != "":
+				HTML.write("<p></b>    <i>" + file_descr.get_author() + "</i></p>" + nl)
+			if file_descr.get_date() != "":
+				HTML.write("<p><b>On</b>    <i>" + file_descr.get_date() + "</i></p>" + nl)
 		
 		if self._conf.FILE_INCLUSION_GRAPH and self._needs_graph:
 			short_name, _ = utils.path_ext(self._short_name)
-			self._html.write("<img src=\"" + short_name + ".png\" alt=\"file_inclusion_map\">" + nl)
+			HTML.write("<img src=\"" + short_name + ".png\" alt=\"file_inclusion_map\">" + nl)
 		
 		if len(self._included_files) > 0:
 			self._write_included_files_list()
@@ -167,9 +176,8 @@ class html_maker:
 			self._write_predicate_list()
 			self._write_predicate_details()
 		
-		self._html.write(csts.html_git_footer)
-		
-		self._html.write("</body>" + nl)
+		HTML.write(csts.html_git_footer)
+		HTML.write("</body>" + nl)
 	
 	# fp: file parser object
 	def __init__(self, conf, source_dir, all_info, fp):
