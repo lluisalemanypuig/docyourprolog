@@ -1,7 +1,7 @@
 from os.path import abspath, dirname, isfile
 from os.path import join, splitext, relpath
 import utils
-import doc_block as dblock
+import block_doc as bdoc
 import constants as csts
 
 class file_parser:
@@ -99,7 +99,7 @@ class file_parser:
 	# and the predicate's names
 	def _extract_documentation(self):
 		for doc_line in self._doc_lines:
-			B = dblock.doc_block(doc_line)
+			B = bdoc.doc_block(doc_line)
 			self._blocks.append(B)
 			btype = B.block_type()
 			if btype == "predicate":

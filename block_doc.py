@@ -1,6 +1,6 @@
-import predicate_block
-import file_block
-import separator_block
+import block_predicate as bpred
+import block_separator as bsep
+import block_file as bfile
 
 class doc_block:
 	
@@ -21,13 +21,13 @@ class doc_block:
 		
 		if firstw.find("/*!") != -1:
 			self._type = "separator"
-			self._info = separator_block.separator_block(block, lineno)
+			self._info = bsep.separator_block(block, lineno)
 		elif firstw.find("/***") != -1:
 			self._type = "file"
-			self._info = file_block.file_block(block, lineno)
+			self._info = bfile.file_block(block, lineno)
 		elif firstw.find("/**") != -1:
 			self._type = "predicate"
-			self._info = predicate_block.predicate_block(block, lineno)
+			self._info = bpred.predicate_block(block, lineno)
 		else:
 			print "    Warning: unrecognised block starting with '%s' at line %d" % (firstw, lineno)
 	
