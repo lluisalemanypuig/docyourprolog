@@ -34,5 +34,5 @@ class doc_block:
 	def block_type(self): return self._type
 	def block_info(self): return self._info
 	
-		
+	
 
