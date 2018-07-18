@@ -152,5 +152,5 @@ main file is to add an alias to your _.bashrc_ (or equivalent file):
 
 Alternatively, the code can also be copied and moved to the _/usr/bin/_ directory:
 
-        sudo cp ~/Documents/software/docyourprolog/src/* /usr/bin/docyourprolog
+        sudo cp ~/Documents/software/docyourprolog/ /usr/bin/docyourprolog/
         alias dyp='python /usr/bin/docyourprolog/dyp.py'
