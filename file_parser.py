@@ -1,7 +1,7 @@
 from os.path import abspath, dirname, isfile
 from os.path import join, splitext, relpath
 import utils
-import block_doc as bdoc
+import block_types.block_doc as bdoc
 import constants as csts
 
 class file_parser:
