@@ -1,0 +1,85 @@
+<html>
+<head>
+<title>natural.pl</title>
+</head>
+<body>
+<h1> Documentation for Prolog file: natural.pl</h1>
+<p>This file contains the basic definitions for what a natural number is, two constants (zero and one),</p
+<a name="predicates"></a>
+<h2>Predicates:</h2>
+<ul id="predicate_list">
+<li><p><a href="#zero-1">zero/1</a></p></li>
+<li><p><a href="#one-1">one/1</a></p></li>
+<li><p><a href="#natural-1">natural/1</a></p></li>
+<li><p><a href="#next_natural-1">next_natural/1</a></p></li>
+<li><p><a href="#parity-2">parity/2</a></p></li>
+</ul>
+<a name="details"></a>
+<h2>Predicate Details:</h2>
+<ul id="predicate_details">
+<li>
+<h3><a name="zero-1"></a>zero/1</h3>
+<dl>
+<dt>
+<b>Form:</b> zero(<i style="color:#ff0000">Z</i>)
+</dt>
+<dt>
+<b>Description: </b> Predicate fails if <i style="color:#cc33ff">Z</i> is not 0.
+</dt>
+</dl>
+</li>
+<li>
+<h3><a name="one-1"></a>one/1</h3>
+<dl>
+<dt>
+<b>Form:</b> one(<i style="color:#ff0000">O</i>)
+</dt>
+<dt>
+<b>Description: </b> Predicate fails if <i style="color:#cc33ff">O</i> is not 1.
+</dt>
+</dl>
+</li>
+<li>
+<h3><a name="natural-1"></a>natural/1</h3>
+<dl>
+<dt>
+<b>Form:</b> natural(<i style="color:#ff0000">N</i>)
+</dt>
+<dt>
+<b>Description: </b> Predicates fails on any non-integer value, or negative integer value for parameter <i style="color:#cc33ff">N</i>.
+</dt>
+</dl>
+</li>
+<li>
+<h3><a name="next_natural-1"></a>next_natural/1</h3>
+<dl>
+<dt>
+<b>Form:</b> next_natural(<i style="color:#ff0000">N</i>)
+</dt>
+<dt>
+<b>Description: </b> Predicate used to generate all natural numbers.  Example of usage: next_natural(N), write(N), nl, fail.
+</dt>
+<dt>
+<b>Constraints: </b> 
+<ul>
+<li>
+<i style="color:#0099ff"><u>N</u></i> Natural value.
+</li>
+</ul>
+</dt>
+</dl>
+</li>
+<li>
+<h3><a name="parity-2"></a>parity/2</h3>
+<dl>
+<dt>
+<b>Form:</b> parity(<i style="color:#ff0000">Num</i>, <i style="color:#ff0000">Par</i>)
+</dt>
+<dt>
+<b>Description: </b> Obtains the parity of natural number <i style="color:#cc33ff">Num</i>.  *> If <i style="color:#cc33ff">Num</i> is even then <i style="color:#cc33ff">Par</i> is "even". *> If <i style="color:#cc33ff">Num</i> is odd then <i style="color:#cc33ff">Par</i> is "odd".
+</dt>
+</dl>
+</li>
+</ul>
+<hr><p><a href="http://github.com/lluisalemanypuig/docyourprolog.git">Generated with DYP</a></p></body>
+</html>
