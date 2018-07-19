@@ -2,11 +2,11 @@ from os.path import join, relpath
 import os
 
 import file_parser
-import constants
+import constants.platform_constants as pcsts
 import utils
 
 def graph_to_png(graph, dot_abs_name, png_abs_name, conf):
-	nl = constants.nl
+	nl = pcsts.nl
 	
 	dot_file = utils.make_file(dot_abs_name)
 	dot_file.write("digraph file_graph {" + nl)

@@ -3,7 +3,14 @@ from os.path import join, splitext, relpath
 import utils
 import block_types.block_doc as bdoc
 import constants as csts
+import constants.warnings_errors as WE
 
+"""
+This class is used to parse the contents of a file: it is used to
+extract the structured comments (or block comments) as defined in
+block_types/ and to extract the file inclusion rules (or module
+loading rules).
+"""
 class file_parser:
 	# -----------------
 	# STATIC ATTRIBUTES
@@ -16,7 +23,9 @@ class file_parser:
 	# *******
 	# PRIVATE (do not call from outside)
 	
-	# Extract the documentation from the file, found in block comments
+	# Extract the necessary information from the file:
+	# - the block comments
+	# - the file inlcusion rules
 	def _extract_information(self, filename):
 		# read and store file
 		f = open(filename, 'r')
@@ -25,23 +34,25 @@ class file_parser:
 		
 		# extract information from file
 		
-		# Extracts rules and structured comments.
-		# The opening and closing of a structured must be the same. The
-		# opening must begin with '/*' and the closing must end with '*/'.
-		# Does not store lines with only a '%'-comment
-		
 		n_lines = len(lines)
 		p = 0				# pointer to file line
 		current_line = ""	# current line built
-		inside_sc = False
-		file_inclusion = False
-		ignore = 0
-		start_line = 0
+		ignore = 0			# ignore nested structured comments
+		start_line = 0		# starting line of whatever is being parsed
+		
+		# state of parsing
+		inside_sc = False		# parsing a structured comment
+		file_inclusion = False	# parsing a file inclusion rule
 		
 		while p < n_lines:
+			# remove leading white spaces (spaces, tabs),
+			# remove trailing white spaces
+			# remove anything after a '%'
 			line = utils.string_cleanup(lines[p])
 			
-			# ignore lines with only one comment
+			# ignore lines with only one comment (if a line contains
+			# only a comment starting with '%' the result of its cleanup
+			# is an empty string)
 			if line == '': pass
 			
 			opens_sc = utils.opens_struct_comm(line)
@@ -66,8 +77,7 @@ class file_parser:
 				# line opens a block comment
 				if inside_sc:
 					ignore += 1
-					print "    Warning: Block comment within bigger block comment in line", p + 1
-					print "        Ignoring (%d) this block" % ignore
+					WE.nested_block(p+1, ignore)
 				else:
 					inside_sc = True
 					start_line = p
@@ -116,20 +126,9 @@ class file_parser:
 	# Extract the names of the files being included
 	def _extract_included_files(self):
 		
-		def inclusion_type(rule):
-			i = rule.find(':')
-			i += 2
-			# place 'i' at the beginning of rule
-			while i < len(rule) and utils.empty_space(rule[i]): i += 1
-			# place 'j' at the end of rule
-			j = i
-			while j < len(rule) and rule[j] != '(' and rule[j] != '[': j += 1
-			if i == j: return rule[i:(j+1)]
-			return rule[i:j]
-			
 		for load in self._load_predicates:
 			rule = load[1]
-			inclusion = inclusion_type(rule)
+			inclusion = utils.inclusion_type(rule)
 			
 			if inclusion == "ensure_loaded":
 				name = utils.file_ensure_loaded(rule)
@@ -149,12 +148,10 @@ class file_parser:
 	# PUBLIC
 	
 	def __init__(self, source_dir, abs_name):
-		# assuming that the main directory's absolute path
-		# specified in option -d, --main-dir is /home/user/dir1
-		# we have that:
-		
+		# assuming that the source directory's absolute path
+		# is '/home/user/dir1' we have that:
 		# absolute: /home/user/dir1/dir2/file.pl
-		# rel: dir2/file.pl
+		# rel:      dir2/file.pl
 		# short:    file.pl
 		
 		rel_name = relpath(abs_name, source_dir)
@@ -165,7 +162,7 @@ class file_parser:
 		
 		# absolute, rel and short name of the file to be parsed
 		self._abs_name = abs_name
-		self._abs_path = utils.path_name(abs_name)[0]
+		self._abs_path = abs_path
 		self._rel_name = rel_name
 		self._rel_path = relpath(abs_path, source_dir)
 		self._short_name = name_file

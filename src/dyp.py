@@ -6,7 +6,8 @@ import sys, shutil, importlib
 import graph_maker
 import file_parser
 import html_maker as hmaker
-import constants
+import constants.platform_constants as pcsts
+import constants.html_constants as hcsts
 import utils
 
 def get_matching_files(dirname, patterns, rec):
@@ -48,7 +49,7 @@ def print_usage():
 # **********
 
 # Initialise platform-dependent constants
-constants.make_constants()
+pcsts.make_constants()
 
 # Parse arguments
 
@@ -167,7 +168,7 @@ for abs_path, info in all_info.iteritems():
 print ">> Making html file for index"
 all_files = sorted(all_files)
 
-nl = constants.nl
+nl = pcsts.nl
 html_index = utils.make_file(join(dest_dir, 'index.html'))
 html_index.write("<html>" + nl)
 
@@ -187,7 +188,7 @@ for f in all_files:
 	html_index.write((file_list_item % (f, f)) + nl)
 
 html_index.write("</ul>" + nl)
-html_index.write(constants.html_git_footer)
+html_index.write(hcsts.html_git_footer)
 html_index.write("</body>" + nl)
 html_index.write("</html>" + nl)
 html_index.close()

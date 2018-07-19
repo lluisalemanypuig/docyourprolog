@@ -1,19 +1,26 @@
 from os.path import abspath, relpath
-import constants as csts
+
 import file_parser
 import utils
-import formats
+
+import constants.platform_constants as pcsts
+import constants.html_constants as hcsts
+import constants.warnings_errors as WE
+
+import formats.file_description as FD
+import formats.included_files as IF
+import formats.predicate_list as PL
+import formats.predicate_details as PD
 
 # write the head of the html file
 class html_maker:
-	file_descr = "<h1> Documentation for Prolog file: %s</h1>"
 	
 	# find all words starting with '@' and '?'.
 	# Make sure those with '@' are a parameter, and display them appropriately
 	# Make sure those with '?' are a predicates, and display them appropriately
 	def _format_constr_descr(self, descr, param_names):
-		form_param = formats.descr_parameter_format
-		form_href_pred = formats.pred_local_cstr_format
+		form_param = PD.descr_parameter_format
+		form_href_pred = PD.pred_local_cstr_format
 		
 		words = descr.split(' ')
 		for i in range(0, len(words)):
@@ -39,7 +46,7 @@ class html_maker:
 		return " ".join(words)
 	
 	def _write_head(self):
-		nl = csts.nl
+		nl = pcsts.nl
 		HTML = self._html
 		
 		HTML.write("<head>" + nl)
@@ -47,18 +54,18 @@ class html_maker:
 		HTML.write("</head>" + nl)
 	
 	def _write_included_files_list(self):
-		nl = csts.nl
+		nl = pcsts.nl
 		
 		self._html.write("<a name=\"included_files\"></a>" + nl)
 		self._html.write("<h2>Included files:</h2>" + nl)
 		self._html.write("<ul id=\"included_files_list\">" + nl)
 		
 		for f in self._included_files:
-			self._html.write(formats.included_file_format(f, f) + nl)
+			self._html.write(IF.included_file(f, f) + nl)
 		self._html.write("</ul>" + nl)
 	
 	def _write_predicate_list(self):
-		nl = csts.nl
+		nl = pcsts.nl
 		
 		self._html.write("<a name=\"predicates\"></a>" + nl)
 		self._html.write("<h2>Predicates:</h2>" + nl)
@@ -74,14 +81,14 @@ class html_maker:
 			elif btype == "predicate":
 				label = binfo.get_predicate_label()
 				href = label.replace('/','-')
-				self._html.write(formats.pred_list_format(label,href) + nl )
+				self._html.write(PL.predicate_in_list(label,href) + nl )
 		
 		self._html.write("</ul>" + nl)
 	
 	def _write_pred_form(self, binfo, name, all_param_names):
-		form_param = formats.form_parameter_format
+		form_param = PD.form_parameter_format
 		
-		nl = csts.nl
+		nl = pcsts.nl
 		self._html.write("<dt>" + nl)
 		html_form = "<b>Form:</b> " + name + "("
 		for i in range(0, len(all_param_names)):
@@ -95,8 +102,8 @@ class html_maker:
 		self._html.write("</dt>" + nl)
 	
 	def _write_pred_constrs(self, binfo, all_param_names, params):
-		form_param = formats.cstr_parameter_format
-		nl = csts.nl
+		form_param = PD.cstr_parameter_format
+		nl = pcsts.nl
 		
 		self._html.write("<dt>" + nl)
 		constr_descr = "<b>Constraints: </b> "
@@ -120,7 +127,7 @@ class html_maker:
 		self._html.write("</dt>" + nl)
 	
 	def _write_pred_descr(self, binfo, all_param_names):
-		nl = csts.nl
+		nl = pcsts.nl
 		self._html.write("<dt>" + nl)
 		pred_descr = "<b>Description: </b> "
 		if binfo.get_description() != "":
@@ -132,7 +139,7 @@ class html_maker:
 		self._html.write("</dt>" + nl)
 	
 	def _write_predicate_details(self):
-		nl = csts.nl
+		nl = pcsts.nl
 		refmaker = lambda s: s.replace('/', '-')
 		
 		self._html.write("<a name=\"details\"></a>" + nl)
@@ -151,7 +158,7 @@ class html_maker:
 				href = refmaker(label)
 				
 				self._html.write("<li>" + nl)
-				self._html.write(formats.pred_title_format(label,href) + nl )
+				self._html.write(PD.pred_title_format(label,href) + nl )
 				self._html.write("<dl>" + nl)
 				
 				# write predicate form
@@ -170,20 +177,20 @@ class html_maker:
 		self._html.write("</ul>" + nl)
 	
 	def _write_body(self):
-		nl = csts.nl
+		nl = pcsts.nl
 		HTML = self._html
 		
 		HTML.write("<body>" + nl)
-		HTML.write((html_maker.file_descr % self._short_name) + nl)
+		HTML.write((FD.file_title(self._short_name)) + nl)
 		
 		if "file" in self._class_blocks != None:
 			file_descr = self._class_blocks["file"][-1]
 			if file_descr.get_descr() != "":
-				HTML.write("<p>" + file_descr.get_descr() + "</p>" + nl)
+				HTML.write(FD.file_descr(file_descr.get_descr()) + nl)
 			if file_descr.get_author() != "":
-				HTML.write("<p></b>    <i>" + file_descr.get_author() + "</i></p>" + nl)
+				HTML.write(FD.file_author(file_descr.get_author()) + nl)
 			if file_descr.get_date() != "":
-				HTML.write("<p><b>On</b>    <i>" + file_descr.get_date() + "</i></p>" + nl)
+				HTML.write(FD.file_date(file_descr.get_date()) + nl)
 		
 		if self._conf.FILE_INCLUSION_GRAPH and self._needs_graph:
 			short_name, _ = utils.path_ext(self._short_name)
@@ -196,7 +203,7 @@ class html_maker:
 			self._write_predicate_list()
 			self._write_predicate_details()
 		
-		HTML.write(csts.html_git_footer)
+		HTML.write(hcsts.html_git_footer)
 		HTML.write("</body>" + nl)
 	
 	# fp: file parser object
@@ -230,15 +237,15 @@ class html_maker:
 	
 	def make_html_file(self):
 		if self._abs_html_name == None:
-			print "Internal error: absolute path to html file for '%s' was not set" % self._abs_name
+			WE.absolute_path_not_set(self._abs_name)
 			exit(1)
 		
 		self._html = utils.make_file(self._abs_html_name)
 		
-		self._html.write("<html>" + csts.nl)
+		self._html.write("<html>" + pcsts.nl)
 		self._write_head()
 		self._write_body()
-		self._html.write("</html>" + csts.nl)
+		self._html.write("</html>" + pcsts.nl)
 		
 		self._html.close()
 

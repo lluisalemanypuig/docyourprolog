@@ -33,22 +33,8 @@ def pred_local_cstr_format(label, href):
 def pred_global_cstr_format(label, href):
 	return "<a href=\"%s\"><u>%s</u></a>" % (href, label)
 
-# Format a string 'label' as an element in the predicate list
-# at the beginning of each file with a hyperlink 'href'.
-def pred_list_format(label, href):
-	return "<li><p><a href=\"#%s\">%s</a></p></li>" % (href, label)
-
 # Format string 'label' as the title of a predicate description.
 # This title appears in an itemised list. Its contents are Form,
 # Description, ...
 def pred_title_format(label, name):
 	return "<h3><a name=\"%s\"></a>%s</h3>" % (name, label)
-
-"""
-For the included files list
-"""
-
-# Format string 'f' so that it opens the html file corresponding to
-# the html documentation of the source file 'f'.pl
-def included_file_format(f, href):
-	return "<li><p><a href=\"%s\">%s</a></p></li>" % (href, f)

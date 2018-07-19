@@ -1,7 +1,7 @@
 from os import listdir, makedirs
 from os.path import exists, abspath, dirname, isfile
 from os.path import join, splitext, relpath, split
-import constants
+import constants.platform_constants as pcsts
 
 # Returns true if character is either a letter or a number
 def is_alphanumeric(c):
@@ -21,7 +21,7 @@ def closes_struct_comm(line):
 # Returns true if the character is an empty space (either a blank
 # space, a tabulator or an endline character)
 def empty_space(c):
-	return c == ' ' or c == '\t' or c == constants.nl
+	return c == ' ' or c == '\t' or c == pcsts.nl
 
 # Returns true if the line tries to load a file
 def loads_file(line):
@@ -39,7 +39,7 @@ def line_cleanup(line):
 	return line[0:(i+1)]
 
 # Deletes all leading spaces and tabs.
-# Deletes all characters after '%' and all preceding spaces and tabs
+# Deletes all characters after '%' and all trailing spaces and tabs
 def string_cleanup(line):
 	line_len = len(line)
 	
@@ -103,6 +103,23 @@ def file_use_module(rule):
 	
 	return filename_cleanup(filename)
 
+# Given a string representing the inclusion of a file, return its
+# type. For example:
+# - for rule ':-[file1,file2].' returns '['
+# - for rule ':-ensure_loaded(file).' returns 'ensure_loaded'
+# - for rule ':-use_module(file).' returns 'use_module'
+# - for rule ':-use_module(file, [pred1,pred2]).' returns 'use_module'
+def inclusion_type(rule):
+	i = rule.find(':')
+	i += 2
+	# place 'i' at the beginning of rule
+	while i < len(rule) and empty_space(rule[i]): i += 1
+	# place 'j' at the end of rule
+	j = i
+	while j < len(rule) and rule[j] != '(' and rule[j] != '[': j += 1
+	if i == j: return rule[i:(j+1)]
+	return rule[i:j]
+
 # returns the file's path and name
 def path_name(filename):
 	return split(filename)
@@ -134,7 +151,7 @@ def absolute_filename(filename):
 # Delete all those goddam '..' and '.' from an absolute path
 def resolve_path(apath):
 	# decide what separator
-	sep = constants.sep
+	sep = pcsts.sep
 	
 	while apath.find('..') != -1:
 		partspath = apath.split(sep)
