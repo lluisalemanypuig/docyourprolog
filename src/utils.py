@@ -180,6 +180,6 @@ def resolve_path(apath):
 def make_file(abs_file_name):
 	dir_path = dirname(abs_file_name)
 	file_name = relpath(abs_file_name, dir_path)
-	if not exists(dir_path): makedirs(dir_path)
+	if dir_path != "" and not exists(dir_path): makedirs(dir_path)
 	f = open(abs_file_name, "w+")
 	return f
