@@ -18,13 +18,13 @@ DEST_DIR				= "docs"
 """
 Give your project a name.
 """
-PROJECT_NAME			= "Project Manhattan"
+PROJECT_NAME			= "Minimal example of documented Prolog code"
 
 """
 Add a description for your project. It may contain html code.
 """
-PROJECT_DESCRIPTION		= "Super cool project that will solve \
-all the world's problems"
+PROJECT_DESCRIPTION		= "A tiny set of predicates in Prolog documented \
+using the tags described."
 
 # ---------------------------------------------------------------------
 # GENERATED GRAPHS
