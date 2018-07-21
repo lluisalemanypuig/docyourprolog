@@ -182,3 +182,9 @@ Alternatively, the code can also be copied and moved to the _/usr/bin/_ director
 
         sudo cp ~/Documents/software/docyourprolog/ /usr/bin/docyourprolog/
         alias dyp='python /usr/bin/docyourprolog/dyp.py'
+
+## Example
+
+[Here](https://github.com/lluisalemanypuig/docyourprolog/tree/dev/example) one will find a minimal
+example of Prolog code and a configuration file. The documentation generated for that source code
+can be found in [this](https://github.com/lluisalemanypuig/docyourprolog/tree/dev/example/docs) directory.
