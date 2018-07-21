@@ -11,39 +11,10 @@ import formats.file_description as FD
 import formats.included_files as IF
 import formats.predicate_list as PL
 import formats.predicate_details as PD
+import formats.htmlise as HS
 
 # write the head of the html file
 class html_maker:
-	
-	# find all words starting with '@' and '?'.
-	# Make sure those with '@' are a parameter, and display them appropriately
-	# Make sure those with '?' are a predicates, and display them appropriately
-	def _format_constr_descr(self, descr, param_names):
-		form_param = PD.descr_parameter_format
-		form_href_pred = PD.pred_local_cstr_format
-		
-		words = descr.split(' ')
-		for i in range(0, len(words)):
-			w = words[i]
-			if w.find('@') != -1:
-				j = len(w) - 1
-				while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
-				j += 1
-				
-				if w[1:j] in param_names:
-					words[i] = form_param(w[1:j]) + w[j:]
-			elif w.find('?') != -1:
-				j = len(w) - 1
-				while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
-				j += 1
-				
-				label = w[1:j]
-				
-				if label in self._pred_names:
-					href = label.replace('/', '-')
-					words[i] = form_href_pred(label, href) + w[j:]
-				
-		return " ".join(words)
 	
 	def _write_head(self):
 		self._hw.open_head()
@@ -85,9 +56,17 @@ class html_maker:
 			binfo = B.block_info()
 			if btype == "separator":
 				if binfo.get_descr() != "":
-					HTML.open_paragraph()
-					HTML.put( binfo.get_descr())
+					descr = binfo.get_descr()
+					descr = HS.colour_n_link_descr(descr, [], self._pred_names)
+					descr = HS.make_new_lines(descr)
+					
+					HTML.open_description_list()
+					for line in descr:
+						HTML.define_term()
+						HTML.put(line)
+						HTML.close_tag()
 					HTML.close_tag()
+					
 			elif btype == "predicate":
 				label = binfo.get_predicate_label()
 				href = label.replace('/','-')
@@ -119,6 +98,25 @@ class html_maker:
 		HTML.put(html_form)
 		HTML.close_tag()
 	
+	def _write_pred_descr(self, binfo, all_param_names):
+		nl = pcsts.nl
+		HTML = self._hw
+		
+		HTML.define_term()
+		HTML.open_bold()
+		HTML.put("Description:")
+		HTML.close_tag()
+		HTML.close_tag()
+		
+		if binfo.get_description() != "":
+			descr = binfo.get_description()
+			descr = HS.colour_n_link_descr(descr, all_param_names, self._pred_names)
+			descr = HS.make_new_lines(descr)
+			for paragraph in descr:
+				HTML.describe_term()
+				HTML.put(paragraph)
+				HTML.close_tag()
+	
 	def _write_pred_constrs(self, binfo, all_param_names, params):
 		form_param = PD.cstr_parameter_format
 		nl = pcsts.nl
@@ -130,11 +128,13 @@ class html_maker:
 		HTML.close_tag()
 		HTML.close_tag()
 		
-		HTML.describe_term()
 		bcd = binfo.get_cstrs_descr()
-		bcd = self._format_constr_descr(bcd, all_param_names)
-		HTML.put(bcd)
-		HTML.close_tag()
+		bcd = HS.colour_n_link_descr(bcd, all_param_names, self._pred_names)
+		bcd = HS.make_new_lines(bcd)
+		for paragraph in bcd:
+			HTML.describe_term()
+			HTML.put(paragraph)
+			HTML.close_tag()
 		
 		# write parameter list
 		HTML.open_unordered_list()
@@ -149,24 +149,6 @@ class html_maker:
 				HTML.put(pnamelist + pdescr + nl)
 				HTML.close_tag()
 			
-		HTML.close_tag()
-	
-	def _write_pred_descr(self, binfo, all_param_names):
-		nl = pcsts.nl
-		HTML = self._hw
-		
-		HTML.define_term()
-		HTML.open_bold()
-		HTML.put("Description:")
-		HTML.close_tag()
-		HTML.close_tag()
-		
-		HTML.describe_term()
-		if binfo.get_description() != "":
-			descr = binfo.get_description()
-			descr = self._format_constr_descr(descr, all_param_names)
-			HTML.put(descr)
-		
 		HTML.close_tag()
 	
 	def _write_predicate_details(self):
@@ -210,7 +192,7 @@ class html_maker:
 				HTML.close_tag()	# description list
 				HTML.close_tag()	# list element
 		
-		HTML.close_tag()
+		HTML.close_tag() # unordered list
 	
 	def _write_footer(self):
 		HTML = self._hw

@@ -4,6 +4,7 @@ import utils
 import block_types.block_doc as bdoc
 import constants as csts
 import constants.warnings_errors as WE
+import constants.special as SC
 
 """
 This class is used to parse the contents of a file: it is used to
@@ -53,7 +54,12 @@ class file_parser:
 			# ignore lines with only one comment (if a line contains
 			# only a comment starting with '%' the result of its cleanup
 			# is an empty string)
-			if line == '': pass
+			if line == '' and lines[p].find('%'): pass
+			
+			# empty lines within a structured comment is interpreted
+			# as an indication to make a new paragraph
+			if line == '':
+				line = SC.new_line
 			
 			opens_sc = utils.opens_struct_comm(line)
 			closes_sc = utils.closes_struct_comm(line)

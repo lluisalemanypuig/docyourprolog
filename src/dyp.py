@@ -142,6 +142,18 @@ while len(to_be_parsed) > 0:
 		# include next files to be parsed
 		if conf.FOLLOW_INCLUDES:
 			to_be_parsed += information.get_included_files()
+		
+		class_blocks = information.get_class_blocks()
+		if "predicate" in class_blocks:
+			pred_blocks = class_blocks["predicate"]
+			for pblock in pred_blocks:
+				print "    ", pblock.get_form()
+				print "    ", pblock.get_predicate_label()
+				print "    ", pblock.get_predicate_name()
+				print "    ", pblock.get_description()
+				print "    ", pblock.get_predicate_param_list()
+				print "    ", pblock.get_cstrs_descr()
+				print "    ", pblock.get_parameters()
 
 print
 print "Making html files:"
