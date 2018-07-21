@@ -38,7 +38,7 @@ class html_writer:
 		self._tab_cnt.append(env)
 		self._cnt_nl.append('')
 		self._ltab.append('\t')
-		
+	
 	def __init__(self, name):
 		# name of the html file to create
 		self._name = name
@@ -58,15 +58,15 @@ class html_writer:
 		self._ltab = []
 		
 	def __del__(self):
-		html_closed = self.close_tag()
-		while not html_closed:
-			html_closed = self.close_tag()
+		is_open = (len(self._envir) > 0)
+		while is_open:
+			is_open = self.close_tag()
 	
 	# Closes the last opened environment. Returns true if all
 	# environments have been close_tagd.
 	def close_tag(self):
 		if len(self._envir) == 0:
-			return True
+			return False
 		
 		# environment to close tag
 		env = self._envir[-1]
@@ -85,9 +85,10 @@ class html_writer:
 		del self._ltab[-1]
 		
 		if len(self._envir) == 0:
-			return True
+			self._html.close()
+			return False
 		
-		return False
+		return True
 	
 	# Writes a string into the file
 	def put(self, string):

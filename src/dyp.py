@@ -6,8 +6,8 @@ import sys, shutil, importlib
 import graph_maker
 import file_parser
 import html.html_maker as hmaker
+import html.html_writer as hwriter
 import constants.platform_constants as pcsts
-import constants.html_constants as hcsts
 import utils
 
 def get_matching_files(dirname, patterns, rec):
@@ -169,30 +169,52 @@ print ">> Making html file for index"
 all_files = sorted(all_files)
 
 nl = pcsts.nl
-html_index = utils.make_file(join(dest_dir, 'index.html'))
-html_index.write("<html>" + nl)
+index = hwriter.html_writer(join(dest_dir, 'index.html'))
+index.start()
+index.open_head()
+index.open_title()
+index.put(conf.PROJECT_NAME)
+index.close_tag()
+index.close_tag()
 
-html_index.write("<head>" + nl)
-html_index.write("<title>" + conf.PROJECT_NAME + "</title>" + nl)
-html_index.write("</head>" + nl)
-html_index.write("<body>" + nl)
-html_index.write("<h1>" + conf.PROJECT_NAME + "</h1>" + nl)
-html_index.write("<p>" + conf.PROJECT_DESCRIPTION + "</p>" + nl)
+index.open_body()
+index.open_h1()
+index.put(conf.PROJECT_NAME)
+index.close_tag()
+index.open_paragraph()
+index.put(conf.PROJECT_DESCRIPTION )
+index.close_tag()
+
 if conf.PROJECT_INCLUSION_GRAPH:
-	html_index.write("<img src=\"project_graph.png\" alt=\"general_inlusion_map\">" + nl)
-html_index.write("<h2>Project files:</h2>" + nl)
-html_index.write("<ul id=\"project_files\">" + nl)
-file_list_item = "<li><p><a href=\"%s\">%s</a></p></li>"
+	index.add_image({"name" : "project_graph.png", "alt" : "general_inclusion_map"})
+index.open_h2()
+index.put("Project files:")
+index.close_tag()
+
+index.open_unordered_list({"id" : "project_files"})
 
 for f in all_files:
-	html_index.write((file_list_item % (f, f)) + nl)
+	index.open_list_element()
+	index.open_paragraph()
+	index.open_a({"href" : f})
+	index.put(f)
+	index.close_tag()
+	index.close_tag()
+	index.close_tag()
 
-html_index.write("</ul>" + nl)
-html_index.write(hcsts.html_git_footer)
-html_index.write("</body>" + nl)
-html_index.write("</html>" + nl)
-html_index.close()
+index.close_tag()
+index.horizontal_line()
+index.open_paragraph()
+index.open_a({"href" : "http://github.com/lluisalemanypuig/docyourprolog.git"})
+index.put("Generated with DYP")
+index.close_tag()
+index.close_tag()
+
+index.close_tag()
+index.close_tag()
 
 if conf.PROJECT_INCLUSION_GRAPH:
 	print "    + Make graph file"
 	graph_maker.make_full_graph(dest_dir, all_info, conf)
+
+

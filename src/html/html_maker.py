@@ -5,7 +5,6 @@ from html_writer import html_writer as hwriter
 import utils
 
 import constants.platform_constants as pcsts
-import constants.html_constants as hcsts
 import constants.warnings_errors as WE
 
 import formats.file_description as FD
