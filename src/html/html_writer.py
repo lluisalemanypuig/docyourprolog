@@ -4,15 +4,41 @@ import utils
 
 class html_writer:
 	
-	add_tab = set(['html', 'head', 'body', 'pre', 'ul', 'ol', 'li', 'dl'])
+	def _full_tab(self): return "".join(self._ltab)
+	def _tab(self): return "".join(self._ltab[:-1])
 	
-	def _put(self, content):
-		envir = self._envir[-1]
-		if envir in html_writer.add_tab:
-			self._html.write(self._tab + content)
-		else:
-			self._html.write(content)
+	def _open(self, tag):
+		env = self._envir[-1]
+		if env == self._tab_open[-1]: tag = self._tab() + tag
+		if env == self._open_nl[-1]:  tag = tag + pcsts.nl
+		self._html.write(tag)
 	
+	def _close(self, tag):
+		env = self._envir[-1]
+		if env == self._tab_close[-1]: tag = self._tab() + tag
+		if env == self._close_nl[-1]:  tag = tag + pcsts.nl
+		self._html.write(tag)
+	
+	def _single_line_env(self, env):
+		self._envir.append(env)
+		self._tab_open.append(env)
+		self._open_nl.append('')
+		self._tab_close.append('')
+		self._close_nl.append(env)
+		self._tab_cnt.append('')
+		self._cnt_nl.append('')
+		self._ltab.append('')
+		
+	def _multi_line_env(self, env):
+		self._envir.append(env)
+		self._tab_open.append(env)
+		self._open_nl.append(env)
+		self._tab_close.append(env)
+		self._close_nl.append(env)
+		self._tab_cnt.append(env)
+		self._cnt_nl.append('')
+		self._ltab.append('\t')
+		
 	def __init__(self, name):
 		# name of the html file to create
 		self._name = name
@@ -21,218 +47,272 @@ class html_writer:
 		#       when opening a new tab?
 		# - which environment are we in?
 		self._envir = []
+		# environment list for which we have to add a/an
+		self._tab_open = []		# tab before opening tag
+		self._open_nl = []		# endline after opening tag
+		self._tab_close = []	# tab before closing tag
+		self._close_nl = []		# endline after closing tag
+		self._tab_cnt = []		# tab before content
+		self._cnt_nl = []		# endline after content
+		# tabulator for indentation of html code
+		self._ltab = []
 		
-		# tabulator for easy debugging of created html file
-		self._tab = ''
-		
-		# add an endline after closing tag
-		self._add_nl = []
-	
 	def __del__(self):
-		is_closed = self.close()
-		while not is_closed:
-			is_closed = self.close()
-	
-	# Creates the html file and opens the environment '<html>'
-	def start(self):
-		self._html = utils.make_file(self._name)
-		self._html.write(self._tab + '<html>' + pcsts.nl)
-		self._envir.append('html')
-		self._add_nl.append('html')
-		self._tab += '\t'
+		html_closed = self.close_tag()
+		while not html_closed:
+			html_closed = self.close_tag()
 	
 	# Closes the last opened environment. Returns true if all
-	# environments have been closed.
-	def close(self):
+	# environments have been close_tagd.
+	def close_tag(self):
 		if len(self._envir) == 0:
 			return True
 		
-		# environment to close
-		envir = self._envir[-1]
+		# environment to close tag
+		env = self._envir[-1]
 		
-		# write closing tag, properly indented
-		if envir in html_writer.add_tab:
-			# reduce by one the tabs
-			self._tab = self._tab[:-1]
+		# close the environment
+		self._close('</%s>' % env)
 		
-		# if current environment matches environment on top of 
-		# stack then add an endline
-		if envir == self._add_nl[-1]:
-			self._put(('</%s>' % envir) + pcsts.nl)
-			del self._add_nl[-1]
-		else:
-			self._put('</%s>' % envir)
-		
-		# delete closing tag
+		# delete top of 'stack'
 		del self._envir[-1]
+		del self._tab_open[-1]
+		del self._open_nl[-1]
+		del self._tab_close[-1]
+		del self._close_nl[-1]
+		del self._tab_cnt[-1]
+		del self._cnt_nl[-1]
+		del self._ltab[-1]
 		
 		if len(self._envir) == 0:
-			self._html.close()
 			return True
 		
 		return False
 	
 	# Writes a string into the file
 	def put(self, string):
+		env = self._envir[-1]
+		if env == self._tab_cnt[-1]: string = self._full_tab() + string
+		if env == self._cnt_nl[-1]:  string = string + pcsts.nl
 		self._html.write(string)
 	
+	# Creates the html file and opens the environment '<html>'
+	def start(self):
+		env = 'html'
+		self._multi_line_env(env)
+		self._html = utils.make_file(self._name)
+		self._open('<%s>' % env)
+		
 	# Opens tag <head>
 	def open_head(self):
-		self._put('<head>' + pcsts.nl)
-		self._envir.append('head')
-		self._add_nl.append('head')
-		self._tab += '\t'
-	
+		env = 'head'
+		self._multi_line_env(env)
+		self._open('<%s>' % env)
+		
 	# Opens tag <body>
 	def open_body(self):
-		self._put('<body>' + pcsts.nl)
-		self._envir.append('body')
-		self._add_nl.append('body')
-		self._tab += '\t'
-	
+		env = 'body'
+		self._multi_line_env(env)
+		self._open('<%s>' % env)
+		
 	# Opens tag <title>
 	def open_title(self):
-		self._put('<title>')
-		self._envir.append('title')
-		self._add_nl.append('title')
+		env = 'title'
+		self._single_line_env(env)
+		self._open('<%s>' % env)
 	
 	# Opens tag <p>
 	def open_paragraph(self):
-		self._put('<p>')
-		self._envir.append('p')
-		self._add_nl.append('p')
+		env = 'p'
+		self._single_line_env(env)
+		self._open('<%s>' % env)
 	
 	# Opens tag <h1>
 	def open_h1(self):
-		self._put('<h1>')
-		self._envir.append('h1')
-		self._add_nl.append('h1')
+		env = 'h1'
+		self._single_line_env(env)
+		self._open('<%s>' % env)
 	
 	# Opens tag <h2>
 	def open_h2(self):
-		self._put('<h2>')
-		self._envir.append('h2')
-		self._add_nl.append('h2')
+		env = 'h2'
+		self._single_line_env(env)
+		self._open('<%s>' % env)
 	
 	# Opens tag <h3>
 	def open_h3(self):
-		self._put('<h3>')
-		self._envir.append('h3')
-		self._add_nl.append('h3')
+		env = 'h3'
+		self._single_line_env(env)
+		self._open('<%s>' % env)
 	
 	# Opens tag <pre>
 	def open_verbatim(self):
-		self._put('<pre>' + pcsts.nl)
-		self._envir.append('pre')
-		self._add_nl.append('pre')
-		self._tab += '\t'
+		env = 'pre'
+		self._multi_line_env(env)
+		self._open('<%s>' % env)
+	
+	def horizontal_line(self):
+		self.put("<hr>" + pcsts.nl)
+	
+	# opens tag <dl>
+	def open_description_list(self):
+		env = 'dl'
+		self._multi_line_env(env)
+		self._open('<%s>' % env)
+	
+	# to be used when in a description list
+	# opens tag <dt>
+	def define_term(self):
+		env = 'dt'
+		self._single_line_env(env)
+		self._open('<%s>' % env)
+	
+	# to be used when in a description list
+	# opens tag <dd>
+	def describe_term(self):
+		env = 'dd'
+		self._single_line_env(env)
+		self._open('<%s>' % env)
+	
+	# Adds an image to the source
+	# attrs is a dictionary. Keys supported
+	# -> name
+	# -> alt
+	def add_image(self, attrs):
+		content = '<img'
+		if "name" in attrs: content += ' src="' + attrs["name"] + '"'
+		if "alt" in attrs: content += ' alt="' + attrs["alt"] + '"'
+		content += '>'
+		self.put(content)
 	
 	# Opens tag <ul>
 	# attrs is a dictionary. Keys supported
 	# -> id
 	def open_unordered_list(self, attrs = None):
+		env = 'ul'
+		self._multi_line_env(env)
+		
 		if attrs == None:
-			self._put('<ul>' + pcsts.nl)
+			self._open('<%s>' % env)
 		else:
 			# write attributes from attrs
-			info = '<ul '
+			info = '<%s ' % env
 			if 'id' in attrs: info += 'id="' + attrs['id'] + '"'
 			info += '>'
-			self._put(info + pcsts.nl)
-			
-		self._envir.append('ul')
-		self._add_nl.append('ul')
-		self._tab += '\t'
+			self._open(info)
 	
 	# Opens tag <ol>
 	# attrs is a dictionary. Keys supported
 	# -> id
 	def open_ordered_list(self, attrs = None):
+		env = 'ol'
+		self._multi_line_env(env)
+		
 		if attrs == None:
-			self._put('<ol>' + pcsts.nl)
+			self._open('<%s>' % env)
 		else:
 			# write attributes from attrs
-			info = '<ol '
+			info = '<%s ' % env
 			if 'id' in attrs: info += 'id="' + attrs['id'] + '"'
 			info += '>'
-			self._put(info + pcsts.nl)
-			
-		self._envir.append('ol')
-		self._add_nl.append('ol')
-		self._tab += '\t'
-	
-	# opens tag <dl>
-	def open_description_list(self):
-		self._put('<dl>' + pcsts.nl)
-		self._envir.append('dl')
-		self._add_nl.append('dl')
-		self._tab += '\t'
-	
-	# to be used when in a description list
-	# opens tag <dt>
-	def define_term(self):
-		self._put('<dt>')
-		self._envir.append('dt')
-		self._add_nl.append('dt')
-	
-	# to be used when in a description list
-	# opens tag <dd>
-	def describe_term(self):
-		self._put('<dd>')
-		self._envir.append('dd')
-		self._add_nl.append('dd')
+			self._open(info)
 	
 	# Opens tag <a>
 	# attrs is a dictionary. Keys supported
 	# -> name
 	# -> href
 	def open_a(self, attrs = None):
+		env = 'a'
+		self._envir.append(env)
+		self._tab_open.append('')
+		self._open_nl.append('')
+		self._tab_close.append('')
+		self._close_nl.append('')
+		self._tab_cnt.append('')
+		self._cnt_nl.append('')
+		self._ltab.append('')
+		
 		if attrs == None:
-			self._put('<a>')
+			self._open('<%s>' % env)
 		else:
 			# write attributes from attrs
-			info = '<a '
+			info = '<%s ' % env
 			if 'name' in attrs: info += 'name="' + attrs['name'] + '"'
 			if 'href' in attrs: info += 'href="' + attrs['href'] + '"'
 			info += '>'
-			self._put(info)
-			
-		self._envir.append('a')
+			self._open(info)
 	
 	# opens tag <li>
 	def open_list_element(self):
-		self._put('<li>' + pcsts.nl)
-		self._envir.append('li')
-		self._add_nl.append('li')
-		self._tab += '\t'
+		env = 'li'
+		self._multi_line_env(env)
+		self._open('<%s>' % env)
 	
 	# opens tag <b>
 	# attrs is a dictionary. Keys supported
 	# -> style
 	def open_bold(self, attrs = None):
+		env = 'b'
+		self._envir.append(env)
+		self._tab_open.append('')
+		self._open_nl.append('')
+		self._tab_close.append('')
+		self._close_nl.append('')
+		self._tab_cnt.append('')
+		self._cnt_nl.append('')
+		self._ltab.append('')
+		
 		if attrs == None:
-			self._put('<b>')
+			self._open('<%s>' % env)
 		else:
 			info = '<b '
 			if 'style' in attrs: info += 'style="' + attrs['style'] + '"'
 			info += '>'
-			self._put(info)
-		
-		self._envir.append('b')
+			self._open(info)
 	
 	# opens tag <i>
 	# attrs is a dictionary. Keys supported
 	# -> style
 	def open_italics(self, attrs = None):
+		env = 'i'
+		self._envir.append(env)
+		self._tab_open.append('')
+		self._open_nl.append('')
+		self._tab_close.append('')
+		self._close_nl.append('')
+		self._tab_cnt.append('')
+		self._cnt_nl.append('')
+		self._ltab.append('')
+		
 		if attrs == None:
-			self._put('<i>')
+			self._open('<%s>' % env)
 		else:
-			info = '<i '
+			info = '<b '
 			if 'style' in attrs: info += 'style="' + attrs['style'] + '"'
 			info += '>'
-			self._put(info)
+			self._open(info)
+	
+	# opens tag <u>
+	# attrs is a dictionary. Keys supported
+	# -> style
+	def open_underlined(self, attrs = None):
+		env = 'u'
+		self._envir.append(env)
+		self._tab_open.append('')
+		self._open_nl.append('')
+		self._tab_close.append('')
+		self._close_nl.append('')
+		self._tab_cnt.append('')
+		self._cnt_nl.append('')
+		self._ltab.append('')
 		
-		self._envir.append('i')
+		if attrs == None:
+			self._open('<%s>' % env)
+		else:
+			info = '<b '
+			if 'style' in attrs: info += 'style="' + attrs['style'] + '"'
+			info += '>'
+			self._open(info)
 		
 		
 

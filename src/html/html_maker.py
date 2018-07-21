@@ -1,6 +1,7 @@
 from os.path import abspath, relpath
 
 import file_parser
+from html_writer import html_writer as hwriter
 import utils
 
 import constants.platform_constants as pcsts
@@ -46,30 +47,38 @@ class html_maker:
 		return " ".join(words)
 	
 	def _write_head(self):
-		nl = pcsts.nl
-		HTML = self._html
-		
-		HTML.write("<head>" + nl)
-		HTML.write("<title>" + self._short_name + "</title>" + nl)
-		HTML.write("</head>" + nl)
+		self._hw.open_head()
+		self._hw.open_title();
+		self._hw.put(self._short_name);
+		self._hw.close_tag()
+		self._hw.close_tag()
 	
 	def _write_included_files_list(self):
 		nl = pcsts.nl
+		HTML = self._hw
 		
-		self._html.write("<a name=\"included_files\"></a>" + nl)
-		self._html.write("<h2>Included files:</h2>" + nl)
-		self._html.write("<ul id=\"included_files_list\">" + nl)
+		HTML.open_h2()
+		HTML.open_a({"name" : "included_files"})
+		HTML.put("Included files:")
+		HTML.close_tag()
+		HTML.close_tag()
+		HTML.open_unordered_list({"id" : "included_files_list"})
 		
 		for f in self._included_files:
-			self._html.write(IF.included_file(f, f) + nl)
-		self._html.write("</ul>" + nl)
+			IF.included_file(HTML, f, f)
+			
+		HTML.close_tag()
 	
 	def _write_predicate_list(self):
 		nl = pcsts.nl
+		HTML = self._hw
 		
-		self._html.write("<a name=\"predicates\"></a>" + nl)
-		self._html.write("<h2>Predicates:</h2>" + nl)
-		self._html.write("<ul id=\"predicate_list\">" + nl)
+		HTML.open_h2()
+		HTML.open_a({"name" : "predicates"})
+		HTML.put("Predicates:")
+		HTML.close_tag()
+		HTML.close_tag()
+		HTML.open_unordered_list({"id" : "predicate_list"})
 		
 		# iterate over all blocks
 		for B in self._blocks:
@@ -77,20 +86,30 @@ class html_maker:
 			binfo = B.block_info()
 			if btype == "separator":
 				if binfo.get_descr() != "":
-					self._html.write( binfo.get_descr() + nl )
+					HTML.open_paragraph()
+					HTML.put( binfo.get_descr())
+					HTML.close_tag()
 			elif btype == "predicate":
 				label = binfo.get_predicate_label()
 				href = label.replace('/','-')
-				self._html.write(PL.predicate_in_list(label,href) + nl )
+				PL.predicate_in_list(HTML, label,href)
 		
-		self._html.write("</ul>" + nl)
+		HTML.close_tag()
 	
 	def _write_pred_form(self, binfo, name, all_param_names):
 		form_param = PD.form_parameter_format
-		
 		nl = pcsts.nl
-		self._html.write("<dt>" + nl)
-		html_form = "<b>Form:</b> " + name + "("
+		HTML = self._hw
+		
+		HTML.define_term()
+		HTML.open_bold()
+		HTML.put("Form: ")
+		HTML.close_tag()
+		HTML.close_tag()
+		
+		HTML.describe_term()
+		
+		html_form = name + "("
 		for i in range(0, len(all_param_names)):
 			param_name = all_param_names[i]
 			html_form += form_param(param_name)
@@ -98,53 +117,70 @@ class html_maker:
 				html_form += ", "
 		
 		html_form += ")"
-		self._html.write(html_form + nl)
-		self._html.write("</dt>" + nl)
+		HTML.put(html_form)
+		HTML.close_tag()
 	
 	def _write_pred_constrs(self, binfo, all_param_names, params):
 		form_param = PD.cstr_parameter_format
 		nl = pcsts.nl
+		HTML = self._hw
 		
-		self._html.write("<dt>" + nl)
-		constr_descr = "<b>Constraints: </b> "
+		HTML.define_term()
+		HTML.open_bold()
+		HTML.put("Constraints:")
+		HTML.close_tag()
+		HTML.close_tag()
+		
+		HTML.describe_term()
 		bcd = binfo.get_cstrs_descr()
-		constr_descr += self._format_constr_descr(bcd, all_param_names)
-		self._html.write(constr_descr + nl)
+		bcd = self._format_constr_descr(bcd, all_param_names)
+		HTML.put(bcd)
+		HTML.close_tag()
 		
 		# write parameter list
-		self._html.write("<ul>" + nl)
+		HTML.open_unordered_list()
 		for pname in all_param_names:
 			if pname in params:
 				_, pdescr = params[pname]
-				self._html.write("<li>" + nl)
-				self._html.write(form_param(pname) + " ")
+				
+				HTML.open_list_element()
+				pnamelist = form_param(pname) + " "
 				pdescr = pdescr.split(' ')
 				pdescr = " ".join(pdescr[1:])
-				self._html.write(pdescr + nl)
-				self._html.write("</li>" + nl)
+				HTML.put(pnamelist + pdescr + nl)
+				HTML.close_tag()
 			
-		self._html.write("</ul>" + nl)
-		self._html.write("</dt>" + nl)
+		HTML.close_tag()
 	
 	def _write_pred_descr(self, binfo, all_param_names):
 		nl = pcsts.nl
-		self._html.write("<dt>" + nl)
-		pred_descr = "<b>Description: </b> "
+		HTML = self._hw
+		
+		HTML.define_term()
+		HTML.open_bold()
+		HTML.put("Description:")
+		HTML.close_tag()
+		HTML.close_tag()
+		
+		HTML.describe_term()
 		if binfo.get_description() != "":
 			descr = binfo.get_description()
 			descr = self._format_constr_descr(descr, all_param_names)
-			pred_descr += descr
+			HTML.put(descr)
 		
-		self._html.write(pred_descr + nl)
-		self._html.write("</dt>" + nl)
+		HTML.close_tag()
 	
 	def _write_predicate_details(self):
 		nl = pcsts.nl
 		refmaker = lambda s: s.replace('/', '-')
+		HTML = self._hw
 		
-		self._html.write("<a name=\"details\"></a>" + nl)
-		self._html.write("<h2>Predicate Details:</h2>" + nl)
-		self._html.write("<ul id=\"predicate_details\">" + nl)
+		HTML.open_h2()
+		HTML.open_a({"name" : "details"})
+		HTML.put("Predicate Details:")
+		HTML.close_tag()
+		HTML.close_tag()
+		HTML.open_unordered_list({"id" : "predicate_details"})
 		
 		# iterate over all blocks
 		for B in self._blocks:
@@ -157,9 +193,10 @@ class html_maker:
 				all_param_names = binfo.get_predicate_param_list()
 				href = refmaker(label)
 				
-				self._html.write("<li>" + nl)
-				self._html.write(PD.pred_title_format(label,href) + nl )
-				self._html.write("<dl>" + nl)
+				HTML.open_list_element()
+				PD.pred_title_format(HTML, label,href)
+				
+				HTML.open_description_list()
 				
 				# write predicate form
 				self._write_pred_form(binfo, name, all_param_names)
@@ -171,30 +208,40 @@ class html_maker:
 				if binfo.get_cstrs_descr() != "" or len(params) > 0:
 					self._write_pred_constrs(binfo, all_param_names, params)
 				
-				self._html.write("</dl>" + nl)
-				self._html.write("</li>" + nl)
+				HTML.close_tag()	# description list
+				HTML.close_tag()	# list element
 		
-		self._html.write("</ul>" + nl)
+		HTML.close_tag()
+	
+	def _write_footer(self):
+		HTML = self._hw
+		
+		HTML.horizontal_line()
+		HTML.open_paragraph()
+		HTML.open_a({"href" : "http://github.com/lluisalemanypuig/docyourprolog.git"})
+		HTML.put("Generated with DYP")
+		HTML.close_tag()
+		HTML.close_tag()
 	
 	def _write_body(self):
 		nl = pcsts.nl
-		HTML = self._html
+		HTML = self._hw
 		
-		HTML.write("<body>" + nl)
-		HTML.write((FD.file_title(self._short_name)) + nl)
+		HTML.open_body()
+		FD.file_title(HTML, self._short_name)
 		
 		if "file" in self._class_blocks != None:
 			file_descr = self._class_blocks["file"][-1]
 			if file_descr.get_descr() != "":
-				HTML.write(FD.file_descr(file_descr.get_descr()) + nl)
+				FD.file_descr(HTML, file_descr.get_descr())
 			if file_descr.get_author() != "":
-				HTML.write(FD.file_author(file_descr.get_author()) + nl)
+				FD.file_author(HTML, file_descr.get_author())
 			if file_descr.get_date() != "":
-				HTML.write(FD.file_date(file_descr.get_date()) + nl)
+				FD.file_date(HTML, file_descr.get_date())
 		
 		if self._conf.FILE_INCLUSION_GRAPH and self._needs_graph:
 			short_name, _ = utils.path_ext(self._short_name)
-			HTML.write("<img src=\"" + short_name + ".png\" alt=\"file_inclusion_map\">" + nl)
+			HTML.add_image({"name" : short_name + ".png", "alt" : "file_inclusion_map"})
 		
 		if len(self._included_files) > 0:
 			self._write_included_files_list()
@@ -203,8 +250,8 @@ class html_maker:
 			self._write_predicate_list()
 			self._write_predicate_details()
 		
-		HTML.write(hcsts.html_git_footer)
-		HTML.write("</body>" + nl)
+		self._write_footer()
+		HTML.close_tag()
 	
 	# fp: file parser object
 	def __init__(self, conf, source_dir, all_info, fp):
@@ -240,12 +287,10 @@ class html_maker:
 			WE.absolute_path_not_set(self._abs_name)
 			exit(1)
 		
-		self._html = utils.make_file(self._abs_html_name)
+		self._hw = hwriter(self._abs_html_name)
 		
-		self._html.write("<html>" + pcsts.nl)
+		self._hw.start()
 		self._write_head()
 		self._write_body()
-		self._html.write("</html>" + pcsts.nl)
-		
-		self._html.close()
+		self._hw.close_tag()
 

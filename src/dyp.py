@@ -5,7 +5,7 @@ import sys, shutil, importlib
 
 import graph_maker
 import file_parser
-import html_maker as hmaker
+import html.html_maker as hmaker
 import constants.platform_constants as pcsts
 import constants.html_constants as hcsts
 import utils

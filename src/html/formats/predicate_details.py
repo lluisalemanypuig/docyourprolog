@@ -36,5 +36,9 @@ def pred_global_cstr_format(label, href):
 # Format string 'label' as the title of a predicate description.
 # This title appears in an itemised list. Its contents are Form,
 # Description, ...
-def pred_title_format(label, name):
-	return "<h3><a name=\"%s\"></a>%s</h3>" % (name, label)
+def pred_title_format(hw, label, name):
+	hw.open_h3()
+	hw.open_a({"name" : name})
+	hw.put(label)
+	hw.close_tag()
+	hw.close_tag()
