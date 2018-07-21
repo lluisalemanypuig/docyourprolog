@@ -1,97 +1,93 @@
 <html>
-<head>
-<title>basic.pl</title>
-</head>
-<body>
-<h1> Documentation for Prolog file: basic.pl</h1>
-<p>This file contains a number of simple list-related simple predicates. Finding the minimum and maximum values in a list, sorting a list, dropping certain elements from a list, ...</p
-<a name="predicates"></a>
-<h2>Predicates:</h2>
-<ul id="predicate_list">
-<li><p><a href="#min-2">min/2</a></p></li>
-<li><p><a href="#max-2">max/2</a></p></li>
-<li><p><a href="#first-3">first/3</a></p></li>
-<li><p><a href="#last-3">last/3</a></p></li>
-</ul>
-<a name="details"></a>
-<h2>Predicate Details:</h2>
-<ul id="predicate_details">
-<li>
-<h3><a name="min-2"></a>min/2</h3>
-<dl>
-<dt>
-<b>Form:</b> min(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">Min</i>)
-</dt>
-<dt>
-<b>Description: </b> <i style="color:#cc33ff">Min</i> is the smallest value, according to '@>', in <i style="color:#cc33ff">List</i>.
-</dt>
-<dt>
-<b>Constraints: </b> 
-<ul>
-<li>
-<i style="color:#0099ff"><u>List</u></i> Must have at least one element.
-</li>
-</ul>
-</dt>
-</dl>
-</li>
-<li>
-<h3><a name="max-2"></a>max/2</h3>
-<dl>
-<dt>
-<b>Form:</b> max(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">Max</i>)
-</dt>
-<dt>
-<b>Description: </b> <i style="color:#cc33ff">Max</i> is the smallest value, according to '@<', in <i style="color:#cc33ff">List</i>.
-</dt>
-<dt>
-<b>Constraints: </b> 
-<ul>
-<li>
-<i style="color:#0099ff"><u>List</u></i> Must have at least one element.
-</li>
-</ul>
-</dt>
-</dl>
-</li>
-<li>
-<h3><a name="first-3"></a>first/3</h3>
-<dl>
-<dt>
-<b>Form:</b> first(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">First</i>, <i style="color:#ff0000">Rest</i>)
-</dt>
-<dt>
-<b>Description: </b> <i style="color:#cc33ff">First</i> is the head of <i style="color:#cc33ff">List</i> and <i style="color:#cc33ff">Rest</i> are the other elements of <i style="color:#cc33ff">List</i>.
-</dt>
-<dt>
-<b>Constraints: </b> 
-<ul>
-<li>
-<i style="color:#0099ff"><u>List</u></i> Must have at least one element.
-</li>
-</ul>
-</dt>
-</dl>
-</li>
-<li>
-<h3><a name="last-3"></a>last/3</h3>
-<dl>
-<dt>
-<b>Form:</b> last(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">Rest</i>, <i style="color:#ff0000">Last</i>)
-</dt>
-<dt>
-<b>Description: </b> <i style="color:#cc33ff">Last</i> is the last element of <i style="color:#cc33ff">List</i>. <i style="color:#cc33ff">Rest</i> are the elements from the first to the second to last.
-</dt>
-<dt>
-<b>Constraints: </b> 
-<ul>
-<li>
-<i style="color:#0099ff"><u>List</u></i> Cannot be empty.
-</li>
-</ul>
-</dt>
-</dl>
-</li>
-</ul>
-<hr><p><a href="http://github.com/lluisalemanypuig/docyourprolog.git">Generated with DYP</a></p></body>
+	<head>
+		<title>basic.pl</title>
+	</head>
+	<body>
+		<h1>Documentation for Prolog file: basic.pl</h1>
+		<p>This file contains a number of simple list-related simple predicates. Finding the minimum and maximum values in a list, sorting a list, dropping certain elements from a list, ...</p>
+		<h2><a name="predicates">Predicates:</a></h2>
+		<ul id="predicate_list">
+			<li>
+				<p><a href="#min-2">min/2</a></p>
+			</li>
+			<li>
+				<p><a href="#max-2">max/2</a></p>
+			</li>
+			<li>
+				<p><a href="#first-3">first/3</a></p>
+			</li>
+			<li>
+				<p><a href="#last-3">last/3</a></p>
+			</li>
+		</ul>
+		<h2><a name="details">Predicate Details:</a></h2>
+		<ul id="predicate_details">
+			<li>
+				<h3><a name="min-2">min/2</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>min(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">Min</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd><i style="color:#cc33ff">Min</i> is the smallest value, according to '@>', in <i style="color:#cc33ff">List</i>.</dd>
+					<dt><b>Constraints:</b></dt>
+					<dd></dd>
+					<ul>
+						<li>
+							<i style="color:#0099ff"><u>List</u></i> Must have at least one element.
+						</li>
+					</ul>
+				</dl>
+			</li>
+			<li>
+				<h3><a name="max-2">max/2</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>max(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">Max</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd><i style="color:#cc33ff">Max</i> is the smallest value, according to '@<', in <i style="color:#cc33ff">List</i>.</dd>
+					<dt><b>Constraints:</b></dt>
+					<dd></dd>
+					<ul>
+						<li>
+							<i style="color:#0099ff"><u>List</u></i> Must have at least one element.
+						</li>
+					</ul>
+				</dl>
+			</li>
+			<li>
+				<h3><a name="first-3">first/3</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>first(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">First</i>, <i style="color:#ff0000">Rest</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd><i style="color:#cc33ff">First</i> is the head of <i style="color:#cc33ff">List</i> and <i style="color:#cc33ff">Rest</i> are the other elements of <i style="color:#cc33ff">List</i>.</dd>
+					<dt><b>Constraints:</b></dt>
+					<dd></dd>
+					<ul>
+						<li>
+							<i style="color:#0099ff"><u>List</u></i> Must have at least one element.
+						</li>
+					</ul>
+				</dl>
+			</li>
+			<li>
+				<h3><a name="last-3">last/3</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>last(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">Rest</i>, <i style="color:#ff0000">Last</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd><i style="color:#cc33ff">Last</i> is the last element of <i style="color:#cc33ff">List</i>. <i style="color:#cc33ff">Rest</i> are the elements from the first to the second to last.</dd>
+					<dt><b>Constraints:</b></dt>
+					<dd></dd>
+					<ul>
+						<li>
+							<i style="color:#0099ff"><u>List</u></i> Cannot be empty.
+						</li>
+					</ul>
+				</dl>
+			</li>
+		</ul>
+		<hr>
+		<p><a href="http://github.com/lluisalemanypuig/docyourprolog.git">Generated with DYP</a></p>
+	</body>
 </html>

@@ -1,65 +1,63 @@
 <html>
-<head>
-<title>high_order.pl</title>
-</head>
-<body>
-<h1> Documentation for Prolog file: high_order.pl</h1>
-<p>This file contains a number of high-order predicates for list manipulation, such as map, foldl, foldr, zip, ...</p
-<p><b>By: </b><i>Me, Myself and I</i></p>
-<p><b>On: </b><i>19th July 2018</i></p>
-<a name="predicates"></a>
-<h2>Predicates:</h2>
-<ul id="predicate_list">
-<li><p><a href="#map-3">map/3</a></p></li>
-<li><p><a href="#zip-3">zip/3</a></p></li>
-<li><p><a href="#zip-4">zip/4</a></p></li>
-</ul>
-<a name="details"></a>
-<h2>Predicate Details:</h2>
-<ul id="predicate_details">
-<li>
-<h3><a name="map-3"></a>map/3</h3>
-<dl>
-<dt>
-<b>Form:</b> map(<i style="color:#ff0000">Function</i>, <i style="color:#ff0000">List</i>, <i style="color:#ff0000">NewList</i>)
-</dt>
-<dt>
-<b>Description: </b> <i style="color:#cc33ff">NewList</i> is the result of applying <i style="color:#cc33ff">Function</i> to every element of List.  In Haskell notation: map :: (a -> b) -> [a] -> [b]
-</dt>
-</dl>
-</li>
-<li>
-<h3><a name="zip-3"></a>zip/3</h3>
-<dl>
-<dt>
-<b>Form:</b> zip(<i style="color:#ff0000">List1</i>, <i style="color:#ff0000">List2</i>, <i style="color:#ff0000">NewList</i>)
-</dt>
-<dt>
-<b>Description: </b> <i style="color:#cc33ff">NewList</i> is the result of an element-wise pairing of the elements in <i style="color:#cc33ff">List1</i> and <i style="color:#cc33ff">List2</i>. Each element of <i style="color:#cc33ff">NewList</i> is a pair, where the left element is an element from <i style="color:#cc33ff">List1</i> and the right element is an element from <i style="color:#cc33ff">List2</i>.
-</dt>
-<dt>
-<b>Constraints: </b> <i style="color:#cc33ff">List1</i> and <i style="color:#cc33ff">List2</i> must have the same length.
-<ul>
-</ul>
-</dt>
-</dl>
-</li>
-<li>
-<h3><a name="zip-4"></a>zip/4</h3>
-<dl>
-<dt>
-<b>Form:</b> zip(<i style="color:#ff0000">Function</i>, <i style="color:#ff0000">List1</i>, <i style="color:#ff0000">List2</i>, <i style="color:#ff0000">NewList</i>)
-</dt>
-<dt>
-<b>Description: </b> <i style="color:#cc33ff">NewList</i> is the result of applying <i style="color:#cc33ff">Function</i> to the i-th element of both <i style="color:#cc33ff">List1</i> and <i style="color:#cc33ff">List2</i>.  In Haskell notation: zip_with :: (a -> b -> c) -> [a] -> [b] -> [c]
-</dt>
-<dt>
-<b>Constraints: </b> List1 and List2 must have the same length.
-<ul>
-</ul>
-</dt>
-</dl>
-</li>
-</ul>
-<hr><p><a href="http://github.com/lluisalemanypuig/docyourprolog.git">Generated with DYP</a></p></body>
+	<head>
+		<title>high_order.pl</title>
+	</head>
+	<body>
+		<h1>Documentation for Prolog file: high_order.pl</h1>
+		<p>This file contains a number of high-order predicates for list manipulation, such as map, foldl, foldr, zip, ...</p>
+		<p><b>By: </b><i>Me, Myself and I</i></p>
+		<p><b>On: </b><i>19th July 2018</i></p>
+		<h2><a name="predicates">Predicates:</a></h2>
+		<ul id="predicate_list">
+			<li>
+				<p><a href="#map-3">map/3</a></p>
+			</li>
+			<li>
+				<p><a href="#zip-3">zip/3</a></p>
+			</li>
+			<li>
+				<p><a href="#zip-4">zip/4</a></p>
+			</li>
+		</ul>
+		<h2><a name="details">Predicate Details:</a></h2>
+		<ul id="predicate_details">
+			<li>
+				<h3><a name="map-3">map/3</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>map(<i style="color:#ff0000">Function</i>, <i style="color:#ff0000">List</i>, <i style="color:#ff0000">NewList</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd><i style="color:#cc33ff">NewList</i> is the result of applying <i style="color:#cc33ff">Function</i> to every element of List.  In Haskell notation: map :: (a -> b) -> [a] -> [b]</dd>
+				</dl>
+			</li>
+			<li>
+				<h3><a name="zip-3">zip/3</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>zip(<i style="color:#ff0000">List1</i>, <i style="color:#ff0000">List2</i>, <i style="color:#ff0000">NewList</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd><i style="color:#cc33ff">NewList</i> is the result of an element-wise pairing of the elements in <i style="color:#cc33ff">List1</i> and <i style="color:#cc33ff">List2</i>. Each element of <i style="color:#cc33ff">NewList</i> is a pair, where the left element is an element from <i style="color:#cc33ff">List1</i> and the right element is an element from <i style="color:#cc33ff">List2</i>.</dd>
+					<dt><b>Constraints:</b></dt>
+					<dd><i style="color:#cc33ff">List1</i> and <i style="color:#cc33ff">List2</i> must have the same length.</dd>
+					<ul>
+					</ul>
+				</dl>
+			</li>
+			<li>
+				<h3><a name="zip-4">zip/4</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>zip(<i style="color:#ff0000">Function</i>, <i style="color:#ff0000">List1</i>, <i style="color:#ff0000">List2</i>, <i style="color:#ff0000">NewList</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd><i style="color:#cc33ff">NewList</i> is the result of applying <i style="color:#cc33ff">Function</i> to the i-th element of both <i style="color:#cc33ff">List1</i> and <i style="color:#cc33ff">List2</i>.  In Haskell notation: zip_with :: (a -> b -> c) -> [a] -> [b] -> [c]</dd>
+					<dt><b>Constraints:</b></dt>
+					<dd>List1 and List2 must have the same length.</dd>
+					<ul>
+					</ul>
+				</dl>
+			</li>
+		</ul>
+		<hr>
+		<p><a href="http://github.com/lluisalemanypuig/docyourprolog.git">Generated with DYP</a></p>
+	</body>
 </html>

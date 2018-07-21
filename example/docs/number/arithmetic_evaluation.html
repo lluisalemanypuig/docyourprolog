@@ -1,76 +1,73 @@
 <html>
-<head>
-<title>arithmetic_evaluation.pl</title>
-</head>
-<body>
-<h1> Documentation for Prolog file: arithmetic_evaluation.pl</h1>
-<p>This file contains all predicates needed to evaluate arithmetic expressions between real numbers, where the result of operating two rational numbers is another rational number. For example, the result of 2/3 + 4/5 is not given as 1.46667, but as 22/15.</p
-<p><b>By: </b><i>Me, Myself, and I</i></p>
-<p><b>On: </b><i>July 20th, 2018</i></p>
-<a name="predicates"></a>
-<h2>Predicates:</h2>
-<ul id="predicate_list">
-<li><p><a href="#expr_eval-2">expr_eval/2</a></p></li>
-<li><p><a href="#factorial_-2">factorial_/2</a></p></li>
-<li><p><a href="#factorial-2">factorial/2</a></p></li>
-</ul>
-<a name="details"></a>
-<h2>Predicate Details:</h2>
-<ul id="predicate_details">
-<li>
-<h3><a name="expr_eval-2"></a>expr_eval/2</h3>
-<dl>
-<dt>
-<b>Form:</b> expr_eval(<i style="color:#ff0000">Expr</i>, <i style="color:#ff0000">Result</i>)
-</dt>
-<dt>
-<b>Description: </b> 
-</dt>
-<dt>
-<b>Constraints: </b> <i style="color:#cc33ff">Expr</i> is an arithmetic expression. That is, <i style="color:#cc33ff">Expr</i> is either a natural value, or an arithmetic expression of the form <-- A + B A - B A*B A/B A^B -A --> where A and B are arithmetic expressions.  <i style="color:#cc33ff">Result</i> is the evaluation of <i style="color:#cc33ff">Expr</i>.
-<ul>
-</ul>
-</dt>
-</dl>
-</li>
-<li>
-<h3><a name="factorial_-2"></a>factorial_/2</h3>
-<dl>
-<dt>
-<b>Form:</b> factorial_(<i style="color:#ff0000">Num</i>, <i style="color:#ff0000">F</i>)
-</dt>
-<dt>
-<b>Description: </b> <i style="color:#cc33ff">F</i> is the factorial of natural number <i style="color:#cc33ff">Num</i>.
-</dt>
-<dt>
-<b>Constraints: </b> 
-<ul>
-<li>
-<i style="color:#0099ff"><u>Num</u></i> A natural number.
-</li>
-</ul>
-</dt>
-</dl>
-</li>
-<li>
-<h3><a name="factorial-2"></a>factorial/2</h3>
-<dl>
-<dt>
-<b>Form:</b> factorial(<i style="color:#ff0000">Expr</i>, <i style="color:#ff0000">F</i>)
-</dt>
-<dt>
-<b>Description: </b> <i style="color:#cc33ff">F</i> is the factorial of the result of evaluating the arithmetic expression <i style="color:#cc33ff">Expr</i>. Uses predicate <a href="#factorial-2"><u>factorial/2</u></a>.
-</dt>
-<dt>
-<b>Constraints: </b> 
-<ul>
-<li>
-<i style="color:#0099ff"><u>Expr</u></i> An arithmetic expression.
-</li>
-</ul>
-</dt>
-</dl>
-</li>
-</ul>
-<hr><p><a href="http://github.com/lluisalemanypuig/docyourprolog.git">Generated with DYP</a></p></body>
+	<head>
+		<title>arithmetic_evaluation.pl</title>
+	</head>
+	<body>
+		<h1>Documentation for Prolog file: arithmetic_evaluation.pl</h1>
+		<p>This file contains all predicates needed to evaluate arithmetic expressions between real numbers, where the result of operating two rational numbers is another rational number. For example, the result of 2/3 + 4/5 is not given as 1.46667, but as 22/15.</p>
+		<p><b>By: </b><i>Me, Myself, and I</i></p>
+		<p><b>On: </b><i>July 20th, 2018</i></p>
+		<h2><a name="predicates">Predicates:</a></h2>
+		<ul id="predicate_list">
+			<li>
+				<p><a href="#expr_eval-2">expr_eval/2</a></p>
+			</li>
+			<li>
+				<p><a href="#factorial_-2">factorial_/2</a></p>
+			</li>
+			<li>
+				<p><a href="#factorial-2">factorial/2</a></p>
+			</li>
+		</ul>
+		<h2><a name="details">Predicate Details:</a></h2>
+		<ul id="predicate_details">
+			<li>
+				<h3><a name="expr_eval-2">expr_eval/2</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>expr_eval(<i style="color:#ff0000">Expr</i>, <i style="color:#ff0000">Result</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd></dd>
+					<dt><b>Constraints:</b></dt>
+					<dd><i style="color:#cc33ff">Expr</i> is an arithmetic expression. That is, <i style="color:#cc33ff">Expr</i> is either a natural value, or an arithmetic expression of the form <-- A + B A - B A*B A/B A^B -A --> where A and B are arithmetic expressions.  <i style="color:#cc33ff">Result</i> is the evaluation of <i style="color:#cc33ff">Expr</i>.</dd>
+					<ul>
+					</ul>
+				</dl>
+			</li>
+			<li>
+				<h3><a name="factorial_-2">factorial_/2</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>factorial_(<i style="color:#ff0000">Num</i>, <i style="color:#ff0000">F</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd><i style="color:#cc33ff">F</i> is the factorial of natural number <i style="color:#cc33ff">Num</i>.</dd>
+					<dt><b>Constraints:</b></dt>
+					<dd></dd>
+					<ul>
+						<li>
+							<i style="color:#0099ff"><u>Num</u></i> A natural number.
+						</li>
+					</ul>
+				</dl>
+			</li>
+			<li>
+				<h3><a name="factorial-2">factorial/2</a></h3>
+				<dl>
+					<dt><b>Form: </b></dt>
+					<dd>factorial(<i style="color:#ff0000">Expr</i>, <i style="color:#ff0000">F</i>)</dd>
+					<dt><b>Description:</b></dt>
+					<dd><i style="color:#cc33ff">F</i> is the factorial of the result of evaluating the arithmetic expression <i style="color:#cc33ff">Expr</i>. Uses predicate <a href="#factorial-2"><u>factorial/2</u></a>.</dd>
+					<dt><b>Constraints:</b></dt>
+					<dd></dd>
+					<ul>
+						<li>
+							<i style="color:#0099ff"><u>Expr</u></i> An arithmetic expression.
+						</li>
+					</ul>
+				</dl>
+			</li>
+		</ul>
+		<hr>
+		<p><a href="http://github.com/lluisalemanypuig/docyourprolog.git">Generated with DYP</a></p>
+	</body>
 </html>
