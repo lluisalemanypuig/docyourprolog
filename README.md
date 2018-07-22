@@ -2,7 +2,7 @@
 
 This project intends to offer a stable tool to generate html documentation for
 [SWI-Prolog](http://www.swi-prolog.org/) code automatically by parsing the source
-files.
+files found inside a given directory.
 
 ## Documenting your code
 
@@ -30,15 +30,15 @@ as follows:
     the last file block found will be used.
 
 - Predicate blocks: these blocks contain the documentation for a particular predicate
-and are placed just right above it. With this kind of blocks the programmer can
+and should be placed just right above it. With this kind of blocks the programmer can
 specify the form of the predicate, a general description, and constraints on the
 parameters. The tags that should be used are explained using an example:
         
         /**
         @form min(List,Value)
         @descr Value is the minimum value in List
-        @constrs
-            @param List cannot be empty and must contain elements comparable with @>
+        @constrs [descr]
+            @param List Cannot be empty and must contain elements comparable with @>
         */
 
     Just right after the _@constrs_ tag one may write an arbitrarily long general description
@@ -78,10 +78,11 @@ a description that categorises them. For example, one may write:
         - pnppred1
         - pnppred2
 
-Any description (anything after a @descr, or between the @constr and
-the first @param, if there is any) can contain references to parameters
-and predicates. For example, we can have the following predicates
-documentation:
+#### Description enrichment
+
+Any description (anything after a @descr, or between the @constr and each @param, if there is
+any) can contain references to parameters and predicates. For example, we can have the following
+predicates documentation:
 
         /**
         @form min(List,Value)
@@ -98,14 +99,62 @@ documentation:
             @param List Likewise in ?min/2.
         */
 
-The reference to the parameter, indicated with '@' will simply highlight
-the string following the '@'. The reference to the predicate, however,
-will add a hyperlink tied to the following string. The referenced predicate
-must be in the same source file as the block comment where the reference
-is put. That is, the reference '?min/2' can not be used if the corresponding
-predicate block is not in the same file as the predicate block documenting
-'min/2'.
+The reference to the parameter, indicated with '@' will simply highlight the string following the
+'@'. The reference to the predicate, however, will add a hyperlink tied to the following string.
+The referenced predicate must be in the same source file as the block comment where the reference
+is put. That is, the reference '?min/2' can not be used if the corresponding predicate block is
+not in the same file as the predicate block documenting 'min/2'.
 
+Moreover, any description can contain special strings to indicate formatted text.
+- The simplest string is the blank line: a single blank line between two paragraphs.
+        
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+        ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat.
+    
+    This will generate both sentences one next to the other in the html file.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+        ut labore et dolore magna aliqua.
+        
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat.
+    
+    This will make the second sentence to be displayed in a new paragraph.
+    
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+        ut labore et dolore magna aliqua.
+        
+        
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat.
+    
+    This will leave a blank line between both sentences (this also applies for three or more blank
+    lines).
+
+- Verbatim environments: if the programmer wants to display some formatted text "based on spaces",
+they can use the '<--' string to define a verbatim environment. It must be closed with '-->'
+and anything in between will be displayed _as is_.
+
+- Bullet lists: one can define bullet lists with '<++'. A bullet list should be finished with a '++>'
+and its items are defined with '!>'. Leave a blank space after each '!>'. The user may also leave
+blank lines between items of the list so as to make the html display them too. Furthermore, lists 
+can be nested and contain other environments.
+
+        Lorem ipsum dolor sit amet:
+        <++
+        !> consectetur adipiscing elit, sed do eiusmod tempor incididunt
+        !> ut labore et dolore magna aliqua.
+                <++
+                !> Ut enim ad minim veniam,
+                !> quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                commodo consequat.
+                        ++>
+        !> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+        fugiat nulla pariatur
+        ++>
+        
 ### Usage
 
 #### Generate the default configuration
