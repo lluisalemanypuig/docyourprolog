@@ -4,8 +4,33 @@
 /***
 	@descr This file contains all predicates needed to evaluate arithmetic
 	expressions between real numbers, where the result of operating
-	two rational numbers is another rational number. For example, the
+	two rational numbers is another rational number.
+	
+	For example, the
 	result of 2/3 + 4/5 is not given as 1.46667, but as 22/15.
+	
+	A file description can also contain bullet lists:
+	<++
+	!> Actually, any description can contain lists.
+		<++
+			!> File descriptions
+			!> Predicate separators
+			!> Also in predicates:
+			<++
+				!> In their description
+				!> In the description of the constraints
+			++>
+		++>
+	!> Write the coolest documentation using verbatim environments
+	within lists!
+		<--
+		This
+					 is
+			   a
+		verbatim
+										  environment
+		-->
+	++>
 	
 	@author Me, Myself, and I
 	@date July 20th, 2018
@@ -24,6 +49,9 @@
 		-A
 	-->
 	where A and B are arithmetic expressions.
+	
+	Using a closing verbatim environment '-->' without the opening verbatim
+	environment does not affect at all the generation of documentation.
 	
 	@Result is the evaluation of @Expr.
 */

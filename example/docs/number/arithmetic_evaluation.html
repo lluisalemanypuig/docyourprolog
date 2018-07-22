@@ -4,7 +4,45 @@
 	</head>
 	<body>
 		<h1>Documentation for Prolog file: arithmetic_evaluation.pl</h1>
-		<p>This file contains all predicates needed to evaluate arithmetic expressions between real numbers, where the result of operating two rational numbers is another rational number. For example, the result of 2/3 + 4/5 is not given as 1.46667, but as 22/15.</p>
+		<dl>
+			<dt>This file contains all predicates needed to evaluate arithmetic expressions between real numbers, where the result of operating two rational numbers is another rational number.</dt>
+			<dt> For example, the result of 2/3 + 4/5 is not given as 1.46667, but as 22/15.</dt>
+			<dt> A file description can also contain bullet lists: </dt>
+			<ul>
+				<li>
+					Actually, any description can contain lists. 
+					<ul>
+						<li>
+							File descriptions 
+						</li>
+						<li>
+							Predicate separators 
+						</li>
+						<li>
+							Also in predicates: 
+							<ul>
+								<li>
+									In their description 
+								</li>
+								<li>
+									In the description of the constraints 
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Write the coolest documentation using verbatim environments within lists! 
+					<pre>
+ 		This
+ 					 is
+ 			   a
+ 		verbatim
+ 										  environment
+ 					</pre>
+				</li>
+			</ul>
+		</dl>
 		<p><b>By: </b><i>Me, Myself, and I</i></p>
 		<p><b>On: </b><i>July 20th, 2018</i></p>
 		<h2><a name="predicates">Predicates:</a></h2>
@@ -27,9 +65,21 @@
 					<dt><b>Form: </b></dt>
 					<dd>expr_eval(<i style="color:#ff0000">Expr</i>, <i style="color:#ff0000">Result</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd></dd>
 					<dt><b>Constraints:</b></dt>
-					<dd><i style="color:#cc33ff">Expr</i> is an arithmetic expression. That is, <i style="color:#cc33ff">Expr</i> is either a natural value, or an arithmetic expression of the form <-- A + B A - B A*B A/B A^B -A --> where A and B are arithmetic expressions.  <i style="color:#cc33ff">Result</i> is the evaluation of <i style="color:#cc33ff">Expr</i>.</dd>
+					<dl>
+						<dt><i style="color:#cc33ff">Expr</i> is an arithmetic expression. That is, <i style="color:#cc33ff">Expr</i> is either a natural value, or an arithmetic expression of the form </dt>
+						<pre>
+ 		A + B
+ 		A - B
+ 		A*B
+ 		A/B
+ 		A^B
+ 		-A
+ 						</pre>
+						<dt> where A and B are arithmetic expressions.</dt>
+						<dt> Using a closing verbatim environment '-->' without the opening verbatim environment does not affect at all the generation of documentation.</dt>
+						<dt> <i style="color:#cc33ff">Result</i> is the evaluation of <i style="color:#cc33ff">Expr</i>.</dt>
+					</dl>
 					<ul>
 					</ul>
 				</dl>
@@ -40,9 +90,10 @@
 					<dt><b>Form: </b></dt>
 					<dd>factorial_(<i style="color:#ff0000">Num</i>, <i style="color:#ff0000">F</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd><i style="color:#cc33ff">F</i> is the factorial of natural number <i style="color:#cc33ff">Num</i>.</dd>
+					<dl>
+						<dt><i style="color:#cc33ff">F</i> is the factorial of natural number <i style="color:#cc33ff">Num</i>.</dt>
+					</dl>
 					<dt><b>Constraints:</b></dt>
-					<dd></dd>
 					<ul>
 						<li>
 							<i style="color:#0099ff"><u>Num</u></i> A natural number.
@@ -56,9 +107,10 @@
 					<dt><b>Form: </b></dt>
 					<dd>factorial(<i style="color:#ff0000">Expr</i>, <i style="color:#ff0000">F</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd><i style="color:#cc33ff">F</i> is the factorial of the result of evaluating the arithmetic expression <i style="color:#cc33ff">Expr</i>. Uses predicate <a href="#factorial-2"><u>factorial/2</u></a>.</dd>
+					<dl>
+						<dt><i style="color:#cc33ff">F</i> is the factorial of the result of evaluating the arithmetic expression <i style="color:#cc33ff">Expr</i>. Uses predicate <a href="#factorial-2"><u>factorial/2</u></a>.</dt>
+					</dl>
 					<dt><b>Constraints:</b></dt>
-					<dd></dd>
 					<ul>
 						<li>
 							<i style="color:#0099ff"><u>Expr</u></i> An arithmetic expression.

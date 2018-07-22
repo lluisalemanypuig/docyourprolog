@@ -4,7 +4,9 @@
 	</head>
 	<body>
 		<h1>Documentation for Prolog file: natural.pl</h1>
-		<p>This file contains the basic definitions for what a natural number is, two constants (zero and one),</p>
+		<dl>
+			<dt>This file contains the basic definitions for what a natural number is, two constants (zero and one),</dt>
+		</dl>
 		<h2><a name="predicates">Predicates:</a></h2>
 		<ul id="predicate_list">
 			<li>
@@ -31,7 +33,9 @@
 					<dt><b>Form: </b></dt>
 					<dd>zero(<i style="color:#ff0000">Z</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd>Predicate fails if <i style="color:#cc33ff">Z</i> is not 0.</dd>
+					<dl>
+						<dt>Predicate fails if <i style="color:#cc33ff">Z</i> is not 0.</dt>
+					</dl>
 				</dl>
 			</li>
 			<li>
@@ -40,7 +44,9 @@
 					<dt><b>Form: </b></dt>
 					<dd>one(<i style="color:#ff0000">O</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd>Predicate fails if <i style="color:#cc33ff">O</i> is not 1.</dd>
+					<dl>
+						<dt>Predicate fails if <i style="color:#cc33ff">O</i> is not 1.</dt>
+					</dl>
 				</dl>
 			</li>
 			<li>
@@ -49,7 +55,9 @@
 					<dt><b>Form: </b></dt>
 					<dd>natural(<i style="color:#ff0000">N</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd>Predicates fails on any non-integer value, or negative integer value for parameter <i style="color:#cc33ff">N</i>.</dd>
+					<dl>
+						<dt>Predicates fails on any non-integer value, or negative integer value for parameter <i style="color:#cc33ff">N</i>.</dt>
+					</dl>
 				</dl>
 			</li>
 			<li>
@@ -58,9 +66,11 @@
 					<dt><b>Form: </b></dt>
 					<dd>next_natural(<i style="color:#ff0000">N</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd>Predicate used to generate all natural numbers.  Example of usage: next_natural(N), write(N), nl, fail.</dd>
+					<dl>
+						<dt>Predicate used to generate all natural numbers.</dt>
+						<dt> Example of usage: next_natural(N), write(N), nl, fail.</dt>
+					</dl>
 					<dt><b>Constraints:</b></dt>
-					<dd></dd>
 					<ul>
 						<li>
 							<i style="color:#0099ff"><u>N</u></i> Natural value.
@@ -74,7 +84,17 @@
 					<dt><b>Form: </b></dt>
 					<dd>parity(<i style="color:#ff0000">Num</i>, <i style="color:#ff0000">Par</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd>Obtains the parity of natural number <i style="color:#cc33ff">Num</i>.  *> If <i style="color:#cc33ff">Num</i> is even then <i style="color:#cc33ff">Par</i> is "even". *> If <i style="color:#cc33ff">Num</i> is odd then <i style="color:#cc33ff">Par</i> is "odd".</dd>
+					<dl>
+						<dt>Obtains the parity of natural number <i style="color:#cc33ff">Num</i>.</dt>
+						<ul>
+							<li>
+								If <i style="color:#cc33ff">Num</i> is even then <i style="color:#cc33ff">Par</i> is "even". 
+							</li>
+							<li>
+								If <i style="color:#cc33ff">Num</i> is odd then <i style="color:#cc33ff">Par</i> is "odd". 
+							</li>
+						</ul>
+					</dl>
 				</dl>
 			</li>
 		</ul>

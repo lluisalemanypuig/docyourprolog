@@ -4,6 +4,15 @@
 	a list, dropping certain elements from a list, ...
 */
 
+/*!
+Two simple methods to start this basic collection of predicates:
+
+<++
+!> ?min/2
+!> ?max/2
+++>
+*/
+
 /**
 	@form min(List, Min)
 	@descr @Min is the smallest value, according to '@>', in @List.
@@ -23,6 +32,15 @@ min([X|_], X).
 max([X], X):- !.
 max([X|L], M):- max(L, N), X @< N, !, M is N.
 max([X|_], X).
+
+/*!
+Two more simple methods to finish this basic collection of predicates:
+
+<++
+!> ?first/3
+!> ?last/3
+++>
+*/
 
 /**
 	@form first(List, First, Rest)

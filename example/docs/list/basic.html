@@ -4,15 +4,39 @@
 	</head>
 	<body>
 		<h1>Documentation for Prolog file: basic.pl</h1>
-		<p>This file contains a number of simple list-related simple predicates. Finding the minimum and maximum values in a list, sorting a list, dropping certain elements from a list, ...</p>
+		<dl>
+			<dt>This file contains a number of simple list-related simple predicates. Finding the minimum and maximum values in a list, sorting a list, dropping certain elements from a list, ...</dt>
+		</dl>
 		<h2><a name="predicates">Predicates:</a></h2>
 		<ul id="predicate_list">
+			<dl>
+				<dt>Two simple methods to start this basic collection of predicates:</dt>
+				<ul>
+					<li>
+						<a href="#min-2"><u>min/2</u></a> 
+					</li>
+					<li>
+						<a href="#max-2"><u>max/2</u></a> 
+					</li>
+				</ul>
+			</dl>
 			<li>
 				<p><a href="#min-2">min/2</a></p>
 			</li>
 			<li>
 				<p><a href="#max-2">max/2</a></p>
 			</li>
+			<dl>
+				<dt>Two more simple methods to finish this basic collection of predicates:</dt>
+				<ul>
+					<li>
+						<a href="#first-3"><u>first/3</u></a> 
+					</li>
+					<li>
+						<a href="#last-3"><u>last/3</u></a> 
+					</li>
+				</ul>
+			</dl>
 			<li>
 				<p><a href="#first-3">first/3</a></p>
 			</li>
@@ -28,9 +52,10 @@
 					<dt><b>Form: </b></dt>
 					<dd>min(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">Min</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd><i style="color:#cc33ff">Min</i> is the smallest value, according to '@>', in <i style="color:#cc33ff">List</i>.</dd>
+					<dl>
+						<dt><i style="color:#cc33ff">Min</i> is the smallest value, according to '@>', in <i style="color:#cc33ff">List</i>.</dt>
+					</dl>
 					<dt><b>Constraints:</b></dt>
-					<dd></dd>
 					<ul>
 						<li>
 							<i style="color:#0099ff"><u>List</u></i> Must have at least one element.
@@ -44,9 +69,10 @@
 					<dt><b>Form: </b></dt>
 					<dd>max(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">Max</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd><i style="color:#cc33ff">Max</i> is the smallest value, according to '@<', in <i style="color:#cc33ff">List</i>.</dd>
+					<dl>
+						<dt><i style="color:#cc33ff">Max</i> is the smallest value, according to '@<', in <i style="color:#cc33ff">List</i>.</dt>
+					</dl>
 					<dt><b>Constraints:</b></dt>
-					<dd></dd>
 					<ul>
 						<li>
 							<i style="color:#0099ff"><u>List</u></i> Must have at least one element.
@@ -60,9 +86,10 @@
 					<dt><b>Form: </b></dt>
 					<dd>first(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">First</i>, <i style="color:#ff0000">Rest</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd><i style="color:#cc33ff">First</i> is the head of <i style="color:#cc33ff">List</i> and <i style="color:#cc33ff">Rest</i> are the other elements of <i style="color:#cc33ff">List</i>.</dd>
+					<dl>
+						<dt><i style="color:#cc33ff">First</i> is the head of <i style="color:#cc33ff">List</i> and <i style="color:#cc33ff">Rest</i> are the other elements of <i style="color:#cc33ff">List</i>.</dt>
+					</dl>
 					<dt><b>Constraints:</b></dt>
-					<dd></dd>
 					<ul>
 						<li>
 							<i style="color:#0099ff"><u>List</u></i> Must have at least one element.
@@ -76,9 +103,10 @@
 					<dt><b>Form: </b></dt>
 					<dd>last(<i style="color:#ff0000">List</i>, <i style="color:#ff0000">Rest</i>, <i style="color:#ff0000">Last</i>)</dd>
 					<dt><b>Description:</b></dt>
-					<dd><i style="color:#cc33ff">Last</i> is the last element of <i style="color:#cc33ff">List</i>. <i style="color:#cc33ff">Rest</i> are the elements from the first to the second to last.</dd>
+					<dl>
+						<dt><i style="color:#cc33ff">Last</i> is the last element of <i style="color:#cc33ff">List</i>. <i style="color:#cc33ff">Rest</i> are the elements from the first to the second to last.</dt>
+					</dl>
 					<dt><b>Constraints:</b></dt>
-					<dd></dd>
 					<ul>
 						<li>
 							<i style="color:#0099ff"><u>List</u></i> Cannot be empty.
