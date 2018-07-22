@@ -16,6 +16,18 @@ import formats.htmlise as HS
 # write the head of the html file
 class html_maker:
 	
+	def _write_description(self, descr, all_param_names = []):
+		HTML = self._hw
+		descr = HS.colour_n_link_descr(descr, all_param_names, self._pred_names)
+		descr = HS.make_new_lines(descr)
+		
+		if descr == ['']: return
+		
+		HTML.open_description_list()
+		for line in descr:
+			HS.make_environments(HTML, line)
+		HTML.close_tag()
+	
 	def _write_head(self):
 		self._hw.open_head()
 		self._hw.open_title();
@@ -28,11 +40,11 @@ class html_maker:
 		HTML = self._hw
 		
 		HTML.open_h2()
-		HTML.open_a({"name" : "included_files"})
-		HTML.put("Included files:")
+		HTML.open_a({'name' : 'included_files'})
+		HTML.put('Included files:')
 		HTML.close_tag()
 		HTML.close_tag()
-		HTML.open_unordered_list({"id" : "included_files_list"})
+		HTML.open_unordered_list({'id' : 'included_files_list'})
 		
 		for f in self._included_files:
 			IF.included_file(HTML, f, f)
@@ -44,30 +56,22 @@ class html_maker:
 		HTML = self._hw
 		
 		HTML.open_h2()
-		HTML.open_a({"name" : "predicates"})
-		HTML.put("Predicates:")
+		HTML.open_a({'name' : 'predicates'})
+		HTML.put('Predicates:')
 		HTML.close_tag()
 		HTML.close_tag()
-		HTML.open_unordered_list({"id" : "predicate_list"})
+		HTML.open_unordered_list({'id' : 'predicate_list'})
 		
 		# iterate over all blocks
 		for B in self._blocks:
 			btype = B.block_type()
 			binfo = B.block_info()
-			if btype == "separator":
-				if binfo.get_descr() != "":
+			if btype == 'separator':
+				if binfo.get_descr() != '':
 					descr = binfo.get_descr()
-					descr = HS.colour_n_link_descr(descr, [], self._pred_names)
-					descr = HS.make_new_lines(descr)
+					self._write_description(descr, [])
 					
-					HTML.open_description_list()
-					for line in descr:
-						HTML.define_term()
-						HTML.put(line)
-						HTML.close_tag()
-					HTML.close_tag()
-					
-			elif btype == "predicate":
+			elif btype == 'predicate':
 				label = binfo.get_predicate_label()
 				href = label.replace('/','-')
 				PL.predicate_in_list(HTML, label,href)
@@ -81,20 +85,20 @@ class html_maker:
 		
 		HTML.define_term()
 		HTML.open_bold()
-		HTML.put("Form: ")
+		HTML.put('Form: ')
 		HTML.close_tag()
 		HTML.close_tag()
 		
 		HTML.describe_term()
 		
-		html_form = name + "("
+		html_form = name + '('
 		for i in range(0, len(all_param_names)):
 			param_name = all_param_names[i]
 			html_form += form_param(param_name)
 			if i < len(all_param_names) - 1:
-				html_form += ", "
+				html_form += ', '
 		
-		html_form += ")"
+		html_form += ')'
 		HTML.put(html_form)
 		HTML.close_tag()
 	
@@ -104,18 +108,13 @@ class html_maker:
 		
 		HTML.define_term()
 		HTML.open_bold()
-		HTML.put("Description:")
+		HTML.put('Description:')
 		HTML.close_tag()
 		HTML.close_tag()
 		
-		if binfo.get_description() != "":
+		if binfo.get_description() != '':
 			descr = binfo.get_description()
-			descr = HS.colour_n_link_descr(descr, all_param_names, self._pred_names)
-			descr = HS.make_new_lines(descr)
-			for paragraph in descr:
-				HTML.describe_term()
-				HTML.put(paragraph)
-				HTML.close_tag()
+			self._write_description(descr, all_param_names)
 	
 	def _write_pred_constrs(self, binfo, all_param_names, params):
 		form_param = PD.cstr_parameter_format
@@ -124,17 +123,12 @@ class html_maker:
 		
 		HTML.define_term()
 		HTML.open_bold()
-		HTML.put("Constraints:")
+		HTML.put('Constraints:')
 		HTML.close_tag()
 		HTML.close_tag()
 		
 		bcd = binfo.get_cstrs_descr()
-		bcd = HS.colour_n_link_descr(bcd, all_param_names, self._pred_names)
-		bcd = HS.make_new_lines(bcd)
-		for paragraph in bcd:
-			HTML.describe_term()
-			HTML.put(paragraph)
-			HTML.close_tag()
+		self._write_description(bcd, all_param_names)
 		
 		# write parameter list
 		HTML.open_unordered_list()
@@ -143,9 +137,9 @@ class html_maker:
 				_, pdescr = params[pname]
 				
 				HTML.open_list_element()
-				pnamelist = form_param(pname) + " "
+				pnamelist = form_param(pname) + ' '
 				pdescr = pdescr.split(' ')
-				pdescr = " ".join(pdescr[1:])
+				pdescr = ' '.join(pdescr[1:])
 				HTML.put(pnamelist + pdescr + nl)
 				HTML.close_tag()
 			
@@ -157,17 +151,17 @@ class html_maker:
 		HTML = self._hw
 		
 		HTML.open_h2()
-		HTML.open_a({"name" : "details"})
-		HTML.put("Predicate Details:")
+		HTML.open_a({'name' : 'details'})
+		HTML.put('Predicate Details:')
 		HTML.close_tag()
 		HTML.close_tag()
-		HTML.open_unordered_list({"id" : "predicate_details"})
+		HTML.open_unordered_list({'id' : 'predicate_details'})
 		
 		# iterate over all blocks
 		for B in self._blocks:
 			btype = B.block_type()
 			binfo = B.block_info()
-			if btype == "predicate":
+			if btype == 'predicate':
 				label = binfo.get_predicate_label()
 				name = binfo.get_predicate_name()
 				params = binfo.get_parameters()
@@ -186,7 +180,7 @@ class html_maker:
 				self._write_pred_descr(binfo, all_param_names)
 				
 				# write predicate constraints
-				if binfo.get_cstrs_descr() != "" or len(params) > 0:
+				if binfo.get_cstrs_descr() != '' or len(params) > 0:
 					self._write_pred_constrs(binfo, all_param_names, params)
 				
 				HTML.close_tag()	# description list
@@ -199,8 +193,8 @@ class html_maker:
 		
 		HTML.horizontal_line()
 		HTML.open_paragraph()
-		HTML.open_a({"href" : "http://github.com/lluisalemanypuig/docyourprolog.git"})
-		HTML.put("Generated with DYP")
+		HTML.open_a({'href' : 'http://github.com/lluisalemanypuig/docyourprolog.git'})
+		HTML.put('Generated with DYP')
 		HTML.close_tag()
 		HTML.close_tag()
 	
@@ -211,18 +205,18 @@ class html_maker:
 		HTML.open_body()
 		FD.file_title(HTML, self._short_name)
 		
-		if "file" in self._class_blocks != None:
-			file_descr = self._class_blocks["file"][-1]
-			if file_descr.get_descr() != "":
-				FD.file_descr(HTML, file_descr.get_descr())
-			if file_descr.get_author() != "":
+		if 'file' in self._class_blocks != None:
+			file_descr = self._class_blocks['file'][-1]
+			if file_descr.get_descr() != '':
+				self._write_description(file_descr.get_descr(), [])
+			if file_descr.get_author() != '':
 				FD.file_author(HTML, file_descr.get_author())
-			if file_descr.get_date() != "":
+			if file_descr.get_date() != '':
 				FD.file_date(HTML, file_descr.get_date())
 		
 		if self._conf.FILE_INCLUSION_GRAPH and self._needs_graph:
 			short_name, _ = utils.path_ext(self._short_name)
-			HTML.add_image({"name" : short_name + ".png", "alt" : "file_inclusion_map"})
+			HTML.add_image({'name' : short_name + '.png', 'alt' : 'file_inclusion_map'})
 		
 		if len(self._included_files) > 0:
 			self._write_included_files_list()

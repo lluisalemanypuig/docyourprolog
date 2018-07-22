@@ -144,16 +144,6 @@ while len(to_be_parsed) > 0:
 			to_be_parsed += information.get_included_files()
 		
 		class_blocks = information.get_class_blocks()
-		if "predicate" in class_blocks:
-			pred_blocks = class_blocks["predicate"]
-			for pblock in pred_blocks:
-				print "    ", pblock.get_form()
-				print "    ", pblock.get_predicate_label()
-				print "    ", pblock.get_predicate_name()
-				print "    ", pblock.get_description()
-				print "    ", pblock.get_predicate_param_list()
-				print "    ", pblock.get_cstrs_descr()
-				print "    ", pblock.get_parameters()
 
 print
 print "Making html files:"
@@ -161,11 +151,6 @@ print "Making html files:"
 all_files = []
 for abs_path, info in all_info.iteritems():
 	print ">> Making html file for:", info.get_rel_name()
-	
-	print "   ", info.get_abs_html_name()
-	print "   ", info.get_abs_html_path()
-	print "   ", info.get_rel_html_name()
-	print "   ", info.get_rel_html_path()
 	
 	maker = hmaker.html_maker(conf, source_dir, all_info, info)
 	maker.make_html_file()

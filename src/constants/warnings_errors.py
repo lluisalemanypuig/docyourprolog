@@ -1,3 +1,4 @@
+import constants.special as SC
 
 """
 Warnings
@@ -16,3 +17,11 @@ Internal errors:
 
 def absolute_path_not_set(name):
 	print "Internal error: absolute path to html file for '%s' was not set" % name
+
+"""
+External errors:
+"""
+
+def unmatched_tag_close_list():
+	print "Error: unmatched tag '%s'" % SC.close_item_list
+	print "    Did you leave blank lines between elements of the list?"

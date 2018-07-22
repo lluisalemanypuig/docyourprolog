@@ -45,20 +45,35 @@ class file_parser:
 		inside_sc = False		# parsing a structured comment
 		file_inclusion = False	# parsing a file inclusion rule
 		
+		do_cleanup = True		# clean up the current line
+		
 		while p < n_lines:
+			line = lines[p]
 			# remove leading white spaces (spaces, tabs),
-			# remove trailing white spaces
+			# remove trailing white spaces (spaces, tabs, endlines),
 			# remove anything after a '%'
-			line = utils.string_cleanup(lines[p])
+			#
+			# only when we are allowed to, or when the line has a
+			# closing verbatim environment
+			if do_cleanup or line.find(SC.close_verbatim) != -1:
+				line = utils.string_cleanup(line)
 			
 			# ignore lines with only one comment (if a line contains
 			# only a comment starting with '%' the result of its cleanup
 			# is an empty string)
 			if line == '' and lines[p].find('%'): pass
 			
-			# empty lines within a structured comment is interpreted
-			# as an indication to make a new paragraph
-			if line == '':
+			if line == SC.open_verbatim:
+				# if this line is an opening verbatim text, do not
+				# make any cleanup on the line after reading it
+				do_cleanup = False
+			elif line == SC.close_verbatim:
+				# if this line is a closing verbatim text, go back to
+				# do cleanup on the line after reading it
+				do_cleanup = True
+			elif line == '':
+				# empty lines within a structured comment are
+				# interpreted as indications to make a new paragraph
 				line = SC.new_line
 			
 			opens_sc = utils.opens_struct_comm(line)

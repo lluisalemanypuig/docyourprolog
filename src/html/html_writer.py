@@ -90,6 +90,10 @@ class html_writer:
 		
 		return True
 	
+	# returns whether the file is opened or not
+	def is_open(self):
+		return len(self._envir) > 0
+	
 	# Writes a string into the file
 	def put(self, string):
 		env = self._envir[-1]
@@ -149,7 +153,14 @@ class html_writer:
 	# Opens tag <pre>
 	def open_verbatim(self):
 		env = 'pre'
-		self._multi_line_env(env)
+		self._envir.append(env)
+		self._tab_open.append(env)
+		self._open_nl.append(env)
+		self._tab_close.append(env)
+		self._close_nl.append(env)
+		self._tab_cnt.append('')
+		self._cnt_nl.append('')
+		self._ltab.append('\t')
 		self._open('<%s>' % env)
 	
 	def horizontal_line(self):
