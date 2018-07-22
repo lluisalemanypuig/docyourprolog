@@ -234,6 +234,10 @@ Alternatively, the code can also be copied and moved to the _/usr/bin/_ director
 
 ## Example
 
-[Here](https://github.com/lluisalemanypuig/docyourprolog/tree/dev/example) one will find a minimal
+[Here](https://github.com/lluisalemanypuig/docyourprolog/tree/master/example) one will find a minimal
 example of Prolog code and a configuration file. The documentation generated for that source code
-can be found in [this](https://github.com/lluisalemanypuig/docyourprolog/tree/dev/example/docs) directory.
+can be found in [this](https://github.com/lluisalemanypuig/docyourprolog/tree/master/example/docs) directory.
+
+In particular, the reader is encouraged to check the file [arithmetic_evaluation.pl](https://github.com/lluisalemanypuig/docyourprolog/blob/master/example/src/number/arithmetic_evaluation.pl) to see some possibilities of
+_description enrichment_ explained before. The corresponding html file generated with this tool can be found in
+[arithmetic_evaluation.html](https://github.com/lluisalemanypuig/docyourprolog/blob/master/example/docs/number/arithmetic_evaluation.html).
