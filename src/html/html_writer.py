@@ -154,9 +154,9 @@ class html_writer:
 	def open_verbatim(self):
 		env = 'pre'
 		self._envir.append(env)
-		self._tab_open.append(env)
+		self._tab_open.append('')
 		self._open_nl.append(env)
-		self._tab_close.append(env)
+		self._tab_close.append('')
 		self._close_nl.append(env)
 		self._tab_cnt.append('')
 		self._cnt_nl.append('')
@@ -165,6 +165,9 @@ class html_writer:
 	
 	def horizontal_line(self):
 		self.put("<hr>" + pcsts.nl)
+	
+	def blank_line(self):
+		self.put("<br />" + pcsts.nl)
 	
 	# opens tag <dl>
 	def open_description_list(self):

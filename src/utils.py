@@ -39,14 +39,16 @@ def line_cleanup(line):
 	return line[0:(i+1)]
 
 # Deletes all leading spaces and tabs.
-# Deletes all characters after '%' and all trailing spaces and tabs
-def string_cleanup(line):
+def lstring_cleanup(line):
 	line_len = len(line)
 	
 	# delete leading spaces and tabs
 	i = 0
 	while i < line_len and empty_space(line[i]): i += 1
-	
+	return line[i:]
+
+# Deletes all characters after '%' and all trailing spaces and tabs
+def rstring_cleanup(line):
 	# find the last position of a code character
 	j = line.find('%')
 	if j != -1:
@@ -58,9 +60,11 @@ def string_cleanup(line):
 		else:
 			j = len(line) - 1
 			while j > 0 and empty_space(line[j]): j -= 1
-	
-	line = line[i:(j+1)]
-	return line
+	return line[:(j+1)]
+
+# left and right string cleanup
+def string_cleanup(line):
+	return lstring_cleanup( rstring_cleanup(line) )
 
 # deletes simple quotes (') and double quotes (") from the name
 def filename_cleanup(filename):

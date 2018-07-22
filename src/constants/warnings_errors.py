@@ -25,3 +25,6 @@ External errors:
 def unmatched_tag_close_list():
 	print "Error: unmatched tag '%s'" % SC.close_item_list
 	print "    Did you leave blank lines between elements of the list?"
+
+def item_not_within_list():
+	print "Error: found an item tag but not within a list"

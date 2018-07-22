@@ -15,6 +15,7 @@ open_item_list = '<++'
 close_item_list = '++>'
 item_list = '!>'
 
+newlinel = len(new_line)
 overbl = len(open_verbatim)
 cverbl = len(close_verbatim)
 olistl = len(open_item_list)

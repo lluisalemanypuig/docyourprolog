@@ -19,13 +19,9 @@ class html_maker:
 	def _write_description(self, descr, all_param_names = []):
 		HTML = self._hw
 		descr = HS.colour_n_link_descr(descr, all_param_names, self._pred_names)
-		descr = HS.make_new_lines(descr)
-		
-		if descr == ['']: return
 		
 		HTML.open_description_list()
-		for line in descr:
-			HS.make_environments(HTML, line)
+		HS.make_environments(HTML, descr)
 		HTML.close_tag()
 	
 	def _write_head(self):
@@ -140,7 +136,9 @@ class html_maker:
 				pnamelist = form_param(pname) + ' '
 				pdescr = pdescr.split(' ')
 				pdescr = ' '.join(pdescr[1:])
-				HTML.put(pnamelist + pdescr + nl)
+				
+				self._write_description(pnamelist + pdescr + nl)
+				
 				HTML.close_tag()
 			
 		HTML.close_tag()
