@@ -9,20 +9,31 @@
 	For example, the
 	result of 2/3 + 4/5 is not given as 1.46667, but as 22/15.
 	
+	
 	A file description can also contain bullet lists:
+	
+	
 	<++
 	!> Actually, any description can contain lists.
 		<++
 			!> File descriptions
+			
+			
+			
 			!> Predicate separators
 			!> Also in predicates:
 			<++
 				!> In their description
 				!> In the description of the constraints
+				!> In the description of each parameter (see ?expr_eval/2)
+				
+				!> Notice that some bullets have a blank line on top
 			++>
+			
+			!> Included this one (this is due to the separation in the
+			documentation)
 		++>
-	!> Write the coolest documentation using verbatim environments
-	within lists!
+	!> Write the coolest documentation using verbatim environments!
 		<--
 		This
 					 is
@@ -30,6 +41,9 @@
 		verbatim
 										  environment
 		-->
+		
+		
+		
 	++>
 	
 	@author Me, Myself, and I
@@ -53,7 +67,16 @@
 	Using a closing verbatim environment '-->' without the opening verbatim
 	environment does not affect at all the generation of documentation.
 	
+	
 	@Result is the evaluation of @Expr.
+	
+		@param Expr Must be an arithmetic expression.
+		Either one of the following possibilities:
+		<++
+		!> A + B
+		!> A - B
+		!> ...
+		++>
 */
 expr_eval(A + B, C):- expr_eval(A, AA), expr_eval(B, BB), C is AA + BB, !.
 expr_eval(A - B, C):- expr_eval(A, AA), expr_eval(B, BB), C is AA - BB, !.

@@ -6,40 +6,54 @@
 		<h1>Documentation for Prolog file: arithmetic_evaluation.pl</h1>
 		<dl>
 			<dt>This file contains all predicates needed to evaluate arithmetic expressions between real numbers, where the result of operating two rational numbers is another rational number.</dt>
-			<dt> For example, the result of 2/3 + 4/5 is not given as 1.46667, but as 22/15.</dt>
-			<dt> A file description can also contain bullet lists: </dt>
+			<dt>For example, the result of 2/3 + 4/5 is not given as 1.46667, but as 22/15.</dt>
+			<br />
+			<dt>A file description can also contain bullet lists:</dt>
+			<br />
 			<ul>
 				<li>
-					Actually, any description can contain lists. 
+					<dt>Actually, any description can contain lists. </dt>
 					<ul>
 						<li>
-							File descriptions 
+							<dt>File descriptions </dt>
+						</li>
+						<br />
+						<li>
+							<dt>Predicate separators </dt>
 						</li>
 						<li>
-							Predicate separators 
-						</li>
-						<li>
-							Also in predicates: 
+							<dt>Also in predicates: </dt>
 							<ul>
 								<li>
-									In their description 
+									<dt>In their description </dt>
 								</li>
 								<li>
-									In the description of the constraints 
+									<dt>In the description of the constraints </dt>
+								</li>
+								<li>
+									<dt>In the description of each parameter (see <a href="#expr_eval-2"><u>expr_eval/2</u></a>) </dt>
+								</li>
+								<br />
+								<li>
+									<dt>Notice that some bullets have a blank line on top </dt>
 								</li>
 							</ul>
+						</li>
+						<br />
+						<li>
+							<dt>Included this one (this is due to the separation in the documentation) </dt>
 						</li>
 					</ul>
 				</li>
 				<li>
-					Write the coolest documentation using verbatim environments within lists! 
-					<pre>
+					<dt>Write the coolest documentation using verbatim environments! </dt>
+<pre>
  		This
  					 is
  			   a
  		verbatim
  										  environment
- 					</pre>
+</pre>
 				</li>
 			</ul>
 		</dl>
@@ -68,19 +82,38 @@
 					<dt><b>Constraints:</b></dt>
 					<dl>
 						<dt><i style="color:#cc33ff">Expr</i> is an arithmetic expression. That is, <i style="color:#cc33ff">Expr</i> is either a natural value, or an arithmetic expression of the form </dt>
-						<pre>
+<pre>
  		A + B
  		A - B
  		A*B
  		A/B
  		A^B
  		-A
- 						</pre>
-						<dt> where A and B are arithmetic expressions.</dt>
-						<dt> Using a closing verbatim environment '-->' without the opening verbatim environment does not affect at all the generation of documentation.</dt>
-						<dt> <i style="color:#cc33ff">Result</i> is the evaluation of <i style="color:#cc33ff">Expr</i>.</dt>
+</pre>
+						<dt>where A and B are arithmetic expressions.</dt>
+						<dt>Using a closing verbatim environment '-->' without the opening verbatim environment does not affect at all the generation of documentation.</dt>
+						<br />
+						<dt><i style="color:#cc33ff">Result</i> is the evaluation of <i style="color:#cc33ff">Expr</i>.</dt>
 					</dl>
 					<ul>
+						<li>
+							<dl>
+								<dt><i style="color:#0099ff"><u>Expr</u></i> Must be an arithmetic expression. Either one of the following possibilities: </dt>
+								<ul>
+									<li>
+										<dt>A + B </dt>
+									</li>
+									<li>
+										<dt>A - B </dt>
+									</li>
+									<li>
+										<dt>... </dt>
+									</li>
+								</ul>
+								<dt>
+</dt>
+							</dl>
+						</li>
 					</ul>
 				</dl>
 			</li>
@@ -94,9 +127,14 @@
 						<dt><i style="color:#cc33ff">F</i> is the factorial of natural number <i style="color:#cc33ff">Num</i>.</dt>
 					</dl>
 					<dt><b>Constraints:</b></dt>
+					<dl>
+					</dl>
 					<ul>
 						<li>
-							<i style="color:#0099ff"><u>Num</u></i> A natural number.
+							<dl>
+								<dt><i style="color:#0099ff"><u>Num</u></i> A natural number.
+</dt>
+							</dl>
 						</li>
 					</ul>
 				</dl>
@@ -111,9 +149,14 @@
 						<dt><i style="color:#cc33ff">F</i> is the factorial of the result of evaluating the arithmetic expression <i style="color:#cc33ff">Expr</i>. Uses predicate <a href="#factorial-2"><u>factorial/2</u></a>.</dt>
 					</dl>
 					<dt><b>Constraints:</b></dt>
+					<dl>
+					</dl>
 					<ul>
 						<li>
-							<i style="color:#0099ff"><u>Expr</u></i> An arithmetic expression.
+							<dl>
+								<dt><i style="color:#0099ff"><u>Expr</u></i> An arithmetic expression.
+</dt>
+							</dl>
 						</li>
 					</ul>
 				</dl>
