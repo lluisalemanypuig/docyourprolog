@@ -25,8 +25,9 @@ def colour_n_link_descr(descr, param_names, pred_names):
 			while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
 			j += 1
 			
-			if w[1:j] in param_names:
-				words[i] = form_param(w[1:j]) + w[j:]
+			k = w.find('@')
+			if w[(k+1):j] in param_names:
+				words[i] = w[0:k] + form_param(w[(k+1):j]) + w[j:]
 		elif w.find('?') != -1:
 			j = len(w) - 1
 			while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
