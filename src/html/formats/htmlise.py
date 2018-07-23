@@ -41,14 +41,6 @@ def colour_n_link_descr(descr, param_names, pred_names):
 	return " ".join(words)
 
 """
-Returns a list of strings. Each string is meant to start at a new line.
-"""
-def make_new_lines(descr):
-	# find all special strings indicating 'new line' and split the string
-	descr = descr.split(SC.new_line)
-	return map(utils.line_cleanup, descr)
-
-"""
 Makes environments: given a string of space-separated words with
 special delimiters (opening and closing verbatim environments, itemised
 lists, ...) writes in html format the corresponding environments.
@@ -92,7 +84,9 @@ def make_environments(HTML, descr):
 			# we found whatever token. Anything 
 			# in descr[0:it] is simple text
 			if utils.string_cleanup(descr[0:it]) != '':
-				if prev_blanks >= 2: HTML.blank_line()
+				if prev_blanks >= 2:
+					HTML.blank_line()
+					prev_blanks = 0
 				HTML.define_term()
 				HTML.put(descr[0:it])
 				HTML.close_tag()
@@ -100,6 +94,7 @@ def make_environments(HTML, descr):
 			if token == 'olist':
 				if prev_blanks >= 2: HTML.blank_line()
 				HTML.open_unordered_list()
+				
 				descr = descr[(it + SC.olistl):]
 				list_items.append(0)
 				it = 0
