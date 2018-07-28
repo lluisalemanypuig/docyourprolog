@@ -1,6 +1,7 @@
 from os import listdir, environ
 from os.path import abspath, dirname, isfile
 from os.path import join, splitext, relpath
+from os.path import getmtime
 import sys, shutil, importlib
 
 import graph_maker
@@ -34,6 +35,89 @@ def get_matching_files(dirname, patterns, rec):
 	
 	return files
 
+# returns a dictionary:
+# absolute file name -> time_stamp
+def read_cache(dest_dir):
+	cache_name = join(dest_dir, '.cache', 'files.cache')
+	if not isfile(cache_name): return {}
+	
+	info = {}
+	f = open(cache_name, 'r')
+	for line in f:
+		abs_name, time_stamp = line.split(' ')
+		info[abs_name] = str(time_stamp)[:-1]
+	f.close()
+	return info
+
+def write_cache(dest_dir, all_info):
+	cache_name = join(dest_dir, '.cache', 'files.cache')
+	
+	f = utils.make_file(cache_name)
+	for abs_name in all_info:
+		f.write(abs_name + ' ' + str(getmtime(abs_name)) + pcsts.nl)
+	f.close()
+
+def file_needs_html(cache, abs_name):
+	# if file is not cached then needs parsing
+	if abs_name not in cache: return True
+	
+	# if time stamp is different from the cached then needs parsing
+	time_stamp = str(getmtime(abs_name))
+	if time_stamp != cache[abs_name]: return True
+	
+	return False
+
+def make_index_file(all_files, all_info):
+	all_files = sorted(all_files)
+	
+	nl = pcsts.nl
+	index = hwriter.html_writer(join(dest_dir, 'index.html'))
+	index.start()
+	index.open_head()
+	index.open_title()
+	index.put(conf.PROJECT_NAME)
+	index.close_tag()
+	index.close_tag()
+	
+	index.open_body()
+	index.open_h1()
+	index.put(conf.PROJECT_NAME)
+	index.close_tag()
+	index.open_paragraph()
+	index.put(conf.PROJECT_DESCRIPTION )
+	index.close_tag()
+	
+	if conf.PROJECT_INCLUSION_GRAPH:
+		index.add_image({'name' : 'project_graph.png', 'alt' : 'general_inclusion_map'})
+	index.open_h2()
+	index.put('Project files:')
+	index.close_tag()
+	
+	index.open_unordered_list({'id' : 'project_files'})
+	
+	for f in all_files:
+		index.open_list_element()
+		index.open_paragraph()
+		index.open_a({'href' : f})
+		index.put(f)
+		index.close_tag()
+		index.close_tag()
+		index.close_tag()
+	
+	index.close_tag()
+	index.horizontal_line()
+	index.open_paragraph()
+	index.open_a({'href' : 'http://github.com/lluisalemanypuig/docyourprolog.git'})
+	index.put('Generated with DYP')
+	index.close_tag()
+	index.close_tag()
+	
+	index.close_tag()
+	index.close_tag()
+	
+	if conf.PROJECT_INCLUSION_GRAPH:
+		graph_maker.make_full_graph(dest_dir, all_info, conf)
+
 def print_usage():
 	print "Document Your Prolog:"
 	print "Generate html documentation to document your prolog code easily."
@@ -43,7 +127,13 @@ def print_usage():
 	print "                             configuration for the documentation."
 	print "    [-g, --gen-config] FILE  Directory where to generate an empty"
 	print "                             configuration file."
-	
+
+
+
+
+
+
+
 # **********
 # Start code
 # **********
@@ -83,6 +173,12 @@ if config_from != None and config_to != None:
 	print "    to generate a new configuration file, but not both."
 	exit(1)
 
+
+
+
+
+# start making documentation (or file configuration)
+
 mypath, myexe = utils.abspath_name(argv[0])
 def_config_file = join(mypath, "config")
 sys.path.append(def_config_file)
@@ -102,6 +198,9 @@ if config_from != None:
 source_dir = conf.SRC_DIR
 dest_dir = conf.DEST_DIR
 exts = conf.EXTENSIONS
+
+# read cache from cache file
+cache = read_cache(dest_dir)
 
 # files to be parsed
 to_be_parsed = []
@@ -123,21 +222,23 @@ all_info = {}
 print "Parsing source files:"
 
 while len(to_be_parsed) > 0:
-	abs_path = to_be_parsed[0]
+	abs_name = to_be_parsed[0]
 	del to_be_parsed[0]
 	
-	if abs_path not in already_parsed:
-		rel_name = relpath(abs_path, source_dir)
-		path_to_file, name_file = utils.abspath_name(abs_path)
+	if abs_name not in already_parsed:
+		rel_name = relpath(abs_name, source_dir)
+		path_to_file, name_file = utils.abspath_name(abs_name)
 		
-		print ">> Parsing:", rel_name
+		print "    >> Parsing:", rel_name
 		
 		# parse file
-		information = file_parser.file_parser(source_dir, abs_path)
+		information = file_parser.file_parser(source_dir, abs_name)	
+		
+		information.parse_file()
 		information.make_extra_names(dest_dir)
 		# store information parsed
-		all_info[abs_path] = information
-		already_parsed.add(abs_path)
+		all_info[abs_name] = information
+		already_parsed.add(abs_name)
 		
 		# include next files to be parsed
 		if conf.FOLLOW_INCLUDES:
@@ -148,70 +249,33 @@ while len(to_be_parsed) > 0:
 print
 print "Making html files:"
 
+some_html_generated = False
 all_files = []
-for abs_path, info in all_info.iteritems():
-	print ">> Making html file for:", info.get_rel_name()
+for abs_name, info in all_info.iteritems():
 	
-	maker = hmaker.html_maker(conf, source_dir, all_info, info)
-	maker.make_html_file()
-	
-	if conf.FILE_INCLUSION_GRAPH and info.needs_inc_graph():
-		print "    + Make graph file"
-		graph_maker.make_single_graph(dest_dir, info, all_info, conf)
-	
+	# check that file needs to be parsed again
+	if file_needs_html(cache, abs_name):
+		some_html_generated = True
+		
+		print "    >> Making html file for:", info.get_rel_name()
+		
+		maker = hmaker.html_maker(conf, source_dir, all_info, info)
+		maker.make_html_file()
+		
+		if conf.FILE_INCLUSION_GRAPH and info.needs_inc_graph():
+			graph_maker.make_single_graph(dest_dir, info, all_info, conf)
+	else:
+		print "    >> Html file for", info.get_rel_name(), "-- already made"
+		
 	rel_name = info.get_rel_html_name()
 	all_files.append(rel_name)
 
-print ">> Making html file for index"
-all_files = sorted(all_files)
-
-nl = pcsts.nl
-index = hwriter.html_writer(join(dest_dir, 'index.html'))
-index.start()
-index.open_head()
-index.open_title()
-index.put(conf.PROJECT_NAME)
-index.close_tag()
-index.close_tag()
-
-index.open_body()
-index.open_h1()
-index.put(conf.PROJECT_NAME)
-index.close_tag()
-index.open_paragraph()
-index.put(conf.PROJECT_DESCRIPTION )
-index.close_tag()
-
-if conf.PROJECT_INCLUSION_GRAPH:
-	index.add_image({"name" : "project_graph.png", "alt" : "general_inclusion_map"})
-index.open_h2()
-index.put("Project files:")
-index.close_tag()
-
-index.open_unordered_list({"id" : "project_files"})
-
-for f in all_files:
-	index.open_list_element()
-	index.open_paragraph()
-	index.open_a({"href" : f})
-	index.put(f)
-	index.close_tag()
-	index.close_tag()
-	index.close_tag()
-
-index.close_tag()
-index.horizontal_line()
-index.open_paragraph()
-index.open_a({"href" : "http://github.com/lluisalemanypuig/docyourprolog.git"})
-index.put("Generated with DYP")
-index.close_tag()
-index.close_tag()
-
-index.close_tag()
-index.close_tag()
-
-if conf.PROJECT_INCLUSION_GRAPH:
-	print "    + Make graph file"
-	graph_maker.make_full_graph(dest_dir, all_info, conf)
-
+if some_html_generated:
+	# make html for index if necessary
+	print "    >> Making html file for index"
+	make_index_file(all_files, all_info)
+	
+	# rewrite cache file, if necessary
+	if conf.CACHE_FILES:
+		write_cache(dest_dir, all_info)
 

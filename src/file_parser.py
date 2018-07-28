@@ -109,7 +109,7 @@ class file_parser:
 						inside_sc = False
 						self._doc_lines.append((p + 1,line))
 					else:
-						current_line = line + " "
+						current_line = line + ' '
 					
 			elif closes_sc != -1:
 				if ignore > 0:
@@ -118,11 +118,11 @@ class file_parser:
 				else:
 					# line closes a block comment
 					inside_sc = False
-					current_line += " " + line
+					current_line += ' ' + line
 					self._doc_lines.append((start_line + 1,current_line))
 				
 			elif inside_sc or file_inclusion:
-				current_line += line + " "
+				current_line += line + ' '
 			
 			p += 1
 	
@@ -133,15 +133,15 @@ class file_parser:
 			B = bdoc.doc_block(doc_line)
 			self._blocks.append(B)
 			btype = B.block_type()
-			if btype == "predicate":
+			if btype == 'predicate':
 				pred_block = B.block_info()
 				self._pred_labels.append( pred_block.get_predicate_label() )
 			
 			if btype not in self._class_blocks:
 				self._class_blocks[btype] = [B.block_info()]
 			else:
-				if btype == "file":
-					print "    Warning: more than one file description"
+				if btype == 'file':
+					WE.multiple_file_descr()
 				self._class_blocks[btype].append(B.block_info())
 	
 	# Extract the names of the files being included
@@ -151,19 +151,19 @@ class file_parser:
 			rule = load[1]
 			inclusion = utils.inclusion_type(rule)
 			
-			if inclusion == "ensure_loaded":
+			if inclusion == 'ensure_loaded':
 				name = utils.file_ensure_loaded(rule)
-				self._included_files.append(name + ".pl")
-			elif inclusion == "[":
+				self._included_files.append(name + '.pl')
+			elif inclusion == '[':
 				names = utils.files_brackets(rule)
 				for name in names:
-					self._included_files.append(name + ".pl")
-			elif inclusion == "use_module":
+					self._included_files.append(name + '.pl')
+			elif inclusion == 'use_module':
 				name = utils.file_use_module(rule)
 				if name != None:
-					self._included_files.append(name + ".pl")
+					self._included_files.append(name + '.pl')
 			else:
-				print "    Warning: unsupported inclusion type in line %d: '%s'" % load
+				WE.inclustion_type_unsupported(load)
 	
 	# ******
 	# PUBLIC
@@ -213,17 +213,20 @@ class file_parser:
 		self._pred_labels = []		# names of the predicates
 		self._included_files = []	# names of the included files
 		self._class_blocks = {}		# blocks classified by type
+	
+	def parse_file(self):
+		abs_path = self._abs_path
+		abs_name = self._abs_name
 		
 		# check if file exists
 		if not isfile(abs_name):
-			print "    Error: could not read file '%s'" % abs_name
+			WE.cant_read_file(abs_name)
 			return
 		
 		self._extract_information(abs_name)
 		self._extract_documentation()
 		self._extract_included_files()
 		
-		rel_path = relpath(abs_path, source_dir)
 		for i in range(0, len(self._included_files)):
 			f = self._included_files[i]
 			a_path = join(abs_path, f)
@@ -267,11 +270,11 @@ class file_parser:
 	
 	def make_extra_names(self, dest_dir):
 		if self._rel_name == None:
-			print "    Internal error: relative name not set for file: '%s'" % self._abs_name
+			WE.absolute_path_not_set(self._abs_name)
 			exit(1)
 		
 		name_no_ext = splitext(self._short_name)[0]
-		name_html = name_no_ext + ".html"
+		name_html = name_no_ext + '.html'
 		
 		self._abs_html_name = join(dest_dir, self._rel_path, name_html)
 		self._abs_html_path = join(dest_dir, self._rel_path)
@@ -279,11 +282,11 @@ class file_parser:
 		self._rel_html_path = self._rel_path
 		self._short_html_name = name_html
 		
-		name_png = name_no_ext + ".png"
+		name_png = name_no_ext + '.png'
 		self._rel_png_name = join(self._rel_path, name_png)
 		self._rel_png_path = self._rel_path
 		
-		name_dot = name_no_ext + ".dot"
+		name_dot = name_no_ext + '.dot'
 		self._rel_dot_name = join(self._rel_path, name_dot)
 		self._rel_dot_path = self._rel_path
 		

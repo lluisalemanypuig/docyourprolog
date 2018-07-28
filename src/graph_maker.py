@@ -1,30 +1,51 @@
-from os.path import join, relpath
+from os.path import join, relpath, isfile
 import os
 
 import file_parser
 import constants.platform_constants as pcsts
 import utils
 
+def needs_run_dot(new_dot_string, dot_abs_name):
+	if not isfile(dot_abs_name): return True
+	
+	old_dot_string = ''
+	dot_file = open(dot_abs_name, 'r')
+	for line in dot_file: old_dot_string += line
+	
+	if old_dot_string != new_dot_string: return True
+	return False
+
 def graph_to_png(graph, dot_abs_name, png_abs_name, conf):
+	print "        + Construct graph"
+	
 	nl = pcsts.nl
 	
-	dot_file = utils.make_file(dot_abs_name)
-	dot_file.write("digraph file_graph {" + nl)
-	dot_file.write("node [shape=rectangle]" + nl)
-	dot_file.write("nodesep = 0.1" + nl)
-	dot_file.write("ranksep = 0.3" + nl)
+	dot_string = ''
+	dot_string += 'digraph file_graph {' + nl
+	dot_string += 'node [shape=rectangle]' + nl
+	dot_string += 'nodesep = 0.1' + nl
+	dot_string += 'ranksep = 0.3' + nl
 	
 	for node,neighs in graph.iteritems():
 		for n in neighs:
-			dot_file.write("\"" + node + "\" -> \"" + n + "\"" + nl)
+			dot_string += '"' + node + '" -> "' + n + '"' + nl
 	
-	dot_file.write("}" + nl)
-	dot_file.close()
-	os.system("dot " + dot_abs_name + " -T png > " + png_abs_name)
+	dot_string += '}' + nl
 	
-	if not conf.KEEP_DOT:
-		os.remove(dot_abs_name)
-
+	if needs_run_dot(dot_string, dot_abs_name):
+		print "            - Running dot ..."
+		
+		dot_file = utils.make_file(dot_abs_name)
+		dot_file.write(dot_string)
+		dot_file.close()	
+		
+		os.system('dot ' + dot_abs_name + ' -T png > ' + png_abs_name)
+		
+		if not conf.CACHE_FILES:
+			os.remove(dot_abs_name)
+	else:
+		print "            - No need to run dot"
+		
 # makes the graph for all parsed files in all_info
 def make_full_graph(dest_dir, all_info, conf):
 	# -------------------------------------------------
@@ -106,11 +127,10 @@ def make_full_graph(dest_dir, all_info, conf):
 		if rel_name not in graph: graph[rel_name] = neigh_set
 		else: graph[rel_name].update(neigh_set)
 	
-	
-	dot_abs_name = join(dest_dir, "project_graph.dot")
+	dot_abs_name = join(dest_dir, '.cache', 'project_graph.dot')
 	dot_abs_name = utils.resolve_path(dot_abs_name)
 	
-	png_abs_name = join(dest_dir, "project_graph.png")
+	png_abs_name = join(dest_dir, 'project_graph.png')
 	png_abs_name = utils.resolve_path(png_abs_name)
 	
 	graph_to_png(graph, dot_abs_name, png_abs_name, conf)
@@ -143,7 +163,7 @@ def make_single_graph(dest_dir, fp, all_info, conf):
 			# if that distance is greater than the allowed,
 			# do not add more vertices to graph
 			if FGMD <= 0 or dists[f] <= FGMD:
-			
+				
 				neigh_set.add( all_info[f].get_rel_name() )
 				if f not in found_files:
 					# this file has yet to be processed: add to 'queue'
@@ -159,11 +179,11 @@ def make_single_graph(dest_dir, fp, all_info, conf):
 	my_rel_name_dot = fp.get_rel_dot_name()
 	my_rel_name_png = fp.get_rel_png_name()
 	
-	dot_abs_name = join(dest_dir, my_rel_name_dot)
+	dot_abs_name = join(dest_dir, '.cache', my_rel_name_dot)
 	dot_abs_name = utils.resolve_path(dot_abs_name)
 	
 	png_abs_name = join(dest_dir, my_rel_name_png)
 	png_abs_name = utils.resolve_path(png_abs_name)
 	
 	graph_to_png(graph, dot_abs_name, png_abs_name, conf)
-	
+

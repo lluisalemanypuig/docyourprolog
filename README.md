@@ -185,9 +185,6 @@ one directed edge A -> B if file A includes B.
 vertex that represents the file.
 - PROJECT_INCLUSION_GRAPH: generate a graph for the whole project. This graph may have
 several source vertices.
-- KEEP_DOT: the graphs are generated using the _dot_ software which is part of Graphviz.
-This variable is used to decide whether the _.dot_ files are kept or removed after generating
-the graphs in _.png_ format.
 - FILE_GRAPH_MAX_DIAMETER: control the maximum diameter of each file's graph.
 - PROJECT_GRAPH_MAX_DIAMETER: control the maximum diameter of the whole project's graph.
  
@@ -200,9 +197,20 @@ although these files may still be found in the directory.
 - RECURSIVE: tell _dyp_ to find source files in all the subdirectories in _SRC_DIR_.
 - EXTENSIONS: document only those files with an extension in the list.
 
-Finally, since _dot_ is needed to generate the graphs, _dyp_ needs to know the path
+Since _dot_ is needed to generate the graphs, _dyp_ needs to know the path
 to the executable file:
 - DOT_EXE_PATH: the absolute path to the executable file of the _dot_ software.
+
+Cache system (efficiency options):
+- CACHE_FILES: the user may want to check how the documentation looks after modifying
+a single file among the hundreds of files in the project. This variable tells the software to
+store information to avoid generating html code when it is not actually needed, that is,
+when a source file has not been modified (however, each file will be parsed regardless
+of the absence of modifications). Moreover, the graphs are generated using the _dot_ software
+(which is part of Graphviz). This variable is used to decide whether the
+_.dot_ files are kept or removed after generating the graphs in _.png_ format. These files
+are also used to avoid callid the _dot_ software if the graph has not changed.
+It is recommended to be set to _True_.
 
 #### Generate the documentation
 

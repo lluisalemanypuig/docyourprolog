@@ -1,3 +1,4 @@
+import constants.warnings_errors as WE
 import block_predicate as bpred
 import block_separator as bsep
 import block_file as bfile
@@ -29,7 +30,7 @@ class doc_block:
 			self._type = "predicate"
 			self._info = bpred.predicate_block(block, lineno)
 		else:
-			print "    Warning: unrecognised block starting with '%s' at line %d" % (firstw, lineno)
+			WE.unrecognised_block(firstw, lineno)
 	
 	def block_type(self): return self._type
 	def block_info(self): return self._info

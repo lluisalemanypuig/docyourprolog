@@ -175,8 +175,8 @@ def resolve_path(apath):
 		del partspath[i]
 		apath = sep.join(partspath)
 	
-	if apath.find(sep + '.') != -1: apath = apath[0:-2]
-	
+	# if a '/.' is found at the end of the string
+	if apath.find(sep + '.') == len(apath) - 1: apath = apath[0:-2]
 	return apath
 
 # opens the file in 'w+' mode and returns the object
