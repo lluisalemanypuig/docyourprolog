@@ -1,0 +1,7 @@
+digraph file_graph {
+node [shape=rectangle]
+nodesep = 0.1
+ranksep = 0.3
+"number.pl" -> "number/arithmetic_evaluation.pl"
+"number.pl" -> "number/natural.pl"
+}

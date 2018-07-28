@@ -45,12 +45,6 @@ Allowed values: True, False
 PROJECT_INCLUSION_GRAPH	= True
 
 """
-Remove or keep the .dot files used to generate the inclusion graphs.
-Allowed values: True, False
-"""
-KEEP_DOT				= False
-
-"""
 The maximum distance between a source vertex and a sink vertex
 in the file inclusion graph is at most the value. A value less than
 or equal to 0 is interpreted as infinite.
@@ -97,3 +91,22 @@ This executable must understand the DOT language. For more information,
 see: https://www.graphviz.org/
 """
 DOT_EXE_PATH			= "/usr/bin/"
+
+# ---------------------------------------------------------------------
+# CACHE SYSTEM
+
+"""
+Make a cache file for all source files. This file contains information
+that can be used to avoid generating html files that will not change at
+all.
+Allowed values: True, False
+"""
+CACHE_FILES				= True
+
+"""
+Remove or keep the .dot files used to generate the inclusion graphs.
+If they are kept they will be used in the future to avoid generating
+exactly the same graph again.
+Allowed values: True, False
+"""
+KEEP_DOT				= True

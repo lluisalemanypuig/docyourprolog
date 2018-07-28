@@ -1,0 +1,7 @@
+digraph file_graph {
+node [shape=rectangle]
+nodesep = 0.1
+ranksep = 0.3
+"list.pl" -> "list/basic.pl"
+"list.pl" -> "list/high_order.pl"
+}
