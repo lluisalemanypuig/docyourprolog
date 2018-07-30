@@ -4,6 +4,23 @@ import predicate_details as PD
 import constants.special as SC
 import utils
 
+# colours a word containing parameter names
+def colourise_word(w, param_names):
+	form_param = PD.descr_parameter_format
+	
+	i = w.find('@')
+	while i != -1:
+		j = i + 1
+		while j < len(w) and utils.is_alphanumeric(w[j]): j += 1
+		
+		param = w[(i+1):j]
+		if param in param_names:
+			w = w[0:i] + form_param(param) + w[j:]
+		
+		i = w.find('@', j)
+	
+	return w
+
 """
 Format a space-separated list of strings with html code:
 	-> Check that words starting with @ are parameters of predicates.
@@ -14,20 +31,14 @@ Format a space-separated list of strings with html code:
 Returns a list of strings. Each string represents a paragraph.
 """
 def colour_n_link_descr(descr, param_names, pred_names):
-	form_param = PD.descr_parameter_format
 	form_href_pred = PD.pred_local_cstr_format
 	
 	words = descr.split(' ')
 	for i in range(0, len(words)):
 		w = words[i]
 		if w.find('@') != -1:
-			j = len(w) - 1
-			while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
-			j += 1
+			words[i] = colourise_word(words[i], param_names)
 			
-			k = w.find('@')
-			if w[(k+1):j] in param_names:
-				words[i] = w[0:k] + form_param(w[(k+1):j]) + w[j:]
 		elif w.find('?') != -1:
 			j = len(w) - 1
 			while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1

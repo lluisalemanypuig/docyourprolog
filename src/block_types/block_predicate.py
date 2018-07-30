@@ -1,4 +1,5 @@
 import utils
+import constants.warnings_errors as WE
 
 """
 PREDICATE DOCUMENTATION
@@ -78,7 +79,8 @@ class predicate_block:
 					info = self._parse_parameter(info)
 		else:
 			# this should not happen
-			print "Internal error: wrong environment", environment
+			WE.wrong_environment()
+			exit(1)
 				
 	def __init__(self, block, line):
 		self._form = None	# Form of the predicate. Namely @form
@@ -115,18 +117,15 @@ class predicate_block:
 			if descr != None:
 				descr = utils.line_cleanup(descr)
 				if pname in param_names:
-					print "    Error: at least two @param defining '%s'" % pname
-					print "        In block comment starting at line", line
+					WE.too_many_param_defs(pname, line)
 					exit(1)
 				else:
 					param_names.add(pname)
 		
 		# make sure that there are at most as many parameters in
 		# form as @param there are in @constraints
-		if len(self._params) > self._form.count(',') + 1:
-			print "    Warning: too many @param in @constrs environment in block"
-			print "        starting at line %d" % line
-			exit(1)
+		if len(self._params) > len(param_names):
+			WE.too_many_param(line)
 	
 	def get_form(self): return self._form
 	def get_predicate_label(self):

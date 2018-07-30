@@ -27,6 +27,17 @@ Internal errors:
 def absolute_path_not_set(name):
 	print "        Internal error: absolute path to html file for '%s' was not set" % name
 
+def wrong_environment():
+	print "        Internal error: wrong environment", environment
+
+def too_many_param_defs(pname, line):
+	print "        Error: at least two @param defining '%s'" % pname
+	print "            In block comment starting at line", line
+
+def too_many_param(line):
+	print "        Warning: too many @param in @constrs environment in block"
+	print "            starting at line %d" % line
+
 """
 External errors:
 """
