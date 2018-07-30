@@ -137,7 +137,7 @@ class html_maker:
 				pdescr = pdescr.split(' ')
 				pdescr = ' '.join(pdescr[1:])
 				
-				self._write_description(pnamelist + pdescr + nl)
+				self._write_description(pnamelist + pdescr + nl, all_param_names)
 				
 				HTML.close_tag()
 			
