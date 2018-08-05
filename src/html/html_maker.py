@@ -156,33 +156,31 @@ class html_maker:
 		HTML.open_unordered_list({'id' : 'predicate_details'})
 		
 		# iterate over all blocks
-		for B in self._blocks:
-			btype = B.block_type()
-			binfo = B.block_info()
-			if btype == 'predicate':
-				label = binfo.get_predicate_label()
-				name = binfo.get_predicate_name()
-				params = binfo.get_parameters()
-				all_param_names = binfo.get_predicate_param_list()
-				href = refmaker(label)
-				
-				HTML.open_list_element()
-				PD.pred_title_format(HTML, label,href)
-				
-				HTML.open_description_list()
-				
-				# write predicate form
-				self._write_pred_form(binfo, name, all_param_names)
-				
-				# write predicate description
-				self._write_pred_descr(binfo, all_param_names)
-				
-				# write predicate constraints
-				if binfo.get_cstrs_descr() != '' or len(params) > 0:
-					self._write_pred_constrs(binfo, all_param_names, params)
-				
-				HTML.close_tag()	# description list
-				HTML.close_tag()	# list element
+		for binfo in self._class_blocks['predicate']:
+			
+			label = binfo.get_predicate_label()
+			name = binfo.get_predicate_name()
+			params = binfo.get_parameters()
+			all_param_names = binfo.get_predicate_param_list()
+			href = refmaker(label)
+			
+			HTML.open_list_element()
+			PD.pred_title_format(HTML, label,href)
+			
+			HTML.open_description_list()
+			
+			# write predicate form
+			self._write_pred_form(binfo, name, all_param_names)
+			
+			# write predicate description
+			self._write_pred_descr(binfo, all_param_names)
+			
+			# write predicate constraints
+			if binfo.get_cstrs_descr() != '' or len(params) > 0:
+				self._write_pred_constrs(binfo, all_param_names, params)
+			
+			HTML.close_tag()	# description list
+			HTML.close_tag()	# list element
 		
 		HTML.close_tag() # unordered list
 	
@@ -219,7 +217,7 @@ class html_maker:
 		if len(self._included_files) > 0:
 			self._write_included_files_list()
 		
-		if len(self._blocks) > 0:
+		if 'predicate' in self._class_blocks:
 			self._write_predicate_list()
 			self._write_predicate_details()
 		
