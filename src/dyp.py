@@ -74,6 +74,7 @@ def make_index_file(all_files, all_info):
 	index = hwriter.html_writer(join(dest_dir, 'index.html'))
 	index.start()
 	index.open_head()
+	index.put_meta({'charset' : 'UTF-8'})
 	index.open_title()
 	index.put(conf.PROJECT_NAME)
 	index.close_tag()
