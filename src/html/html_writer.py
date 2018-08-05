@@ -197,7 +197,16 @@ class html_writer:
 		content = '<img'
 		if "name" in attrs: content += ' src="' + attrs["name"] + '"'
 		if "alt" in attrs: content += ' alt="' + attrs["alt"] + '"'
-		content += '>'
+		content += '>' + pcsts.nl
+		self.put(content)
+	
+	# Adds meta information
+	# attrs is a dictionary. Keys supported
+	# -> charset
+	def put_meta(self, attrs):
+		content = '<meta'
+		if "charset" in attrs: content += ' charset="' + attrs["charset"] + '"'
+		content += '>' + pcsts.nl
 		self.put(content)
 	
 	# Opens tag <ul>

@@ -26,6 +26,7 @@ class html_maker:
 	
 	def _write_head(self):
 		self._hw.open_head()
+		self._hw.put_meta({'charset' : 'UTF-8'})
 		self._hw.open_title();
 		self._hw.put(self._short_name);
 		self._hw.close_tag()
