@@ -36,10 +36,10 @@ next_natural(N):- next_natural(M), N is M + 1.
 	@form parity(Num, Par)
 	@descr Obtains the parity of natural number @Num.
 	
-	<++
-	!> If @Num is even then @Par is "even".
-	!> If @Num is odd then @Par is "odd".
-	++>
+	\blist
+	\item If @Num is even then @Par is "even".
+	\item If @Num is odd then @Par is "odd".
+	\elist
 */
 parity(N, "even"):- 0 is N mod 2, !.
 parity(_, "odd").

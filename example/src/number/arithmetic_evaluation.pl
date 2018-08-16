@@ -13,38 +13,39 @@
 	A file description can also contain bullet lists:
 	
 	
-	<++
-	!> Actually, any description can contain lists.
-		<++
-			!> File descriptions
+	\blist
+		\item Actually, any description can contain lists.
+		\blist
+			\item File descriptions
 			
 			
 			
-			!> Predicate separators
-			!> Also in predicates:
-			<++
-				!> In their description
-				!> In the description of the constraints
-				!> In the description of each parameter (see ?expr_eval/2)
+			\item Predicate separators
+			\item Also in predicates:
+			\blist
+				\item In their description
+				\item In the description of the constraints
+				\item In the description of each parameter (see ?expr_eval/2)
 				
-				!> Notice that some bullets have a blank line on top
-			++>
+				\item Notice that some bullets have a blank line on top
+			\elist
 			
-			!> Included this one (this is due to the separation in the
+			\item Included this one (this is due to the separation in the
 			documentation)
-		++>
-	!> Write the coolest documentation using verbatim environments!
-		<--
+		\elist
+		
+		\item Write the coolest documentation using verbatim environments!
+		\bverbatim
 		This
 					 is
 			   a
 		verbatim
 										  environment
-		-->
+		\everbatim
 		
 		
 		
-	++>
+	\elist
 	
 	@author Me, Myself, and I
 	@date July 20th, 2018
@@ -52,31 +53,31 @@
 
 /**
 	@form expr_eval(Expr, Result)
-	@constrs @Expr is an arithmetic expression. That is, @Expr is either
+	@descr @Expr is an arithmetic expression. That is, @Expr is either
 	a natural value, or an arithmetic expression of the form
-	<--
+	\bverbatim
 		A + B
 		A - B
 		A*B
 		A/B
 		A^B
 		-A
-	-->
+	\everbatim
 	where A and B are arithmetic expressions.
 	
-	Using a closing verbatim environment '-->' without the opening verbatim
+	Using a closing verbatim environment '\everbatim' without the opening verbatim
 	environment does not affect at all the generation of documentation.
-	
 	
 	@Result is the evaluation of @Expr.
 	
+	@constrs
 		@param Expr Must be an arithmetic expression.
 		Either one of the following possibilities:
-		<++
-		!> A + B
-		!> A - B
-		!> ...
-		++>
+		\blist
+		\item A + B
+		\item A - B
+		\item ...
+		\elist
 */
 expr_eval(A + B, C):- expr_eval(A, AA), expr_eval(B, BB), C is AA + BB, !.
 expr_eval(A - B, C):- expr_eval(A, AA), expr_eval(B, BB), C is AA - BB, !.

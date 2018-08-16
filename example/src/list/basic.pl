@@ -7,10 +7,10 @@
 /*!
 Two simple methods to start this basic collection of predicates:
 
-<++
-!> ?min/2
-!> ?max/2
-++>
+\blist
+\item ?min/2
+\item ?max/2
+\elist
 */
 
 /**
@@ -36,10 +36,10 @@ max([X|_], X).
 /*!
 Two more simple methods to finish this basic collection of predicates:
 
-<++
-!> ?first/3
-!> ?last/3
-++>
+\blist
+\item ?first/3
+\item ?last/3
+\elist
 */
 
 /**
