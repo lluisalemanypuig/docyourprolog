@@ -11,7 +11,8 @@ def colourise_word(w, param_names):
 	i = w.find('@')
 	while i != -1:
 		j = i + 1
-		while j < len(w) and utils.is_alphanumeric(w[j]): j += 1
+		while j < len(w) and utils.is_alphanumeric(w[j]):
+			j += 1
 		
 		param = w[(i+1):j]
 		if param in param_names:
@@ -41,7 +42,8 @@ def colour_n_link_descr(descr, param_names, pred_names):
 			
 		elif w.find('?') != -1:
 			j = len(w) - 1
-			while j > 0 and not utils.is_alphanumeric(w[j]): j -= 1
+			while j > 0 and not utils.is_alphanumeric(w[j]):
+				j -= 1
 			j += 1
 			
 			label = w[1:j]
@@ -72,7 +74,8 @@ def make_environments(HTML, descr):
 		
 		# if nothing is found, it is a term
 		if it == -1:
-			if prev_blanks >= 2: HTML.blank_line()
+			if prev_blanks >= 2:
+				HTML.blank_line()
 			HTML.define_term()
 			HTML.put(descr)
 			HTML.close_tag()
@@ -82,7 +85,8 @@ def make_environments(HTML, descr):
 		if token == 'blank':
 			text = utils.string_cleanup(descr[0:it])
 			if text != '':
-				if prev_blanks >= 2: HTML.blank_line()
+				if prev_blanks >= 2:
+					HTML.blank_line()
 				HTML.define_term()
 				HTML.put(text)
 				HTML.close_tag()
@@ -104,7 +108,8 @@ def make_environments(HTML, descr):
 				HTML.close_tag()
 			
 			if token == 'olist':
-				if prev_blanks >= 2: HTML.blank_line()
+				if prev_blanks >= 2:
+					HTML.blank_line()
 				HTML.open_unordered_list()
 				
 				descr = descr[(it + SC.olistl):]
@@ -116,7 +121,8 @@ def make_environments(HTML, descr):
 					WE.unmatched_tag_close_list()
 					exit(1)
 				
-				if list_items[-1] > 0: HTML.close_tag()
+				if list_items[-1] > 0:
+					HTML.close_tag()
 				
 				HTML.close_tag()
 				del list_items[-1]
@@ -152,7 +158,8 @@ def make_environments(HTML, descr):
 				
 				list_items[-1] += 1
 				
-				if prev_blanks >= 1: HTML.blank_line()
+				if prev_blanks >= 1:
+					HTML.blank_line()
 				HTML.open_list_element()
 				
 				descr = descr[(it + SC.clistl):]
@@ -169,7 +176,6 @@ def make_environments(HTML, descr):
 				it = 0
 			
 			prev_blanks = 0
-			
 
 def get_next_token(descr, it):
 	olist = descr.find(SC.open_item_list, it)
@@ -185,7 +191,8 @@ def get_next_token(descr, it):
 		(item, 'item'), (blank, 'blank')
 	]
 	values = filter(lambda (p,t): p != -1, values)
-	if len(values) == 0: return (-1,None)
+	if len(values) == 0:
+		return (-1,None)
 	
 	values = sorted(values)
 	return values[0]
@@ -201,7 +208,9 @@ def peek_nblanks(descr, at):
 		last_at = p
 		p = descr.find(SC.new_line, p + 1)
 	
-	if last_at != -1: last_at += (SC.newlinel + 1)
-	else: last_at = at + (SC.newlinel + 1)
+	if last_at != -1:
+		last_at += (SC.newlinel + 1)
+	else:
+		last_at = at + (SC.newlinel + 1)
 	
 	return cnt, last_at

@@ -34,14 +34,18 @@ class predicate_block:
 		# find position of next @param
 		p = info.find('@param', 1)
 		param = None
-		if p == -1: param = info
-		else: param = info[0:(p-1)]
+		if p == -1:
+			param = info
+		else:
+			param = info[0:(p-1)]
 		
 		# extract parameter type
 		ob = param.find('[')	# opened bracket
 		cb = param.find(']')	# closed bracket
-		if ob != -1 and cb != -1: parameter_type = param[(ob+1):cb]
-		else: parameter_type = None
+		if ob != -1 and cb != -1:
+			parameter_type = param[(ob+1):cb]
+		else:
+			parameter_type = None
 			
 		# find starting of description
 		s = param.find(' ')
@@ -53,12 +57,15 @@ class predicate_block:
 		# parameter constraint information
 		self._params[parameter_name] = (parameter_type, descr)
 		
-		if p == -1: return ""
+		if p == -1:
+			return ""
 		return info[p:]
 		
 	def _add_info(self, environment, info):
-		if environment == "form": self._form = info[6:len(info)]
-		elif environment == "descr": self._descr = info[7:len(info)]
+		if environment == "form":
+			self._form = info[6:len(info)]
+		elif environment == "descr":
+			self._descr = info[7:len(info)]
 		elif environment == "constr":
 			# space after @constraints
 			s = info.find(' ')
@@ -96,8 +103,10 @@ class predicate_block:
 		
 		for i in range(0, len(info)):
 			M = -1
-			if i == len(info) - 1: M = len(block)
-			else: M = info[i + 1][0] - 1
+			if i == len(info) - 1:
+				M = len(block)
+			else:
+				M = info[i + 1][0] - 1
 			
 			content = block[info[i][0] : M]
 			self._add_info(info[i][1], content)
@@ -127,7 +136,8 @@ class predicate_block:
 		if len(self._params) > len(param_names):
 			WE.too_many_param(line)
 	
-	def get_form(self): return self._form
+	def get_form(self):
+		return self._form
 	def get_predicate_label(self):
 		p = self._form.find('(')
 		return self._form[0:p] + '/' + str( self._form.count(',') + 1 )
@@ -139,9 +149,12 @@ class predicate_block:
 		cp = self._form.find(')')
 		full_list = self._form[(op+1):cp]
 		return map(utils.string_cleanup, full_list.split(','))
-	def get_description(self): return self._descr
-	def get_cstrs_descr(self): return self._constr
-	def get_parameters(self): return self._params
+	def get_description(self):
+		return self._descr
+	def get_cstrs_descr(self):
+		return self._constr
+	def get_parameters(self):
+		return self._params
 	
 	def show(self, tab = ""):
 		print "%sPredicate block" % tab

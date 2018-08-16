@@ -5,9 +5,12 @@ import constants.platform_constants as pcsts
 
 # Returns true if character is either a letter or a number
 def is_alphanumeric(c):
-	if 'a' <= c and c <= 'z': return True
-	if 'A' <= c and c <= 'Z': return True
-	if '0' <= c and c <= '9': return True
+	if 'a' <= c and c <= 'z':
+		return True
+	if 'A' <= c and c <= 'Z':
+		return True
+	if '0' <= c and c <= '9':
+		return True
 	return False
 
 # Returns the position of the opening of the structured comment
@@ -26,16 +29,19 @@ def empty_space(c):
 # Returns true if the line tries to load a file
 def loads_file(line):
 	p = line.find(':-')
-	while p > 0 and empty_space(line[p]): p -= 1
+	while p > 0 and empty_space(line[p]):
+		p -= 1
 	return p == 0
 
 # If a string finishes with '*/', delete it
 # delete also leading and trailing empty characters
 def line_cleanup(line):
 	i = len(line) - 3
-	if line.find('*/') == -1: i = len(line) - 1
+	if line.find('*/') == -1:
+		i = len(line) - 1
 	
-	while i > 0 and empty_space(line[i]): i -= 1
+	while i > 0 and empty_space(line[i]):
+		i -= 1
 	return line[0:(i+1)]
 
 # Deletes all leading spaces and tabs.
@@ -44,7 +50,8 @@ def lstring_cleanup(line):
 	
 	# delete leading spaces and tabs
 	i = 0
-	while i < line_len and empty_space(line[i]): i += 1
+	while i < line_len and empty_space(line[i]):
+		i += 1
 	return line[i:]
 
 # Deletes all characters after '%' and all trailing spaces and tabs
@@ -52,14 +59,16 @@ def rstring_cleanup(line):
 	# find the last position of a code character
 	j = line.find('%')
 	if j != -1:
-		while j > 0 and empty_space(line[j]): j -= 1
+		while j > 0 and empty_space(line[j]):
+			j -= 1
 	else:
 		if len(line) == 1:
 			# sinle end-line character
 			j = 1
 		else:
 			j = len(line) - 1
-			while j > 0 and empty_space(line[j]): j -= 1
+			while j > 0 and empty_space(line[j]):
+				j -= 1
 	return line[:(j+1)]
 
 # left and right string cleanup
@@ -117,11 +126,14 @@ def inclusion_type(rule):
 	i = rule.find(':')
 	i += 2
 	# place 'i' at the beginning of rule
-	while i < len(rule) and empty_space(rule[i]): i += 1
+	while i < len(rule) and empty_space(rule[i]):
+		i += 1
 	# place 'j' at the end of rule
 	j = i
-	while j < len(rule) and rule[j] != '(' and rule[j] != '[': j += 1
-	if i == j: return rule[i:(j+1)]
+	while j < len(rule) and rule[j] != '(' and rule[j] != '[':
+		j += 1
+	if i == j:
+		return rule[i:(j+1)]
 	return rule[i:j]
 
 # returns the file's path and name
@@ -176,7 +188,8 @@ def resolve_path(apath):
 		apath = sep.join(partspath)
 	
 	# if a '/.' is found at the end of the string
-	if apath.find(sep + '.') == len(apath) - 1: apath = apath[0:-2]
+	if apath.find(sep + '.') == len(apath) - 1:
+		apath = apath[0:-2]
 	return apath
 
 # opens the file in 'w+' mode and returns the object
@@ -184,6 +197,7 @@ def resolve_path(apath):
 def make_file(abs_file_name):
 	dir_path = dirname(abs_file_name)
 	file_name = relpath(abs_file_name, dir_path)
-	if dir_path != "" and not exists(dir_path): makedirs(dir_path)
+	if dir_path != "" and not exists(dir_path):
+		makedirs(dir_path)
 	f = open(abs_file_name, "w+")
 	return f

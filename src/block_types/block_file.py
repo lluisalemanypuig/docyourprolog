@@ -19,9 +19,12 @@ GENERAL FILE DOCUMENTATION
 class file_block:
 	
 	def _add_info(self, environment, info):
-		if environment == "descr": self._descr = info[7:len(info)]
-		elif environment == "author": self._author = info[8:len(info)]
-		elif environment == "date": self._date = info[6:len(info)]
+		if environment == "descr":
+			self._descr = info[7:len(info)]
+		elif environment == "author":
+			self._author = info[8:len(info)]
+		elif environment == "date":
+			self._date = info[6:len(info)]
 		else:
 			# this should not happen
 			print "Internal error: wrong environment", environment
@@ -39,8 +42,10 @@ class file_block:
 		
 		for i in range(0, len(info)):
 			M = -1
-			if i == len(info) - 1: M = len(block)
-			else: M = info[i + 1][0] - 1
+			if i == len(info) - 1:
+				M = len(block)
+			else:
+				M = info[i + 1][0] - 1
 			
 			content = block[info[i][0] : M]
 			self._add_info(info[i][1], content)
@@ -58,6 +63,9 @@ class file_block:
 		print "%s    File author: '%s'" % (tab, self._author)
 		print "%s    File date: '%s'" % (tab, self._date)
 	
-	def get_descr(self): return self._descr
-	def get_author(self): return self._author
-	def get_date(self): return self._date
+	def get_descr(self):
+		return self._descr
+	def get_author(self):
+		return self._author
+	def get_date(self):
+		return self._date

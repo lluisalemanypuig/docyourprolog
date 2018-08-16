@@ -39,7 +39,8 @@ def get_matching_files(dirname, patterns, rec):
 # absolute file name -> time_stamp
 def read_cache(dest_dir):
 	cache_name = join(dest_dir, '.cache', 'files.cache')
-	if not isfile(cache_name): return {}
+	if not isfile(cache_name):
+		return {}
 	
 	info = {}
 	f = open(cache_name, 'r')
@@ -59,11 +60,13 @@ def write_cache(dest_dir, all_info):
 
 def file_needs_html(cache, abs_name):
 	# if file is not cached then needs parsing
-	if abs_name not in cache: return True
+	if abs_name not in cache:
+		return True
 	
 	# if time stamp is different from the cached then needs parsing
 	time_stamp = str(getmtime(abs_name))
-	if time_stamp != cache[abs_name]: return True
+	if time_stamp != cache[abs_name]:
+		return True
 	
 	return False
 

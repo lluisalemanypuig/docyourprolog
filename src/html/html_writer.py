@@ -4,8 +4,11 @@ import utils
 
 class html_writer:
 	
-	def _full_tab(self): return "".join(self._ltab)
-	def _tab(self): return "".join(self._ltab[:-1])
+	def _full_tab(self):
+		return "".join(self._ltab)
+		
+	def _tab(self):
+		return "".join(self._ltab[:-1])
 	
 	def _open(self, tag):
 		env = self._envir[-1]
@@ -97,8 +100,10 @@ class html_writer:
 	# Writes a string into the file
 	def put(self, string):
 		env = self._envir[-1]
-		if env == self._tab_cnt[-1]: string = self._full_tab() + string
-		if env == self._cnt_nl[-1]:  string = string + pcsts.nl
+		if env == self._tab_cnt[-1]:
+			string = self._full_tab() + string
+		if env == self._cnt_nl[-1]:
+			string = string + pcsts.nl
 		self._html.write(string)
 	
 	# Creates the html file and opens the environment '<html>'
@@ -195,8 +200,10 @@ class html_writer:
 	# -> alt
 	def add_image(self, attrs):
 		content = '<img'
-		if "name" in attrs: content += ' src="' + attrs["name"] + '"'
-		if "alt" in attrs: content += ' alt="' + attrs["alt"] + '"'
+		if "name" in attrs:
+			content += ' src="' + attrs["name"] + '"'
+		if "alt" in attrs:
+			content += ' alt="' + attrs["alt"] + '"'
 		content += '>' + pcsts.nl
 		self.put(content)
 	
@@ -205,7 +212,8 @@ class html_writer:
 	# -> charset
 	def put_meta(self, attrs):
 		content = '<meta'
-		if "charset" in attrs: content += ' charset="' + attrs["charset"] + '"'
+		if "charset" in attrs:
+			content += ' charset="' + attrs["charset"] + '"'
 		content += '>' + pcsts.nl
 		self.put(content)
 	

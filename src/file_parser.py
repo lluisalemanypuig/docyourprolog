@@ -31,7 +31,8 @@ class file_parser:
 		# read and store file
 		f = open(filename, 'r')
 		lines = []
-		for line in f: lines.append(line)
+		for line in f:
+			lines.append(line)
 		
 		# extract information from file
 		
@@ -61,7 +62,8 @@ class file_parser:
 			# ignore lines with only one comment (if a line contains
 			# only a comment starting with '%' the result of its cleanup
 			# is an empty string)
-			if line == '' and lines[p].find('%'): pass
+			if line == '' and lines[p].find('%'):
+				pass
 			
 			if line == SC.open_verbatim:
 				# if this line is an opening verbatim text, do not

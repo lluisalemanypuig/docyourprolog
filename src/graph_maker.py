@@ -6,13 +6,16 @@ import constants.platform_constants as pcsts
 import utils
 
 def needs_run_dot(new_dot_string, dot_abs_name):
-	if not isfile(dot_abs_name): return True
+	if not isfile(dot_abs_name):
+		return True
 	
 	old_dot_string = ''
 	dot_file = open(dot_abs_name, 'r')
-	for line in dot_file: old_dot_string += line
+	for line in dot_file:
+		old_dot_string += line
 	
-	if old_dot_string != new_dot_string: return True
+	if old_dot_string != new_dot_string:
+		return True
 	return False
 
 def graph_to_png(graph, dot_abs_name, png_abs_name, conf):
@@ -110,8 +113,10 @@ def make_full_graph(dest_dir, all_info, conf):
 		for f in inc_files:
 			
 			# distance from the source to a neighbour of node
-			if f in dists: dists[f] = min(D + 1, dists[f])
-			else: dists[f] = D + 1
+			if f in dists:
+				dists[f] = min(D + 1, dists[f])
+			else:
+				dists[f] = D + 1
 			
 			# if that distance is greater than the allowed,
 			# do not add more vertices to graph
@@ -124,8 +129,10 @@ def make_full_graph(dest_dir, all_info, conf):
 					found_files.add(f)
 		
 		rel_name = all_info[abs_name].get_rel_name()
-		if rel_name not in graph: graph[rel_name] = neigh_set
-		else: graph[rel_name].update(neigh_set)
+		if rel_name not in graph:
+			graph[rel_name] = neigh_set
+		else:
+			graph[rel_name].update(neigh_set)
 	
 	dot_abs_name = join(dest_dir, '.cache', 'project_graph.dot')
 	dot_abs_name = utils.resolve_path(dot_abs_name)
@@ -157,8 +164,10 @@ def make_single_graph(dest_dir, fp, all_info, conf):
 		for f in inc_files:
 			
 			# distance from the source to a neighbour of node
-			if f in dists: dists[f] = min(D + 1, dists[f])
-			else: dists[f] = D + 1
+			if f in dists:
+				dists[f] = min(D + 1, dists[f])
+			else:
+				dists[f] = D + 1
 			
 			# if that distance is greater than the allowed,
 			# do not add more vertices to graph
@@ -171,8 +180,10 @@ def make_single_graph(dest_dir, fp, all_info, conf):
 					found_files.add(f)
 		
 		rel_name = all_info[abs_name].get_rel_name()
-		if rel_name not in graph: graph[rel_name] = neigh_set
-		else: graph[rel_name].update(neigh_set)
+		if rel_name not in graph:
+			graph[rel_name] = neigh_set
+		else:
+			graph[rel_name].update(neigh_set)
 	
 	top_rel_path = fp.get_rel_path()
 	my_short_name_pl = fp.get_short_name()

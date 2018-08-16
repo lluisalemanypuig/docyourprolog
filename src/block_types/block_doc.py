@@ -32,8 +32,10 @@ class doc_block:
 		else:
 			WE.unrecognised_block(firstw, lineno)
 	
-	def block_type(self): return self._type
-	def block_info(self): return self._info
+	def block_type(self):
+		return self._type
+	def block_info(self):
+		return self._info
 	
 	
 
