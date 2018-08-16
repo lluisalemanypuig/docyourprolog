@@ -150,6 +150,7 @@ def make_environments(HTML, descr):
 			
 			elif token == 'item':
 				if len(list_items) == 0:
+					print descr
 					WE.item_not_within_list()
 					exit(1)
 				

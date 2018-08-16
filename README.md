@@ -134,26 +134,26 @@ Moreover, any description can contain special strings to indicate formatted text
     lines).
 
 - Verbatim environments: if the programmer wants to display some formatted text "based on spaces",
-they can use the '<--' string to define a verbatim environment. It must be closed with '-->'
+they can use the '\bverbatim' string to define a verbatim environment. It must be closed with '\everbatim'
 and anything in between will be displayed _as is_.
 
-- Bullet lists: one can define bullet lists with '<++'. A bullet list should be finished with a '++>'
-and its items are defined with '!>'. Leave a blank space after each '!>'. The user may also leave
+- Bullet lists: one can define bullet lists with '\blist'. A bullet list should be finished with a '\elist'
+and its items are defined with '\item'. Leave a blank space after each '\item'. The user may also leave
 blank lines between items of the list so as to make the html display them too. Furthermore, lists 
 can be nested and contain other environments.
 
         Lorem ipsum dolor sit amet:
-        <++
-        !> consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        !> ut labore et dolore magna aliqua.
-                <++
-                !> Ut enim ad minim veniam,
-                !> quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        \blist
+        \item consectetur adipiscing elit, sed do eiusmod tempor incididunt
+        \item ut labore et dolore magna aliqua.
+                \blist
+                \item Ut enim ad minim veniam,
+                \item quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
                 commodo consequat.
-                        ++>
-        !> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                        \elist
+        \item Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
         fugiat nulla pariatur
-        ++>
+        \elist
         
 ### Usage
 

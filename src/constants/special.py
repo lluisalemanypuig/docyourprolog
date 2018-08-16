@@ -4,16 +4,16 @@ documentation of the code.
 """
 
 # indicate new 'paragraph'
-new_line = '<!*>'
+new_line = '\\newline'
 
 # verbatim
-open_verbatim = '<--'
-close_verbatim = '-->'
+open_verbatim = '\\bverbatim'
+close_verbatim = '\\everbatim'
 
 # Item list
-open_item_list = '<++'
-close_item_list = '++>'
-item_list = '!>'
+open_item_list = '\\blist'
+close_item_list = '\\elist'
+item_list = '\\item'
 
 newlinel = len(new_line)
 overbl = len(open_verbatim)
