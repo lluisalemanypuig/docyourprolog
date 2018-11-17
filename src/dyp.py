@@ -126,16 +126,14 @@ def print_usage():
 	print "Document Your Prolog:"
 	print "Generate html documentation to document your prolog code easily."
 	print
-	print "    [-h, --help]             Prints the usage and exits."
-	print "    [-c, --config-file] FILE The configuration file containing the"
-	print "                             configuration for the documentation."
-	print "    [-g, --gen-config] FILE  Directory where to generate an empty"
-	print "                             configuration file."
-
-
-
-
-
+	print "    [-h, --help]"
+	print "        Prints the usage and exits."
+	print "    [-c, --config-file] FILE"
+	print "        The configuration file containing the configuration"
+	print "        for the documentation. Remember NOT to add the '.py'"
+	print "        of the filename."
+	print "    [-g, --gen-config] FILE"
+	print "        Directory where to generate an empty configuration file."
 
 
 # **********
@@ -177,10 +175,6 @@ if config_from != None and config_to != None:
 	print "    to generate a new configuration file, but not both."
 	exit(1)
 
-
-
-
-
 # start making documentation (or file configuration)
 
 mypath, myexe = utils.abspath_name(argv[0])
@@ -190,10 +184,12 @@ conf = importlib.import_module("default_config")
 environ['PATH'] += ":" + conf.DOT_EXE_PATH
 
 if config_to != None:
+	print "Generating default configuration file..."
 	shutil.copyfile(def_config_file + "/default_config.py", config_to)
 	exit(0)
 
 if config_from != None:
+	print "Reading configuration file:", config_from
 	abs_path, name = utils.abspath_name(config_from)
 	sys.path.append(abs_path)
 	del conf
@@ -202,6 +198,10 @@ if config_from != None:
 source_dir = conf.SRC_DIR
 dest_dir = conf.DEST_DIR
 exts = conf.EXTENSIONS
+
+print "    source dir:", source_dir
+print "    destination dir:", dest_dir
+print "    extensions to be parsed:", exts
 
 # read cache from cache file
 cache = read_cache(dest_dir)
