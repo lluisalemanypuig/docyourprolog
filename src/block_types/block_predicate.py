@@ -122,7 +122,7 @@ class predicate_block:
 		# make sure that there are no two @param defining the same parameter
 		param_names = set()
 		
-		for pname, (ptype,descr) in self._params.iteritems():
+		for pname, (ptype,descr) in self._params.items():
 			if descr != None:
 				descr = utils.line_cleanup(descr)
 				if pname in param_names:
@@ -148,7 +148,7 @@ class predicate_block:
 		op = self._form.find('(')
 		cp = self._form.find(')')
 		full_list = self._form[(op+1):cp]
-		return map(utils.string_cleanup, full_list.split(','))
+		return list(map(utils.string_cleanup, full_list.split(',')))
 	def get_description(self):
 		return self._descr
 	def get_cstrs_descr(self):
@@ -157,10 +157,10 @@ class predicate_block:
 		return self._params
 	
 	def show(self, tab = ""):
-		print "%sPredicate block" % tab
-		print "%s    Form: '%s' (%s)" % (tab, self._form, self.get_predicate_label())
-		print "%s    Description: '%s'" % (tab, self._descr)
-		print "%s    Constraints: '%s'" % (tab, self._constr)
-		print "%s    Parameters:" % tab
+		print("%sPredicate block" % tab)
+		print("%s    Form: '%s' (%s)" % (tab, self._form, self.get_predicate_label()))
+		print("%s    Description: '%s'" % (tab, self._descr))
+		print("%s    Constraints: '%s'" % (tab, self._constr))
+		print("%s    Parameters:" % tab)
 		for param in self._params:
-			print "%s        " % tab, param, self._params[param]
+			print("%s        " % tab, param, self._params[param])

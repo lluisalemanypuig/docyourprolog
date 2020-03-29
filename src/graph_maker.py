@@ -19,7 +19,7 @@ def needs_run_dot(new_dot_string, dot_abs_name):
 	return False
 
 def graph_to_png(graph, dot_abs_name, png_abs_name, conf):
-	print "        + Construct graph"
+	print("        + Construct graph")
 	
 	nl = pcsts.nl
 	
@@ -29,14 +29,14 @@ def graph_to_png(graph, dot_abs_name, png_abs_name, conf):
 	dot_string += 'nodesep = 0.1' + nl
 	dot_string += 'ranksep = 0.3' + nl
 	
-	for node,neighs in graph.iteritems():
+	for node,neighs in graph.items():
 		for n in neighs:
 			dot_string += '"' + node + '" -> "' + n + '"' + nl
 	
 	dot_string += '}' + nl
 	
 	if needs_run_dot(dot_string, dot_abs_name):
-		print "            - Running dot ..."
+		print("            - Running dot ...")
 		
 		dot_file = utils.make_file(dot_abs_name)
 		dot_file.write(dot_string)
@@ -47,7 +47,7 @@ def graph_to_png(graph, dot_abs_name, png_abs_name, conf):
 		if not conf.CACHE_FILES:
 			os.remove(dot_abs_name)
 	else:
-		print "            - No need to run dot"
+		print("            - No need to run dot")
 		
 # makes the graph for all parsed files in all_info
 def make_full_graph(dest_dir, all_info, conf):
@@ -95,7 +95,7 @@ def make_full_graph(dest_dir, all_info, conf):
 	
 	# initialise distances
 	dists = {}
-	for f,d in in_degree.iteritems():
+	for f,d in in_degree.items():
 		if d == 0:
 			dists[f] = 0
 			list_files.append(f)

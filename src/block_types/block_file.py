@@ -27,7 +27,7 @@ class file_block:
 			self._date = info[6:len(info)]
 		else:
 			# this should not happen
-			print "Internal error: wrong environment", environment
+			print("Internal error: wrong environment", environment)
 	
 	def __init__(self, block, line):
 		self._descr = None
@@ -58,10 +58,10 @@ class file_block:
 			self._date = utils.line_cleanup(self._date)
 	
 	def show(self, tab = ""):
-		print "%sFile block" % tab
-		print "%s    File description: '%s' " % (tab, self._descr)
-		print "%s    File author: '%s'" % (tab, self._author)
-		print "%s    File date: '%s'" % (tab, self._date)
+		print("%sFile block" % tab)
+		print("%s    File description: '%s' " % (tab, self._descr))
+		print("%s    File author: '%s'" % (tab, self._author))
+		print("%s    File date: '%s'" % (tab, self._date))
 	
 	def get_descr(self):
 		return self._descr

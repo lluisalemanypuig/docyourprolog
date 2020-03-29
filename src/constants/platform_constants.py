@@ -2,7 +2,7 @@
 # Platform-dependent 'constants' (values that are not meant to change)
 
 import platform
-import warnings_errors as WE
+import constants.warnings_errors as WE
 
 nl = None	# endline character(s)
 sep = None	# path-separator character:

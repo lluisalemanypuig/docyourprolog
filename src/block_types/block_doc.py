@@ -1,7 +1,7 @@
 import constants.warnings_errors as WE
-import block_predicate as bpred
-import block_separator as bsep
-import block_file as bfile
+import block_types.block_predicate as bpred
+import block_types.block_separator as bsep
+import block_types.block_file as bfile
 
 class doc_block:
 	

@@ -1,6 +1,6 @@
 import constants.platform_constants as pcsts
 import constants.warnings_errors as WE
-import predicate_details as PD
+import html.formats.predicate_details as PD
 import constants.special as SC
 import utils
 
@@ -150,7 +150,7 @@ def make_environments(HTML, descr):
 			
 			elif token == 'item':
 				if len(list_items) == 0:
-					print descr
+					print(descr)
 					WE.item_not_within_list()
 					exit(1)
 				
@@ -191,7 +191,7 @@ def get_next_token(descr, it):
 		(overb, 'overb'), (cverb, 'cverb'),
 		(item, 'item'), (blank, 'blank')
 	]
-	values = filter(lambda (p,t): p != -1, values)
+	values = list(filter(lambda p: p[0] != -1, values))
 	if len(values) == 0:
 		return (-1,None)
 	

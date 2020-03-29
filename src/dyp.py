@@ -123,22 +123,27 @@ def make_index_file(all_files, all_info):
 		graph_maker.make_full_graph(dest_dir, all_info, conf)
 
 def print_usage():
-	print "Document Your Prolog:"
-	print "Generate html documentation to document your prolog code easily."
-	print
-	print "    [-h, --help]"
-	print "        Prints the usage and exits."
-	print "    [-c, --config-file] FILE"
-	print "        The configuration file containing the configuration"
-	print "        for the documentation. Remember NOT to add the '.py'"
-	print "        of the filename."
-	print "    [-g, --gen-config] FILE"
-	print "        Directory where to generate an empty configuration file."
+	print("Document Your Prolog:")
+	print("Generate html documentation to document your prolog code easily.")
+	print()
+	print("    [-h, --help]")
+	print("        Prints the usage and exits.")
+	print()
+	print("    [-c, --config-file] FILE")
+	print("        Tell what configuration should be used to generate the")
+	print("        documentation. The name of the file can be absoulte or")
+	print("        relative, but it must not contain the extension .py")
+	print()
+	print("    [-g, --gen-config] FILE")
+	print("        Generate a new configuration file.")
+	print("        FILE is the name of the new generated file.")
 
 
-# **********
-# Start code
-# **********
+# ****************************
+# *                          *
+# *        Start code        *
+# *                          *
+# ****************************
 
 # Initialise platform-dependent constants
 pcsts.make_constants()
@@ -160,19 +165,20 @@ while i < len(argv):
 		config_to = argv[i + 1]
 		i += 1
 	else:
-		print "Error: unrecognised option '%s'" % argv[i]
+		print("Error: unrecognised option '%s'" % argv[i])
 		exit(1)
 	i += 1
 
 if config_from == None and config_to == None:
-	print "Error: this program needs either the configuration to be read"
-	print "    or where to generate a new configuration file."
+	print("Error: this program needs either the configuration to be read")
+	print("    or where to generate a new configuration file.")
 	print_usage()
 	exit(1)
 
 if config_from != None and config_to != None:
-	print "Error: specify only the configuration file to be read or where"
-	print "    to generate a new configuration file, but not both."
+	print("Error: specify only the configuration file to be read or where")
+	print("    to generate a new configuration file, but not both.")
+	print_usage()
 	exit(1)
 
 # start making documentation (or file configuration)
@@ -184,12 +190,12 @@ conf = importlib.import_module("default_config")
 environ['PATH'] += ":" + conf.DOT_EXE_PATH
 
 if config_to != None:
-	print "Generating default configuration file..."
+	print("Generating default configuration file...")
 	shutil.copyfile(def_config_file + "/default_config.py", config_to)
 	exit(0)
 
 if config_from != None:
-	print "Reading configuration file:", config_from
+	print("Reading configuration file:", config_from)
 	abs_path, name = utils.abspath_name(config_from)
 	sys.path.append(abs_path)
 	del conf
@@ -199,9 +205,9 @@ source_dir = conf.SRC_DIR
 dest_dir = conf.DEST_DIR
 exts = conf.EXTENSIONS
 
-print "    source dir:", source_dir
-print "    destination dir:", dest_dir
-print "    extensions to be parsed:", exts
+print("    source dir:", source_dir)
+print("    destination dir:", dest_dir)
+print("    extensions to be parsed:", exts)
 
 # read cache from cache file
 cache = read_cache(dest_dir)
@@ -223,7 +229,7 @@ already_parsed = set([])
 # relate each file's full path to its file parser object
 all_info = {}
 
-print "Parsing source files:"
+print("Parsing source files:")
 
 while len(to_be_parsed) > 0:
 	abs_name = to_be_parsed[0]
@@ -233,7 +239,7 @@ while len(to_be_parsed) > 0:
 		rel_name = relpath(abs_name, source_dir)
 		path_to_file, name_file = utils.abspath_name(abs_name)
 		
-		print "    >> Parsing:", rel_name
+		print("    >> Parsing:", rel_name)
 		
 		# parse file
 		information = file_parser.file_parser(source_dir, abs_name)	
@@ -250,18 +256,18 @@ while len(to_be_parsed) > 0:
 		
 		class_blocks = information.get_class_blocks()
 
-print
-print "Making html files:"
+print()
+print("Making html files:")
 
 some_html_generated = False
 all_files = []
-for abs_name, info in all_info.iteritems():
+for abs_name, info in all_info.items():
 	
 	# check that file needs to be parsed again
 	if file_needs_html(cache, abs_name):
 		some_html_generated = True
 		
-		print "    >> Making html file for:", info.get_rel_name()
+		print("    >> Making html file for:", info.get_rel_name())
 		
 		maker = hmaker.html_maker(conf, source_dir, all_info, info)
 		maker.make_html_file()
@@ -269,14 +275,14 @@ for abs_name, info in all_info.iteritems():
 		if conf.FILE_INCLUSION_GRAPH and info.needs_inc_graph():
 			graph_maker.make_single_graph(dest_dir, info, all_info, conf)
 	else:
-		print "    >> Html file for", info.get_rel_name(), "-- already made"
+		print("    >> Html file for", info.get_rel_name(), "-- already made")
 		
 	rel_name = info.get_rel_html_name()
 	all_files.append(rel_name)
 
 if some_html_generated:
 	# make html for index if necessary
-	print "    >> Making html file for index"
+	print("    >> Making html file for index")
 	make_index_file(all_files, all_info)
 	
 	# rewrite cache file, if necessary

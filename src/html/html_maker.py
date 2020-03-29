@@ -1,17 +1,17 @@
 from os.path import abspath, relpath
-
 import file_parser
-from html_writer import html_writer as hwriter
+
 import utils
 
 import constants.platform_constants as pcsts
 import constants.warnings_errors as WE
 
-import formats.file_description as FD
-import formats.included_files as IF
-import formats.predicate_list as PL
-import formats.predicate_details as PD
-import formats.htmlise as HS
+from html.html_writer import html_writer as HW
+import html.formats.file_description as FD
+import html.formats.included_files as IF
+import html.formats.predicate_list as PL
+import html.formats.predicate_details as PD
+import html.formats.htmlise as HS
 
 # write the head of the html file
 class html_maker:
@@ -259,7 +259,7 @@ class html_maker:
 			WE.absolute_path_not_set(self._abs_name)
 			exit(1)
 		
-		self._hw = hwriter(self._abs_html_name)
+		self._hw = HW(self._abs_html_name)
 		
 		self._hw.start()
 		self._write_head()

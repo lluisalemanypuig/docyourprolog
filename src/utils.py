@@ -94,7 +94,7 @@ def file_ensure_loaded(rule):
 def files_brackets(rule):
 	ob = rule.find('[')
 	cb = rule.find(']')
-	return map(filename_cleanup, rule[(ob+1):cb].split(','))
+	return list(map(filename_cleanup, rule[(ob+1):cb].split(',')))
 
 # rule is of the form ':-use_module(library(system))'
 # returns all files between the brackets
@@ -173,8 +173,8 @@ def resolve_path(apath):
 		partspath = apath.split(sep)
 		i = partspath.index('..')
 		if i == 0:
-			print "Internal error: path '%s' has a '..' at the beginning" % apath
-			print "    Cannot resolve"
+			print("Internal error: path '%s' has a '..' at the beginning" % apath)
+			print("    Cannot resolve")
 			exit(1)
 		
 		del partspath[i]
